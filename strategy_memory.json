@@ -1,0 +1,561 @@
+{
+  "_readme": "This file is the living memory of your trading system. All agents read it. The Weekly Tuner rewrites it every Sunday at 6 PM. Do not edit manually unless you understand the impact. Changes are logged in weekly_changelog.",
+  "meta": {
+    "version": "1.0",
+    "created": "2026-05-16",
+    "last_updated": "2026-06-02",
+    "last_tuned_by": "system_init",
+    "weeks_of_live_data": 3,
+    "total_paper_trades": 0,
+    "system_status": "ACTIVE",
+    "paper_trading_capital": 500000,
+    "deployment_ready": false,
+    "deployment_criteria": {
+      "min_weeks_paper_trading": 4,
+      "min_total_trades": 20,
+      "min_win_rate_pct": 45.0,
+      "min_expectancy_per_trade": 0,
+      "max_drawdown_pct": 15.0,
+      "target_monthly_return_pct": 20.0,
+      "note": "ALL criteria must pass before real capital deployment"
+    }
+  },
+  "capital_rules": {
+    "total_capital": 500000,
+    "max_risk_per_trade_pct": 4.0,
+    "max_risk_per_trade_inr": 20000,
+    "max_simultaneous_positions": 20,
+    "max_capital_in_options_pct": 30.0,
+    "max_capital_in_single_sector_pct": 25.0,
+    "cash_reserve_min_pct": 20.0,
+    "note_on_sizing": "max_risk_per_trade_inr overrides pct if pct calculation exceeds it. Safety first.",
+    "kelly_params": {
+      "enabled": false,
+      "current_win_rate": 0.0,
+      "avg_win_inr": 0.0,
+      "avg_loss_inr": 0.0,
+      "kelly_fraction": 0.0,
+      "half_kelly_fraction": 0.0,
+      "note": "Kelly disabled until 10+ live trades logged. Until then, use fixed risk rules above."
+    }
+  },
+  "entry_rules": {
+    "minimum_score_to_trade": 9,
+    "strong_buy_threshold": 11,
+    "rsi_long_min": 40,
+    "rsi_long_max": 63,
+    "rsi_mean_reversion_trigger": 30,
+    "rsi_short_min": 55,
+    "rsi_short_max": 75,
+    "macd_required": true,
+    "volume_ratio_min": 0.8,
+    "pct_range_min": 0.015,
+    "pct_range_max": 0.055,
+    "ma20_must_be_rising": true,
+    "no_bearish_candle_lookback_days": 2,
+    "min_days_to_expiry_for_options": 7,
+    "min_dte_preferred": 15,
+    "news_sentiment_override": {
+      "enabled": true,
+      "kill_trade_if_bearish_news": true,
+      "earnings_within_days": 3,
+      "note": "If News Agent flags earnings within 3 days, skip directional trade. Use straddle instead."
+    },
+    "strategies_enabled": {
+      "momentum_long": true,
+      "mean_reversion_long": true,
+      "short_momentum": true,
+      "note": "Disable any strategy here if Weekly Tuner finds it consistently loses"
+    }
+  },
+  "exit_rules": {
+    "target_atr_multiple": 3.0,
+    "stoploss_atr_multiple": 2.0,
+    "trailing_trigger_atr_multiple": 1.5,
+    "trailing_distance_atr_multiple": 2.0,
+    "time_stop_days": 12,
+    "option_exit_rules": {
+      "exit_if_premium_falls_pct": 50,
+      "exit_if_premium_doubles": true,
+      "time_stop_days": 7,
+      "note": "Options decay faster. Tighter time stop than equity."
+    }
+  },
+  "instrument_selection": {
+    "_note_equity_only": "Options disabled during baseline validation \u2014 fake options P&L removed. Re-enable only after options pricing model + data feed exist.",
+    "logic": "Score and India VIX together determine instrument. VIX overrides score for safety.",
+    "india_vix_thresholds": {
+      "low_vol_ceiling": 13.0,
+      "high_vol_floor": 18.0,
+      "extreme_vol_floor": 24.0
+    },
+    "decision_matrix": {
+      "score_11_14_low_vix": {
+        "instrument": "EQUITY",
+        "max_allocation_inr": 50000,
+        "reason": "Baseline validation \u2014 options disabled, see _note_equity_only"
+      },
+      "score_11_14_normal_vix": {
+        "instrument": "EQUITY",
+        "max_allocation_inr": 50000,
+        "reason": "Baseline validation \u2014 options disabled, see _note_equity_only"
+      },
+      "score_11_14_high_vix": {
+        "instrument": "EQUITY",
+        "max_allocation_inr": 50000,
+        "reason": "Baseline validation \u2014 options disabled, see _note_equity_only"
+      },
+      "score_9_10_any_vix": {
+        "instrument": "EQUITY",
+        "max_allocation_inr": 50000,
+        "reason": "Moderate conviction, no leverage"
+      },
+      "score_below_9": {
+        "instrument": "SKIP",
+        "reason": "Below threshold. Do not trade."
+      },
+      "mean_reversion_any": {
+        "instrument": "EQUITY",
+        "max_allocation_inr": 50000,
+        "reason": "Baseline validation \u2014 options disabled, see _note_equity_only"
+      },
+      "short_momentum_any": {
+        "instrument": "SKIP",
+        "reason": "Shorts not validated yet \u2014 Gap 9. Re-enable after short baseline established."
+      },
+      "wait_period_high_vix": {
+        "instrument": "IRON_CONDOR",
+        "max_risk_inr": 8000,
+        "reason": "Earn theta when no directional trade available + VIX elevated."
+      }
+    },
+    "note": "Instrument = SKIP means absolute veto. No trade logs, no exceptions."
+  },
+  "portfolio_rules": {
+    "sector_limits": {
+      "Banking": 1,
+      "NBFC": 1,
+      "Insurance": 1,
+      "IT": 1,
+      "Metals": 1,
+      "Pharma": 1,
+      "Energy": 1,
+      "Auto": 1,
+      "FMCG": 1,
+      "Infra": 1,
+      "Defence": 1,
+      "Telecom": 1,
+      "Consumer": 1,
+      "Conglomerate": 1,
+      "Mining": 1,
+      "Exchange": 2,
+      "Finance": 1,
+      "Power": 1,
+      "Defence Electronics": 1,
+      "default": 1,
+      "note": "Max 1 position per sector. Tuner can raise to 2 for strong sectors after 4 weeks of data."
+    },
+    "correlation_rules": {
+      "note": "ICICIBANK + AXISBANK + HDFCBANK cannot all be open simultaneously. Banking limit=1 enforces this.",
+      "cross_sector_warning": "If 2 positions are both infrastructure plays, flag to Financial Expert agent even if different sectors."
+    }
+  },
+  "stock_universe": {
+    "active_watchlist": [
+      "AXISBANK",
+      "BHARTIARTL",
+      "KOTAKBANK",
+      "HINDALCO",
+      "SHRIRAMFIN",
+      "BEL",
+      "SBIN",
+      "HDFCBANK",
+      "ICICIBANK",
+      "BAJFINANCE",
+      "BAJAJFINSV",
+      "SBILIFE",
+      "COALINDIA",
+      "TATASTEEL",
+      "GRASIM",
+      "SUNPHARMA",
+      "MARUTI",
+      "HCLTECH",
+      "TECHM",
+      "DRREDDY",
+      "INFY",
+      "TCS",
+      "WIPRO",
+      "TITAN",
+      "BRITANNIA",
+      "ITC",
+      "HEROMOTOCO",
+      "EICHERMOT",
+      "APOLLOHOSP",
+      "ADANIENT",
+      "ADANIPORTS",
+      "BPCL",
+      "LT",
+      "RELIANCE",
+      "HINDUNILVR",
+      "ULTRACEMCO",
+      "NESTLEIND",
+      "POWERGRID",
+      "HDFCLIFE",
+      "INDUSINDBK",
+      "ASIANPAINT",
+      "BAJAJ-AUTO"
+    ],
+    "blacklist": {
+      "stocks": [],
+      "note": "Weekly Tuner adds stocks here after 3+ consecutive losses. Stays blacklisted for 2 weeks minimum."
+    },
+    "high_conviction_favorites": {
+      "stocks": [],
+      "note": "Weekly Tuner adds stocks here after 3+ consecutive wins. Financial Expert gives these a +1 score boost."
+    },
+    "lot_sizes": {
+      "AXISBANK": 600,
+      "BHARTIARTL": 450,
+      "KOTAKBANK": 400,
+      "HINDALCO": 1300,
+      "SHRIRAMFIN": 200,
+      "BEL": 1500,
+      "SBIN": 750,
+      "HDFCBANK": 550,
+      "ICICIBANK": 700,
+      "BAJFINANCE": 125,
+      "BAJAJFINSV": 350,
+      "SBILIFE": 375,
+      "COALINDIA": 1200,
+      "TATASTEEL": 5500,
+      "GRASIM": 275,
+      "SUNPHARMA": 300,
+      "MARUTI": 50,
+      "HCLTECH": 350,
+      "TECHM": 300,
+      "DRREDDY": 125,
+      "INFY": 400,
+      "TCS": 175,
+      "WIPRO": 1500,
+      "TITAN": 175,
+      "BRITANNIA": 100,
+      "ITC": 1600,
+      "HEROMOTOCO": 100,
+      "EICHERMOT": 150,
+      "APOLLOHOSP": 125,
+      "ADANIENT": 250,
+      "ADANIPORTS": 500,
+      "BPCL": 1800,
+      "LT": 150,
+      "RELIANCE": 250,
+      "HINDUNILVR": 300,
+      "ULTRACEMCO": 50,
+      "NESTLEIND": 200,
+      "POWERGRID": 2700,
+      "HDFCLIFE": 850,
+      "INDUSINDBK": 500,
+      "ASIANPAINT": 300,
+      "BAJAJ-AUTO": 75,
+      "BSE": 200,
+      "MCX": 250,
+      "HINDZINC": 1500,
+      "POWERINDIA": 300,
+      "DSSL": 600,
+      "NETWEB": 400,
+      "DATAPATTNS": 200,
+      "HFCL": 3000,
+      "DCXINDIA": 1000
+    },
+    "sector_map": {
+      "HDFCBANK": "Banking",
+      "ICICIBANK": "Banking",
+      "SBIN": "Banking",
+      "AXISBANK": "Banking",
+      "KOTAKBANK": "Banking",
+      "INDUSINDBK": "Banking",
+      "BAJFINANCE": "NBFC",
+      "BAJAJFINSV": "NBFC",
+      "SHRIRAMFIN": "NBFC",
+      "SBILIFE": "Insurance",
+      "HDFCLIFE": "Insurance",
+      "RELIANCE": "Energy",
+      "BPCL": "Energy",
+      "COALINDIA": "Mining",
+      "TATASTEEL": "Metals",
+      "HINDALCO": "Metals",
+      "INFY": "IT",
+      "TCS": "IT",
+      "WIPRO": "IT",
+      "HCLTECH": "IT",
+      "TECHM": "IT",
+      "SUNPHARMA": "Pharma",
+      "DRREDDY": "Pharma",
+      "BHARTIARTL": "Telecom",
+      "MARUTI": "Auto",
+      "BAJAJ-AUTO": "Auto",
+      "EICHERMOT": "Auto",
+      "HEROMOTOCO": "Auto",
+      "TITAN": "Consumer",
+      "HINDUNILVR": "FMCG",
+      "ITC": "FMCG",
+      "NESTLEIND": "FMCG",
+      "BRITANNIA": "FMCG",
+      "ASIANPAINT": "Consumer",
+      "APOLLOHOSP": "Healthcare",
+      "LT": "Infra",
+      "GRASIM": "Cement",
+      "ULTRACEMCO": "Cement",
+      "ADANIENT": "Conglomerate",
+      "ADANIPORTS": "Infra",
+      "BEL": "Defence",
+      "POWERGRID": "Utilities",
+      "BSE": "Finance",
+      "MCX": "Finance",
+      "HINDZINC": "Metals",
+      "POWERINDIA": "Power",
+      "DSSL": "Defence",
+      "DATAPATTNS": "Defence",
+      "DCXINDIA": "Defence",
+      "NETWEB": "IT",
+      "HFCL": "Telecom"
+    }
+  },
+  "circuit_breakers": {
+    "consecutive_loss_limit": 3,
+    "pause_days_after_circuit": 2,
+    "daily_loss_limit_pct": 3.0,
+    "daily_loss_limit_inr": 15000,
+    "weekly_loss_limit_pct": 8.0,
+    "weekly_loss_limit_inr": 40000,
+    "monthly_loss_limit_pct": 15.0,
+    "monthly_loss_limit_inr": 75000,
+    "circuit_active": false,
+    "circuit_tripped_on": null,
+    "circuit_resets_on": null,
+    "note": "If circuit is active, Auto Trader logs SKIPPED for all signals. No trades until reset date."
+  },
+  "performance_live": {
+    "period_start": "2026-05-16",
+    "total_trades": 3,
+    "open_positions": 0,
+    "closed_trades": 0,
+    "wins": 0,
+    "losses": 0,
+    "win_rate_pct": 0,
+    "total_pnl_inr": 0,
+    "total_return_pct": 0.0,
+    "best_trade_inr": 0,
+    "worst_trade_inr": 0,
+    "avg_win_inr": 0.0,
+    "avg_loss_inr": 0.0,
+    "gross_win_sum_inr": 0,
+    "gross_loss_sum_inr": 0,
+    "expectancy_per_trade_inr": 0.0,
+    "profit_factor": 0.0,
+    "max_drawdown_pct": 0.0,
+    "sharpe_ratio": 0.0,
+    "current_streak": 0,
+    "streak_type": "none",
+    "best_strategy": "insufficient_data",
+    "worst_strategy": "insufficient_data",
+    "month_target_inr": 100000,
+    "month_target_pct": 20.0,
+    "month_progress_pct": 0.0
+  },
+  "weekly_performance_history": [],
+  "news_filters": {
+    "always_skip_keywords": [
+      "fraud",
+      "SEBI ban",
+      "promoter pledge",
+      "accounting irregularity",
+      "CBI raid",
+      "ED raid",
+      "default",
+      "bankruptcy",
+      "delisting"
+    ],
+    "bearish_keywords": [
+      "downgrade",
+      "profit warning",
+      "miss estimates",
+      "weak guidance",
+      "CEO resignation",
+      "block deal sell",
+      "FII selling",
+      "stake sale"
+    ],
+    "bullish_keywords": [
+      "upgrade",
+      "beat estimates",
+      "record profit",
+      "new contract",
+      "buyback",
+      "dividend",
+      "FII buying",
+      "block deal buy",
+      "order win"
+    ],
+    "earnings_lookout_days": 3,
+    "rbi_policy_skip": true,
+    "budget_day_skip": true,
+    "india_vix_spike_threshold": 22.0,
+    "note": "If VIX spikes above 24 intraday, News Agent adds MARKET_FEAR flag. All ATM calls skipped."
+  },
+  "agent_instructions": {
+    "technical_analyser": {
+      "tool": "morning_scan.py",
+      "output_format": "json",
+      "focus": "Extract score, RSI, MACD, ATR, BB position, strategy type, SL, target for each stock",
+      "filter": "Only pass stocks with score >= 9 to next agent. Score is now out of 14 points."
+    },
+    "news_researcher": {
+      "tool": "duckduckgo_search",
+      "search_queries": [
+        "{stock} NSE news today",
+        "{stock} earnings results India",
+        "India VIX today",
+        "Nifty 50 outlook today",
+        "RBI policy news today"
+      ],
+      "output_format": "sentiment: BULLISH/BEARISH/NEUTRAL, event_flag: EARNINGS/NORMAL/HIGH_RISK"
+    },
+    "data_analyst": {
+      "rule": "Merge tech score with news sentiment. Kill trade if news is BEARISH or event_flag is EARNINGS within 3 days",
+      "sector_check": "Enforce sector_limits from this file. Max 1 per sector in final output",
+      "output": "Top 3 highest conviction setups only. Never pass more than 3 to Financial Expert."
+    },
+    "financial_expert": {
+      "reads": [
+        "strategy_memory.json",
+        "paper_trades.json",
+        "daily_reports/scan_latest.json"
+      ],
+      "uses": "decision_matrix from instrument_selection section",
+      "calculates": "lot_size = floor(max_risk_per_trade_inr / (entry_price * sl_pct))",
+      "output_format": {
+        "symbol": "string",
+        "direction": "LONG or SHORT",
+        "instrument": "ATM_CALL / BULL_CALL_SPREAD / EQUITY / ATM_PUT / IRON_CONDOR / SKIP",
+        "entry_price": "float",
+        "strike": "int (for options)",
+        "expiry": "YYYY-MM-DD",
+        "quantity": "int (shares or lots)",
+        "stop_loss": "float",
+        "target": "float",
+        "max_risk_inr": "float",
+        "reasoning": "1-2 sentence explanation Claude generates"
+      }
+    },
+    "auto_trader": {
+      "tool": "paper_trades.py",
+      "action": "Call log_trade() for each order from Financial Expert",
+      "skip_if": "circuit_active = true OR instrument = SKIP",
+      "confirm_message": "Log entry to decision_log.json after each trade"
+    },
+    "position_monitor": {
+      "run_at": "15:30 IST daily",
+      "reads": "paper_trades.json for all OPEN positions",
+      "fetches": "live closing price via yfinance",
+      "closes_if": "price >= target OR price <= stop_loss OR days_held >= time_stop",
+      "updates": "performance_live section of this file after each close"
+    },
+    "weekly_tuner": {
+      "run_at": "18:00 IST every Sunday",
+      "model": "claude-opus-4-6",
+      "reviews": "All trades from the past week",
+      "can_modify": [
+        "entry_rules.minimum_score_to_trade",
+        "entry_rules.rsi_long_max",
+        "entry_rules.rsi_long_min",
+        "entry_rules.strategies_enabled",
+        "stock_universe.blacklist",
+        "stock_universe.high_conviction_favorites",
+        "capital_rules.max_risk_per_trade_inr",
+        "capital_rules.kelly_params",
+        "circuit_breakers",
+        "performance_live",
+        "weekly_performance_history"
+      ],
+      "cannot_modify": [
+        "meta.deployment_ready",
+        "meta.paper_trading_capital",
+        "instrument_selection.india_vix_thresholds",
+        "portfolio_rules.sector_limits"
+      ],
+      "must_add_to_changelog": true,
+      "format_instruction": "When rewriting any value, explain WHY in weekly_changelog entry. Be specific: quote the trades that caused the change."
+    }
+  },
+  "weekly_changelog": [
+    {
+      "date": "2026-05-16",
+      "week": 0,
+      "changed_by": "system_init",
+      "changes": [],
+      "performance_this_week": {
+        "trades": 0,
+        "wins": 0,
+        "losses": 0,
+        "pnl_inr": 0,
+        "win_rate_pct": 0.0
+      },
+      "insights": [
+        "System initialized. Paper trading starts 2026-05-19.",
+        "All parameters set to V8 backtest-proven defaults.",
+        "Kelly sizing disabled until 10 live trades accumulated.",
+        "Sector limits set to max 1 per sector for first 4 weeks.",
+        "Target: \u20b91,00,000 profit on \u20b95,00,000 capital within 30 days."
+      ],
+      "next_week_focus": [
+        "Establish baseline win rate from first live signals",
+        "Identify which stocks appear most frequently in signals",
+        "Watch for mean reversion setups specifically (highest RR in backtests)"
+      ]
+    },
+    {
+      "date": "2026-06-02",
+      "week": 2,
+      "changed_by": "weekly_tuner",
+      "changes": [],
+      "performance_this_week": {
+        "trades": 0,
+        "wins": 0,
+        "losses": 0,
+        "pnl_inr": 0,
+        "win_rate_pct": 0
+      },
+      "insights": [
+        "No trades this week \u2014 system may not have found qualifying signals."
+      ],
+      "next_week_focus": [
+        "Continue paper trading. Monitor if score thresholds are too strict."
+      ],
+      "deployment_recommendation": "NOT_READY",
+      "deployment_notes": "Need minimum 20 trades to evaluate.",
+      "changelog_summary": "Week 2: No closed trades. No rule changes."
+    },
+    {
+      "date": "2026-06-02",
+      "week": 3,
+      "changed_by": "weekly_tuner",
+      "changes": [],
+      "performance_this_week": {
+        "trades": 0,
+        "wins": 0,
+        "losses": 0,
+        "pnl_inr": 0,
+        "win_rate_pct": 0
+      },
+      "insights": [
+        "No trades this week \u2014 system may not have found qualifying signals."
+      ],
+      "next_week_focus": [
+        "Continue paper trading. Monitor if score thresholds are too strict."
+      ],
+      "deployment_recommendation": "NOT_READY",
+      "deployment_notes": "Need minimum 20 trades to evaluate.",
+      "changelog_summary": "Week 3: No closed trades. No rule changes."
+    }
+  ]
+}

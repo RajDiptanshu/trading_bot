@@ -1,0 +1,1531 @@
+{
+ "base(conf2,rank40,trail3,ts12)": {
+  "full": {
+   "label": "base(conf2,rank40,trail3,ts12)/full",
+   "trades": 210,
+   "win_rate": 56.2,
+   "expectancy": 1307.0,
+   "profit_factor": 2.38,
+   "total_pnl": 274570.0,
+   "total_costs": 21213.0,
+   "max_dd_inr": -24886.0,
+   "return_pct": 54.9,
+   "sharpe": 3.05,
+   "k_ratio": 0.151,
+   "by_year": {
+    "2019": 678.0,
+    "2020": 62159.0,
+    "2021": 139542.0,
+    "2022": -11689.0,
+    "2023": 33049.0,
+    "2024": 48100.0,
+    "2025": -2861.0,
+    "2026": 5592.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 125,
+     "sum": 147689.0
+    },
+    "SL_GAP": {
+     "count": 8,
+     "sum": -2260.0
+    },
+    "TARGET_HALF": {
+     "count": 65,
+     "sum": 143089.0
+    },
+    "TIME_DEAD": {
+     "count": 12,
+     "sum": -13947.0
+    }
+   }
+  },
+  "IS": {
+   "label": "base(conf2,rank40,trail3,ts12)/IS",
+   "trades": 114,
+   "win_rate": 59.6,
+   "expectancy": 1963.0,
+   "profit_factor": 3.26,
+   "total_pnl": 223739.0,
+   "total_costs": 11505.0,
+   "max_dd_inr": -23009.0,
+   "return_pct": 44.7,
+   "sharpe": 3.6,
+   "k_ratio": 0.2,
+   "by_year": {
+    "2019": 678.0,
+    "2020": 62159.0,
+    "2021": 139542.0,
+    "2022": -11689.0,
+    "2023": 33049.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 63,
+     "sum": 149793.0
+    },
+    "SL_GAP": {
+     "count": 3,
+     "sum": 1395.0
+    },
+    "TARGET_HALF": {
+     "count": 38,
+     "sum": 86412.0
+    },
+    "TIME_DEAD": {
+     "count": 10,
+     "sum": -13861.0
+    }
+   }
+  },
+  "OOS": {
+   "label": "base(conf2,rank40,trail3,ts12)/OOS",
+   "trades": 96,
+   "win_rate": 52.1,
+   "expectancy": 529.0,
+   "profit_factor": 1.51,
+   "total_pnl": 50831.0,
+   "total_costs": 9709.0,
+   "max_dd_inr": -24886.0,
+   "return_pct": 10.2,
+   "sharpe": 2.25,
+   "k_ratio": 0.099,
+   "by_year": {
+    "2024": 48100.0,
+    "2025": -2861.0,
+    "2026": 5592.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 62,
+     "sum": -2105.0
+    },
+    "SL_GAP": {
+     "count": 5,
+     "sum": -3655.0
+    },
+    "TARGET_HALF": {
+     "count": 27,
+     "sum": 56677.0
+    },
+    "TIME_DEAD": {
+     "count": 2,
+     "sum": -86.0
+    }
+   }
+  }
+ },
+ "conf3": {
+  "full": {
+   "label": "conf3/full",
+   "trades": 198,
+   "win_rate": 54.5,
+   "expectancy": 885.0,
+   "profit_factor": 1.78,
+   "total_pnl": 175184.0,
+   "total_costs": 20628.0,
+   "max_dd_inr": -60598.0,
+   "return_pct": 35.0,
+   "sharpe": 2.45,
+   "k_ratio": 0.117,
+   "by_year": {
+    "2019": 12556.0,
+    "2020": 42679.0,
+    "2021": 110879.0,
+    "2022": -6060.0,
+    "2023": 22133.0,
+    "2024": 14483.0,
+    "2025": -11316.0,
+    "2026": -10170.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 118,
+     "sum": 77784.0
+    },
+    "SL_GAP": {
+     "count": 12,
+     "sum": -10375.0
+    },
+    "TARGET_HALF": {
+     "count": 56,
+     "sum": 123977.0
+    },
+    "TIME_DEAD": {
+     "count": 12,
+     "sum": -16202.0
+    }
+   }
+  },
+  "IS": {
+   "label": "conf3/IS",
+   "trades": 112,
+   "win_rate": 62.5,
+   "expectancy": 1627.0,
+   "profit_factor": 2.72,
+   "total_pnl": 182187.0,
+   "total_costs": 11273.0,
+   "max_dd_inr": -27437.0,
+   "return_pct": 36.4,
+   "sharpe": 3.75,
+   "k_ratio": 0.223,
+   "by_year": {
+    "2019": 12556.0,
+    "2020": 42679.0,
+    "2021": 110879.0,
+    "2022": -6060.0,
+    "2023": 22133.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 62,
+     "sum": 107634.0
+    },
+    "SL_GAP": {
+     "count": 6,
+     "sum": -1137.0
+    },
+    "TARGET_HALF": {
+     "count": 37,
+     "sum": 84713.0
+    },
+    "TIME_DEAD": {
+     "count": 7,
+     "sum": -9023.0
+    }
+   }
+  },
+  "OOS": {
+   "label": "conf3/OOS",
+   "trades": 86,
+   "win_rate": 44.2,
+   "expectancy": -81.0,
+   "profit_factor": 0.94,
+   "total_pnl": -7003.0,
+   "total_costs": 9355.0,
+   "max_dd_inr": -60598.0,
+   "return_pct": -1.4,
+   "sharpe": -0.35,
+   "k_ratio": -0.075,
+   "by_year": {
+    "2024": 14483.0,
+    "2025": -11316.0,
+    "2026": -10170.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 56,
+     "sum": -29850.0
+    },
+    "SL_GAP": {
+     "count": 6,
+     "sum": -9237.0
+    },
+    "TARGET_HALF": {
+     "count": 19,
+     "sum": 39264.0
+    },
+    "TIME_DEAD": {
+     "count": 5,
+     "sum": -7180.0
+    }
+   }
+  }
+ },
+ "rank50": {
+  "full": {
+   "label": "rank50/full",
+   "trades": 210,
+   "win_rate": 56.2,
+   "expectancy": 1307.0,
+   "profit_factor": 2.38,
+   "total_pnl": 274570.0,
+   "total_costs": 21213.0,
+   "max_dd_inr": -24886.0,
+   "return_pct": 54.9,
+   "sharpe": 3.05,
+   "k_ratio": 0.151,
+   "by_year": {
+    "2019": 678.0,
+    "2020": 62159.0,
+    "2021": 139542.0,
+    "2022": -11689.0,
+    "2023": 33049.0,
+    "2024": 48100.0,
+    "2025": -2861.0,
+    "2026": 5592.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 125,
+     "sum": 147689.0
+    },
+    "SL_GAP": {
+     "count": 8,
+     "sum": -2260.0
+    },
+    "TARGET_HALF": {
+     "count": 65,
+     "sum": 143089.0
+    },
+    "TIME_DEAD": {
+     "count": 12,
+     "sum": -13947.0
+    }
+   }
+  },
+  "IS": {
+   "label": "rank50/IS",
+   "trades": 114,
+   "win_rate": 59.6,
+   "expectancy": 1963.0,
+   "profit_factor": 3.26,
+   "total_pnl": 223739.0,
+   "total_costs": 11505.0,
+   "max_dd_inr": -23009.0,
+   "return_pct": 44.7,
+   "sharpe": 3.6,
+   "k_ratio": 0.2,
+   "by_year": {
+    "2019": 678.0,
+    "2020": 62159.0,
+    "2021": 139542.0,
+    "2022": -11689.0,
+    "2023": 33049.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 63,
+     "sum": 149793.0
+    },
+    "SL_GAP": {
+     "count": 3,
+     "sum": 1395.0
+    },
+    "TARGET_HALF": {
+     "count": 38,
+     "sum": 86412.0
+    },
+    "TIME_DEAD": {
+     "count": 10,
+     "sum": -13861.0
+    }
+   }
+  },
+  "OOS": {
+   "label": "rank50/OOS",
+   "trades": 96,
+   "win_rate": 52.1,
+   "expectancy": 529.0,
+   "profit_factor": 1.51,
+   "total_pnl": 50831.0,
+   "total_costs": 9709.0,
+   "max_dd_inr": -24886.0,
+   "return_pct": 10.2,
+   "sharpe": 2.25,
+   "k_ratio": 0.099,
+   "by_year": {
+    "2024": 48100.0,
+    "2025": -2861.0,
+    "2026": 5592.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 62,
+     "sum": -2105.0
+    },
+    "SL_GAP": {
+     "count": 5,
+     "sum": -3655.0
+    },
+    "TARGET_HALF": {
+     "count": 27,
+     "sum": 56677.0
+    },
+    "TIME_DEAD": {
+     "count": 2,
+     "sum": -86.0
+    }
+   }
+  }
+ },
+ "rank30": {
+  "full": {
+   "label": "rank30/full",
+   "trades": 210,
+   "win_rate": 56.2,
+   "expectancy": 1307.0,
+   "profit_factor": 2.38,
+   "total_pnl": 274570.0,
+   "total_costs": 21213.0,
+   "max_dd_inr": -24886.0,
+   "return_pct": 54.9,
+   "sharpe": 3.05,
+   "k_ratio": 0.151,
+   "by_year": {
+    "2019": 678.0,
+    "2020": 62159.0,
+    "2021": 139542.0,
+    "2022": -11689.0,
+    "2023": 33049.0,
+    "2024": 48100.0,
+    "2025": -2861.0,
+    "2026": 5592.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 125,
+     "sum": 147689.0
+    },
+    "SL_GAP": {
+     "count": 8,
+     "sum": -2260.0
+    },
+    "TARGET_HALF": {
+     "count": 65,
+     "sum": 143089.0
+    },
+    "TIME_DEAD": {
+     "count": 12,
+     "sum": -13947.0
+    }
+   }
+  },
+  "IS": {
+   "label": "rank30/IS",
+   "trades": 114,
+   "win_rate": 59.6,
+   "expectancy": 1963.0,
+   "profit_factor": 3.26,
+   "total_pnl": 223739.0,
+   "total_costs": 11505.0,
+   "max_dd_inr": -23009.0,
+   "return_pct": 44.7,
+   "sharpe": 3.6,
+   "k_ratio": 0.2,
+   "by_year": {
+    "2019": 678.0,
+    "2020": 62159.0,
+    "2021": 139542.0,
+    "2022": -11689.0,
+    "2023": 33049.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 63,
+     "sum": 149793.0
+    },
+    "SL_GAP": {
+     "count": 3,
+     "sum": 1395.0
+    },
+    "TARGET_HALF": {
+     "count": 38,
+     "sum": 86412.0
+    },
+    "TIME_DEAD": {
+     "count": 10,
+     "sum": -13861.0
+    }
+   }
+  },
+  "OOS": {
+   "label": "rank30/OOS",
+   "trades": 96,
+   "win_rate": 52.1,
+   "expectancy": 529.0,
+   "profit_factor": 1.51,
+   "total_pnl": 50831.0,
+   "total_costs": 9709.0,
+   "max_dd_inr": -24886.0,
+   "return_pct": 10.2,
+   "sharpe": 2.25,
+   "k_ratio": 0.099,
+   "by_year": {
+    "2024": 48100.0,
+    "2025": -2861.0,
+    "2026": 5592.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 62,
+     "sum": -2105.0
+    },
+    "SL_GAP": {
+     "count": 5,
+     "sum": -3655.0
+    },
+    "TARGET_HALF": {
+     "count": 27,
+     "sum": 56677.0
+    },
+    "TIME_DEAD": {
+     "count": 2,
+     "sum": -86.0
+    }
+   }
+  }
+ },
+ "trail2.5": {
+  "full": {
+   "label": "trail2.5/full",
+   "trades": 271,
+   "win_rate": 59.0,
+   "expectancy": 709.0,
+   "profit_factor": 1.81,
+   "total_pnl": 192226.0,
+   "total_costs": 27947.0,
+   "max_dd_inr": -28706.0,
+   "return_pct": 38.4,
+   "sharpe": 3.37,
+   "k_ratio": 0.135,
+   "by_year": {
+    "2019": 13257.0,
+    "2020": 51240.0,
+    "2021": 89979.0,
+    "2022": -22838.0,
+    "2023": 36463.0,
+    "2024": 41168.0,
+    "2025": -17698.0,
+    "2026": 656.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 162,
+     "sum": 37121.0
+    },
+    "SL_GAP": {
+     "count": 14,
+     "sum": -7082.0
+    },
+    "TARGET_HALF": {
+     "count": 79,
+     "sum": 175739.0
+    },
+    "TIME_DEAD": {
+     "count": 16,
+     "sum": -13552.0
+    }
+   }
+  },
+  "IS": {
+   "label": "trail2.5/IS",
+   "trades": 159,
+   "win_rate": 64.2,
+   "expectancy": 1057.0,
+   "profit_factor": 2.39,
+   "total_pnl": 168100.0,
+   "total_costs": 16107.0,
+   "max_dd_inr": -28706.0,
+   "return_pct": 33.6,
+   "sharpe": 4.81,
+   "k_ratio": 0.169,
+   "by_year": {
+    "2019": 13257.0,
+    "2020": 51240.0,
+    "2021": 89979.0,
+    "2022": -22838.0,
+    "2023": 36463.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 88,
+     "sum": 55298.0
+    },
+    "SL_GAP": {
+     "count": 8,
+     "sum": 3614.0
+    },
+    "TARGET_HALF": {
+     "count": 51,
+     "sum": 120406.0
+    },
+    "TIME_DEAD": {
+     "count": 12,
+     "sum": -11218.0
+    }
+   }
+  },
+  "OOS": {
+   "label": "trail2.5/OOS",
+   "trades": 112,
+   "win_rate": 51.8,
+   "expectancy": 215.0,
+   "profit_factor": 1.21,
+   "total_pnl": 24126.0,
+   "total_costs": 11840.0,
+   "max_dd_inr": -25948.0,
+   "return_pct": 4.8,
+   "sharpe": 1.11,
+   "k_ratio": 0.017,
+   "by_year": {
+    "2024": 41168.0,
+    "2025": -17698.0,
+    "2026": 656.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 74,
+     "sum": -18176.0
+    },
+    "SL_GAP": {
+     "count": 6,
+     "sum": -10697.0
+    },
+    "TARGET_HALF": {
+     "count": 28,
+     "sum": 55333.0
+    },
+    "TIME_DEAD": {
+     "count": 4,
+     "sum": -2334.0
+    }
+   }
+  }
+ },
+ "trail3.5": {
+  "full": {
+   "label": "trail3.5/full",
+   "trades": 194,
+   "win_rate": 56.7,
+   "expectancy": 1312.0,
+   "profit_factor": 2.45,
+   "total_pnl": 254484.0,
+   "total_costs": 19233.0,
+   "max_dd_inr": -25940.0,
+   "return_pct": 50.9,
+   "sharpe": 3.14,
+   "k_ratio": 0.191,
+   "by_year": {
+    "2019": 2669.0,
+    "2020": 59556.0,
+    "2021": 122241.0,
+    "2022": -5541.0,
+    "2023": 50183.0,
+    "2024": 40404.0,
+    "2025": -17049.0,
+    "2026": 2020.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 106,
+     "sum": 120831.0
+    },
+    "SL_GAP": {
+     "count": 13,
+     "sum": 1846.0
+    },
+    "TARGET_HALF": {
+     "count": 63,
+     "sum": 144817.0
+    },
+    "TIME_DEAD": {
+     "count": 12,
+     "sum": -13009.0
+    }
+   }
+  },
+  "IS": {
+   "label": "trail3.5/IS",
+   "trades": 111,
+   "win_rate": 63.1,
+   "expectancy": 2064.0,
+   "profit_factor": 3.55,
+   "total_pnl": 229109.0,
+   "total_costs": 10764.0,
+   "max_dd_inr": -19158.0,
+   "return_pct": 45.8,
+   "sharpe": 3.96,
+   "k_ratio": 0.31,
+   "by_year": {
+    "2019": 2669.0,
+    "2020": 59556.0,
+    "2021": 122241.0,
+    "2022": -5541.0,
+    "2023": 50183.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 55,
+     "sum": 123536.0
+    },
+    "SL_GAP": {
+     "count": 8,
+     "sum": 16932.0
+    },
+    "TARGET_HALF": {
+     "count": 40,
+     "sum": 97929.0
+    },
+    "TIME_DEAD": {
+     "count": 8,
+     "sum": -9289.0
+    }
+   }
+  },
+  "OOS": {
+   "label": "trail3.5/OOS",
+   "trades": 83,
+   "win_rate": 48.2,
+   "expectancy": 306.0,
+   "profit_factor": 1.3,
+   "total_pnl": 25375.0,
+   "total_costs": 8469.0,
+   "max_dd_inr": -25940.0,
+   "return_pct": 5.1,
+   "sharpe": 1.49,
+   "k_ratio": 0.032,
+   "by_year": {
+    "2024": 40404.0,
+    "2025": -17049.0,
+    "2026": 2020.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 51,
+     "sum": -2706.0
+    },
+    "SL_GAP": {
+     "count": 5,
+     "sum": -15087.0
+    },
+    "TARGET_HALF": {
+     "count": 23,
+     "sum": 46888.0
+    },
+    "TIME_DEAD": {
+     "count": 4,
+     "sum": -3720.0
+    }
+   }
+  }
+ },
+ "ts8": {
+  "full": {
+   "label": "ts8/full",
+   "trades": 229,
+   "win_rate": 52.4,
+   "expectancy": 1035.0,
+   "profit_factor": 2.14,
+   "total_pnl": 236995.0,
+   "total_costs": 24097.0,
+   "max_dd_inr": -36225.0,
+   "return_pct": 47.4,
+   "sharpe": 2.81,
+   "k_ratio": 0.138,
+   "by_year": {
+    "2019": 4267.0,
+    "2020": 58935.0,
+    "2021": 111254.0,
+    "2022": -19682.0,
+    "2023": 30946.0,
+    "2024": 43495.0,
+    "2025": 3486.0,
+    "2026": 4294.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 120,
+     "sum": 121525.0
+    },
+    "SL_GAP": {
+     "count": 9,
+     "sum": 10677.0
+    },
+    "TARGET_HALF": {
+     "count": 64,
+     "sum": 143765.0
+    },
+    "TIME_DEAD": {
+     "count": 36,
+     "sum": -38972.0
+    }
+   }
+  },
+  "IS": {
+   "label": "ts8/IS",
+   "trades": 134,
+   "win_rate": 52.2,
+   "expectancy": 1386.0,
+   "profit_factor": 2.56,
+   "total_pnl": 185720.0,
+   "total_costs": 14409.0,
+   "max_dd_inr": -36225.0,
+   "return_pct": 37.1,
+   "sharpe": 3.01,
+   "k_ratio": 0.135,
+   "by_year": {
+    "2019": 4267.0,
+    "2020": 58935.0,
+    "2021": 111254.0,
+    "2022": -19682.0,
+    "2023": 30946.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 65,
+     "sum": 124560.0
+    },
+    "SL_GAP": {
+     "count": 3,
+     "sum": 3205.0
+    },
+    "TARGET_HALF": {
+     "count": 38,
+     "sum": 87743.0
+    },
+    "TIME_DEAD": {
+     "count": 28,
+     "sum": -29788.0
+    }
+   }
+  },
+  "OOS": {
+   "label": "ts8/OOS",
+   "trades": 95,
+   "win_rate": 52.6,
+   "expectancy": 540.0,
+   "profit_factor": 1.58,
+   "total_pnl": 51275.0,
+   "total_costs": 9687.0,
+   "max_dd_inr": -14696.0,
+   "return_pct": 10.3,
+   "sharpe": 2.85,
+   "k_ratio": 0.242,
+   "by_year": {
+    "2024": 43495.0,
+    "2025": 3486.0,
+    "2026": 4294.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 55,
+     "sum": -3035.0
+    },
+    "SL_GAP": {
+     "count": 6,
+     "sum": 7471.0
+    },
+    "TARGET_HALF": {
+     "count": 26,
+     "sum": 56021.0
+    },
+    "TIME_DEAD": {
+     "count": 8,
+     "sum": -9183.0
+    }
+   }
+  }
+ },
+ "ts16": {
+  "full": {
+   "label": "ts16/full",
+   "trades": 204,
+   "win_rate": 55.9,
+   "expectancy": 1233.0,
+   "profit_factor": 2.18,
+   "total_pnl": 251488.0,
+   "total_costs": 20750.0,
+   "max_dd_inr": -24886.0,
+   "return_pct": 50.3,
+   "sharpe": 2.82,
+   "k_ratio": 0.144,
+   "by_year": {
+    "2019": 4975.0,
+    "2020": 63971.0,
+    "2021": 120891.0,
+    "2022": -13216.0,
+    "2023": 33049.0,
+    "2024": 48100.0,
+    "2025": -8037.0,
+    "2026": 1757.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 128,
+     "sum": 121607.0
+    },
+    "SL_GAP": {
+     "count": 7,
+     "sum": -2215.0
+    },
+    "TARGET_HALF": {
+     "count": 62,
+     "sum": 142042.0
+    },
+    "TIME_DEAD": {
+     "count": 7,
+     "sum": -9946.0
+    }
+   }
+  },
+  "IS": {
+   "label": "ts16/IS",
+   "trades": 113,
+   "win_rate": 61.1,
+   "expectancy": 1855.0,
+   "profit_factor": 2.94,
+   "total_pnl": 209670.0,
+   "total_costs": 11351.0,
+   "max_dd_inr": -22408.0,
+   "return_pct": 41.9,
+   "sharpe": 3.36,
+   "k_ratio": 0.167,
+   "by_year": {
+    "2019": 4975.0,
+    "2020": 63971.0,
+    "2021": 120891.0,
+    "2022": -13216.0,
+    "2023": 33049.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 68,
+     "sum": 126321.0
+    },
+    "SL_GAP": {
+     "count": 2,
+     "sum": 1441.0
+    },
+    "TARGET_HALF": {
+     "count": 38,
+     "sum": 89371.0
+    },
+    "TIME_DEAD": {
+     "count": 5,
+     "sum": -7463.0
+    }
+   }
+  },
+  "OOS": {
+   "label": "ts16/OOS",
+   "trades": 91,
+   "win_rate": 49.5,
+   "expectancy": 460.0,
+   "profit_factor": 1.4,
+   "total_pnl": 41819.0,
+   "total_costs": 9398.0,
+   "max_dd_inr": -24886.0,
+   "return_pct": 8.4,
+   "sharpe": 1.9,
+   "k_ratio": 0.078,
+   "by_year": {
+    "2024": 48100.0,
+    "2025": -8037.0,
+    "2026": 1757.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 60,
+     "sum": -4714.0
+    },
+    "SL_GAP": {
+     "count": 5,
+     "sum": -3655.0
+    },
+    "TARGET_HALF": {
+     "count": 24,
+     "sum": 52671.0
+    },
+    "TIME_DEAD": {
+     "count": 2,
+     "sum": -2483.0
+    }
+   }
+  }
+ },
+ "tgt2.5": {
+  "full": {
+   "label": "tgt2.5/full",
+   "trades": 230,
+   "win_rate": 54.8,
+   "expectancy": 1110.0,
+   "profit_factor": 2.25,
+   "total_pnl": 255391.0,
+   "total_costs": 22497.0,
+   "max_dd_inr": -24900.0,
+   "return_pct": 51.1,
+   "sharpe": 2.72,
+   "k_ratio": 0.135,
+   "by_year": {
+    "2019": 358.0,
+    "2020": 66146.0,
+    "2021": 123628.0,
+    "2022": -10755.0,
+    "2023": 31929.0,
+    "2024": 44049.0,
+    "2025": -5731.0,
+    "2026": 5768.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 133,
+     "sum": 135008.0
+    },
+    "SL_GAP": {
+     "count": 7,
+     "sum": 899.0
+    },
+    "TARGET_HALF": {
+     "count": 76,
+     "sum": 136919.0
+    },
+    "TIME_DEAD": {
+     "count": 14,
+     "sum": -17436.0
+    }
+   }
+  },
+  "IS": {
+   "label": "tgt2.5/IS",
+   "trades": 132,
+   "win_rate": 56.1,
+   "expectancy": 1601.0,
+   "profit_factor": 3.01,
+   "total_pnl": 211306.0,
+   "total_costs": 12797.0,
+   "max_dd_inr": -22556.0,
+   "return_pct": 42.3,
+   "sharpe": 3.18,
+   "k_ratio": 0.16,
+   "by_year": {
+    "2019": 358.0,
+    "2020": 66146.0,
+    "2021": 123628.0,
+    "2022": -10755.0,
+    "2023": 31929.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 71,
+     "sum": 136482.0
+    },
+    "SL_GAP": {
+     "count": 2,
+     "sum": 4555.0
+    },
+    "TARGET_HALF": {
+     "count": 47,
+     "sum": 87618.0
+    },
+    "TIME_DEAD": {
+     "count": 12,
+     "sum": -17349.0
+    }
+   }
+  },
+  "OOS": {
+   "label": "tgt2.5/OOS",
+   "trades": 98,
+   "win_rate": 53.1,
+   "expectancy": 450.0,
+   "profit_factor": 1.44,
+   "total_pnl": 44086.0,
+   "total_costs": 9699.0,
+   "max_dd_inr": -24900.0,
+   "return_pct": 8.8,
+   "sharpe": 1.96,
+   "k_ratio": 0.083,
+   "by_year": {
+    "2024": 44049.0,
+    "2025": -5731.0,
+    "2026": 5768.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 62,
+     "sum": -1474.0
+    },
+    "SL_GAP": {
+     "count": 5,
+     "sum": -3655.0
+    },
+    "TARGET_HALF": {
+     "count": 29,
+     "sum": 49301.0
+    },
+    "TIME_DEAD": {
+     "count": 2,
+     "sum": -86.0
+    }
+   }
+  }
+ },
+ "tgt3.5": {
+  "full": {
+   "label": "tgt3.5/full",
+   "trades": 202,
+   "win_rate": 55.9,
+   "expectancy": 1225.0,
+   "profit_factor": 2.23,
+   "total_pnl": 247447.0,
+   "total_costs": 21191.0,
+   "max_dd_inr": -35069.0,
+   "return_pct": 49.5,
+   "sharpe": 2.87,
+   "k_ratio": 0.119,
+   "by_year": {
+    "2019": 2831.0,
+    "2020": 65010.0,
+    "2021": 140440.0,
+    "2022": -8152.0,
+    "2023": 33955.0,
+    "2024": 8199.0,
+    "2025": -3996.0,
+    "2026": 9159.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 120,
+     "sum": 109679.0
+    },
+    "SL_GAP": {
+     "count": 12,
+     "sum": 1259.0
+    },
+    "TARGET_HALF": {
+     "count": 57,
+     "sum": 151954.0
+    },
+    "TIME_DEAD": {
+     "count": 13,
+     "sum": -15445.0
+    }
+   }
+  },
+  "IS": {
+   "label": "tgt3.5/IS",
+   "trades": 115,
+   "win_rate": 58.3,
+   "expectancy": 2036.0,
+   "profit_factor": 3.2,
+   "total_pnl": 234084.0,
+   "total_costs": 11944.0,
+   "max_dd_inr": -20994.0,
+   "return_pct": 46.8,
+   "sharpe": 3.74,
+   "k_ratio": 0.205,
+   "by_year": {
+    "2019": 2831.0,
+    "2020": 65010.0,
+    "2021": 140440.0,
+    "2022": -8152.0,
+    "2023": 33955.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 64,
+     "sum": 148976.0
+    },
+    "SL_GAP": {
+     "count": 4,
+     "sum": 417.0
+    },
+    "TARGET_HALF": {
+     "count": 36,
+     "sum": 100050.0
+    },
+    "TIME_DEAD": {
+     "count": 11,
+     "sum": -15358.0
+    }
+   }
+  },
+  "OOS": {
+   "label": "tgt3.5/OOS",
+   "trades": 87,
+   "win_rate": 52.9,
+   "expectancy": 154.0,
+   "profit_factor": 1.14,
+   "total_pnl": 13363.0,
+   "total_costs": 9247.0,
+   "max_dd_inr": -35069.0,
+   "return_pct": 2.7,
+   "sharpe": 0.89,
+   "k_ratio": 0.024,
+   "by_year": {
+    "2024": 8199.0,
+    "2025": -3996.0,
+    "2026": 9159.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 56,
+     "sum": -39296.0
+    },
+    "SL_GAP": {
+     "count": 8,
+     "sum": 842.0
+    },
+    "TARGET_HALF": {
+     "count": 21,
+     "sum": 51904.0
+    },
+    "TIME_DEAD": {
+     "count": 2,
+     "sum": -86.0
+    }
+   }
+  }
+ },
+ "stop1.5": {
+  "full": {
+   "label": "stop1.5/full",
+   "trades": 233,
+   "win_rate": 51.9,
+   "expectancy": 1061.0,
+   "profit_factor": 2.19,
+   "total_pnl": 247118.0,
+   "total_costs": 24146.0,
+   "max_dd_inr": -37432.0,
+   "return_pct": 49.4,
+   "sharpe": 2.69,
+   "k_ratio": 0.095,
+   "by_year": {
+    "2019": 4935.0,
+    "2020": 65581.0,
+    "2021": 141382.0,
+    "2022": 772.0,
+    "2023": 33686.0,
+    "2024": 13262.0,
+    "2025": -19713.0,
+    "2026": 7213.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 148,
+     "sum": 106454.0
+    },
+    "SL_GAP": {
+     "count": 10,
+     "sum": -3353.0
+    },
+    "TARGET_HALF": {
+     "count": 67,
+     "sum": 150288.0
+    },
+    "TIME_DEAD": {
+     "count": 8,
+     "sum": -6271.0
+    }
+   }
+  },
+  "IS": {
+   "label": "stop1.5/IS",
+   "trades": 123,
+   "win_rate": 58.5,
+   "expectancy": 2003.0,
+   "profit_factor": 3.57,
+   "total_pnl": 246356.0,
+   "total_costs": 12402.0,
+   "max_dd_inr": -13407.0,
+   "return_pct": 49.3,
+   "sharpe": 3.86,
+   "k_ratio": 0.194,
+   "by_year": {
+    "2019": 4935.0,
+    "2020": 65581.0,
+    "2021": 141382.0,
+    "2022": 772.0,
+    "2023": 33686.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 73,
+     "sum": 159359.0
+    },
+    "SL_GAP": {
+     "count": 4,
+     "sum": -4682.0
+    },
+    "TARGET_HALF": {
+     "count": 41,
+     "sum": 97152.0
+    },
+    "TIME_DEAD": {
+     "count": 5,
+     "sum": -5472.0
+    }
+   }
+  },
+  "OOS": {
+   "label": "stop1.5/OOS",
+   "trades": 110,
+   "win_rate": 44.5,
+   "expectancy": 7.0,
+   "profit_factor": 1.01,
+   "total_pnl": 762.0,
+   "total_costs": 11744.0,
+   "max_dd_inr": -37432.0,
+   "return_pct": 0.2,
+   "sharpe": 0.04,
+   "k_ratio": -0.046,
+   "by_year": {
+    "2024": 13262.0,
+    "2025": -19713.0,
+    "2026": 7213.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 75,
+     "sum": -52905.0
+    },
+    "SL_GAP": {
+     "count": 6,
+     "sum": 1329.0
+    },
+    "TARGET_HALF": {
+     "count": 26,
+     "sum": 53137.0
+    },
+    "TIME_DEAD": {
+     "count": 3,
+     "sum": -798.0
+    }
+   }
+  }
+ },
+ "stop2.5": {
+  "full": {
+   "label": "stop2.5/full",
+   "trades": 198,
+   "win_rate": 58.1,
+   "expectancy": 1366.0,
+   "profit_factor": 2.45,
+   "total_pnl": 270433.0,
+   "total_costs": 19724.0,
+   "max_dd_inr": -24167.0,
+   "return_pct": 54.1,
+   "sharpe": 3.13,
+   "k_ratio": 0.17,
+   "by_year": {
+    "2019": 3414.0,
+    "2020": 61627.0,
+    "2021": 124555.0,
+    "2022": -10347.0,
+    "2023": 35232.0,
+    "2024": 52152.0,
+    "2025": -5553.0,
+    "2026": 9352.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 108,
+     "sum": 153110.0
+    },
+    "SL_GAP": {
+     "count": 11,
+     "sum": 2285.0
+    },
+    "TARGET_HALF": {
+     "count": 63,
+     "sum": 138750.0
+    },
+    "TIME_DEAD": {
+     "count": 16,
+     "sum": -23712.0
+    }
+   }
+  },
+  "IS": {
+   "label": "stop2.5/IS",
+   "trades": 112,
+   "win_rate": 59.8,
+   "expectancy": 1915.0,
+   "profit_factor": 3.07,
+   "total_pnl": 214481.0,
+   "total_costs": 11337.0,
+   "max_dd_inr": -21992.0,
+   "return_pct": 42.9,
+   "sharpe": 3.45,
+   "k_ratio": 0.194,
+   "by_year": {
+    "2019": 3414.0,
+    "2020": 61627.0,
+    "2021": 124555.0,
+    "2022": -10347.0,
+    "2023": 35232.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 59,
+     "sum": 149288.0
+    },
+    "SL_GAP": {
+     "count": 4,
+     "sum": -1056.0
+    },
+    "TARGET_HALF": {
+     "count": 37,
+     "sum": 84893.0
+    },
+    "TIME_DEAD": {
+     "count": 12,
+     "sum": -18644.0
+    }
+   }
+  },
+  "OOS": {
+   "label": "stop2.5/OOS",
+   "trades": 86,
+   "win_rate": 55.8,
+   "expectancy": 651.0,
+   "profit_factor": 1.68,
+   "total_pnl": 55952.0,
+   "total_costs": 8387.0,
+   "max_dd_inr": -24167.0,
+   "return_pct": 11.2,
+   "sharpe": 2.89,
+   "k_ratio": 0.106,
+   "by_year": {
+    "2024": 52152.0,
+    "2025": -5553.0,
+    "2026": 9352.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 49,
+     "sum": 3822.0
+    },
+    "SL_GAP": {
+     "count": 7,
+     "sum": 3342.0
+    },
+    "TARGET_HALF": {
+     "count": 26,
+     "sum": 53857.0
+    },
+    "TIME_DEAD": {
+     "count": 4,
+     "sum": -5068.0
+    }
+   }
+  }
+ },
+ "maxpos5": {
+  "full": {
+   "label": "maxpos5/full",
+   "trades": 367,
+   "win_rate": 54.5,
+   "expectancy": 1077.0,
+   "profit_factor": 2.09,
+   "total_pnl": 395212.0,
+   "total_costs": 37482.0,
+   "max_dd_inr": -42938.0,
+   "return_pct": 79.0,
+   "sharpe": 3.02,
+   "k_ratio": 0.124,
+   "by_year": {
+    "2019": -995.0,
+    "2020": 64535.0,
+    "2021": 222154.0,
+    "2022": -11482.0,
+    "2023": 36323.0,
+    "2024": 66780.0,
+    "2025": -8785.0,
+    "2026": 26683.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 213,
+     "sum": 181884.0
+    },
+    "SL_GAP": {
+     "count": 21,
+     "sum": -10335.0
+    },
+    "TARGET": {
+     "count": 1,
+     "sum": 2773.0
+    },
+    "TARGET_HALF": {
+     "count": 110,
+     "sum": 246353.0
+    },
+    "TIME_DEAD": {
+     "count": 22,
+     "sum": -25464.0
+    }
+   }
+  },
+  "IS": {
+   "label": "maxpos5/IS",
+   "trades": 213,
+   "win_rate": 55.4,
+   "expectancy": 1458.0,
+   "profit_factor": 2.54,
+   "total_pnl": 310534.0,
+   "total_costs": 21899.0,
+   "max_dd_inr": -38080.0,
+   "return_pct": 62.1,
+   "sharpe": 3.42,
+   "k_ratio": 0.178,
+   "by_year": {
+    "2019": -995.0,
+    "2020": 64535.0,
+    "2021": 222154.0,
+    "2022": -11482.0,
+    "2023": 36323.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 118,
+     "sum": 191194.0
+    },
+    "SL_GAP": {
+     "count": 10,
+     "sum": -10093.0
+    },
+    "TARGET_HALF": {
+     "count": 67,
+     "sum": 153674.0
+    },
+    "TIME_DEAD": {
+     "count": 18,
+     "sum": -24240.0
+    }
+   }
+  },
+  "OOS": {
+   "label": "maxpos5/OOS",
+   "trades": 154,
+   "win_rate": 53.2,
+   "expectancy": 550.0,
+   "profit_factor": 1.53,
+   "total_pnl": 84678.0,
+   "total_costs": 15583.0,
+   "max_dd_inr": -42938.0,
+   "return_pct": 16.9,
+   "sharpe": 2.36,
+   "k_ratio": 0.08,
+   "by_year": {
+    "2024": 66780.0,
+    "2025": -8785.0,
+    "2026": 26683.0
+   },
+   "by_reason": {
+    "SL": {
+     "count": 95,
+     "sum": -9309.0
+    },
+    "SL_GAP": {
+     "count": 11,
+     "sum": -242.0
+    },
+    "TARGET": {
+     "count": 1,
+     "sum": 2773.0
+    },
+    "TARGET_HALF": {
+     "count": 43,
+     "sum": 92679.0
+    },
+    "TIME_DEAD": {
+     "count": 4,
+     "sum": -1223.0
+    }
+   }
+  }
+ }
+}

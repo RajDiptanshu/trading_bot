@@ -1,0 +1,158 @@
+{
+  "_doc": "Contagion playbook for Agent 6 (the pre-market News Brain). Keys under 'sectors' MATCH watchlist.json sector names; the brain joins them to symbols at runtime, so this file never duplicates (or drifts from) the symbol list. 'bellwethers' = global/India names whose news reads across to that NSE sector. 'thesis' = the analyst read-across logic given to Claude as a prior. 'negative_cues'/'positive_cues' = lowercase substrings for the deterministic (no-API-key) fallback matcher. 'macro_drivers' = cross-sector forces (crude, rates, INR, China, flows). Edit freely — no code change needed. Truth-first: every relationship here is a real, documented read-across, not a guess.",
+  "version": "2026-06-20",
+  "sectors": {
+    "IT": {
+      "bellwethers": ["Accenture", "Cognizant", "Capgemini", "Infosys", "TCS", "Microsoft", "Nasdaq", "US tech spending"],
+      "thesis": "Indian IT services revenue tracks global enterprise tech budgets. Accenture is THE lead indicator: it reports ~3 weeks before TCS/Infosys and explicitly guides on demand and bookings. A weak Accenture print or guide-down, or 'IT spending slowdown / discretionary cuts' headlines, are a sector-wide NEGATIVE read-across for INFY, TCS, HCLTECH, TECHM, WIPRO. A weaker rupee (USD/INR up) is a margin POSITIVE for exporters. H-1B/visa tightening is NEGATIVE.",
+      "negative_cues": ["accenture cut", "accenture guidance", "accenture lower", "weak bookings", "discretionary spend", "it budget cut", "it spending slowdown", "furlough", "deal ramp-down", "h-1b", "visa restriction", "client bankruptcy"],
+      "positive_cues": ["accenture raise", "accenture beat", "strong bookings", "large deal win", "mega deal", "it spending recovery", "ai deal", "cloud migration", "rupee depreciat", "record tcv"]
+    },
+    "Metals": {
+      "bellwethers": ["LME", "China stimulus", "iron ore", "copper price", "aluminium price", "zinc price", "steel demand", "US tariffs"],
+      "thesis": "Ferrous/non-ferrous names (TATASTEEL, HINDALCO, HINDZINC, VEDL, GRAVITA) are price-takers on global commodity prices. China stimulus or property-sector support lifts LME base metals = POSITIVE. China demand weakness, steel dumping, or new US/EU tariffs = NEGATIVE. A stronger dollar is a headwind for metals.",
+      "negative_cues": ["china slowdown", "steel dumping", "metal prices fall", "lme drop", "tariff on steel", "property crisis", "demand weakness", "inventory build"],
+      "positive_cues": ["china stimulus", "lme rally", "metal prices rise", "copper surge", "aluminium rally", "supply cut", "infrastructure spending", "production cut china"]
+    },
+    "Mining": {
+      "bellwethers": ["coal price", "China coal demand", "power demand", "e-auction premium"],
+      "thesis": "COALINDIA earnings hinge on volumes, e-auction premiums and power-sector offtake. Strong power demand / heatwave and high e-auction premiums = POSITIVE. Falling global coal prices compress e-auction realisations = NEGATIVE; high monsoon can dent dispatch.",
+      "negative_cues": ["coal price fall", "weak power demand", "e-auction premium fall", "import substitution", "mine closure"],
+      "positive_cues": ["power demand surge", "heatwave", "coal shortage", "e-auction premium rise", "record dispatch", "price hike"]
+    },
+    "Energy": {
+      "bellwethers": ["Brent crude", "WTI", "OPEC", "refining margin", "GRM", "natural gas", "Singapore GRM"],
+      "thesis": "Split read-across. For OMC/refiner BPCL: crude UP squeezes marketing margins = NEGATIVE, crude DOWN = POSITIVE; strong Singapore GRMs = POSITIVE. For RELIANCE (integrated: O2C + retail + Jio): crude is mixed; the swing factors are GRMs, telecom ARPU/Jio, and retail. OPEC supply cuts lift crude.",
+      "negative_cues": ["crude surge", "brent jumps", "opec cut", "oil price spike", "marketing margin hit", "grm collapse", "fuel price freeze"],
+      "positive_cues": ["crude falls", "brent drops", "opec raises output", "grm strong", "refining margin", "arpu hike", "fuel price hike"]
+    },
+    "Pharma": {
+      "bellwethers": ["USFDA", "US generic pricing", "import alert", "Form 483", "ANDA approval", "drug shortage"],
+      "thesis": "SUNPHARMA, DRREDDY earn heavily from US generics. USFDA import alerts / Form 483 / warning letters on a specific plant are NEGATIVE for that name. US generic price erosion is a sector headwind; drug shortages and ANDA approvals are POSITIVE. Mostly name-specific (plant-level), so attribute to the right symbol.",
+      "negative_cues": ["import alert", "form 483", "warning letter", "usfda observation", "price erosion", "recall", "plant inspection fail"],
+      "positive_cues": ["anda approval", "drug shortage", "exclusivity", "usfda clears", "facility cleared", "launch approval", "tentative approval"]
+    },
+    "Auto": {
+      "bellwethers": ["monthly sales", "SIAM data", "chip supply", "semiconductor shortage", "rural demand", "EV policy", "festive sales"],
+      "thesis": "MARUTI, BAJAJ-AUTO, HEROMOTOCO, EICHERMOT move on monthly wholesale/retail volumes, rural demand (2-wheelers), input/chip availability and festive season. Strong monthly numbers / good monsoon = POSITIVE. Chip shortage, demand slowdown, steep input-cost inflation = NEGATIVE.",
+      "negative_cues": ["sales decline", "volume drop", "chip shortage", "demand slowdown", "inventory pile", "price war", "weak monsoon"],
+      "positive_cues": ["sales jump", "record dispatch", "volume growth", "festive demand", "strong bookings", "waiting period", "rural recovery"]
+    },
+    "Banking": {
+      "bellwethers": ["RBI policy", "repo rate", "credit growth", "NPA", "deposit growth", "NIM", "system liquidity", "US 10Y yield"],
+      "thesis": "HDFCBANK, ICICIBANK, AXISBANK, SBIN, KOTAKBANK, INDUSINDBK. RBI rate CUTS compress near-term NIMs but lift credit demand and treasury gains (bond prices up) = net mildly POSITIVE for system; a HIKE/liquidity tightening pressures the sector. Rising NPAs/slippages or RBI restrictions on a specific bank are NEGATIVE for that name. Strong credit growth and falling slippages are POSITIVE.",
+      "negative_cues": ["npa rise", "slippage", "rbi restriction", "rate hike", "asset quality", "liquidity tighten", "fraud", "deposit war"],
+      "positive_cues": ["credit growth", "rate cut", "nim expansion", "slippage fall", "recovery", "crr cut", "treasury gain", "deposit growth"]
+    },
+    "NBFC": {
+      "bellwethers": ["RBI policy", "bond yields", "funding cost", "AUM growth", "RBI risk weight", "gold loan rules"],
+      "thesis": "BAJFINANCE, BAJAJFINSV, SHRIRAMFIN are funding-cost sensitive. Falling bond yields / rate cuts lower borrowing cost = POSITIVE. RBI tightening risk-weights on consumer/unsecured loans, or higher funding costs, = NEGATIVE. AUM growth and benign credit costs are POSITIVE.",
+      "negative_cues": ["risk weight", "funding cost rise", "rbi tighten", "asset quality", "yields spike", "credit cost rise"],
+      "positive_cues": ["rate cut", "yields fall", "aum growth", "funding cost fall", "securitisation", "credit demand"]
+    },
+    "Insurance": {
+      "bellwethers": ["IRDAI", "tax on policies", "VNB margin", "APE growth", "GST on insurance"],
+      "thesis": "SBILIFE, HDFCLIFE move on APE growth, VNB margin and regulation. Adverse tax/GST changes on premiums or surrender-value rules = NEGATIVE. Strong APE/VNB and favourable regulation = POSITIVE.",
+      "negative_cues": ["tax on insurance", "surrender value", "gst on premium", "vnb margin fall", "ape decline", "irdai cap"],
+      "positive_cues": ["ape growth", "vnb expansion", "strong premium", "tax benefit", "protection growth"]
+    },
+    "Telecom": {
+      "bellwethers": ["ARPU", "tariff hike", "AGR dues", "spectrum", "5G capex", "Jio", "Airtel"],
+      "thesis": "BHARTIARTL (and equipment maker HFCL) move on tariff hikes (ARPU up = POSITIVE), subscriber adds, AGR/spectrum dues (NEGATIVE), and 5G/fibre capex (POSITIVE for HFCL gear orders).",
+      "negative_cues": ["agr dues", "tariff war", "subscriber loss", "spectrum payment", "price cut"],
+      "positive_cues": ["tariff hike", "arpu rise", "subscriber add", "5g rollout", "fibre order", "spectrum win"]
+    },
+    "Defence": {
+      "bellwethers": ["defence budget", "MoD order", "indigenisation", "emergency procurement", "export clearance", "order book"],
+      "thesis": "BEL, HAL, DATAPATTNS, DCXINDIA are order-book driven. New MoD orders, indigenisation push, higher defence capex, and export approvals = POSITIVE. Order deferrals/cancellations or budget cuts = NEGATIVE. Geopolitical tension typically lifts the basket.",
+      "negative_cues": ["order deferral", "budget cut", "order cancel", "execution delay", "cost overrun"],
+      "positive_cues": ["mod order", "new order", "order win", "indigenisation", "defence budget hike", "export clearance", "emergency procurement", "geopolitical tension"]
+    },
+    "Defence Electronics": {
+      "bellwethers": ["EMS demand", "PLI scheme", "Micron", "Nvidia", "Broadcom", "electronics manufacturing", "China+1"],
+      "thesis": "DIXON is an EMS/electronics-manufacturing play. PLI incentives, new client/anchor wins, and 'China+1' shift = POSITIVE. Global consumer-electronics demand and the semis cycle (Micron/Nvidia/Broadcom) color sentiment. Component shortages or PLI rollback = NEGATIVE.",
+      "negative_cues": ["pli rollback", "client loss", "component shortage", "margin pressure", "order cut"],
+      "positive_cues": ["pli", "new client", "anchor customer", "china plus one", "capacity expansion", "order win", "semiconductor demand"]
+    },
+    "FMCG": {
+      "bellwethers": ["rural demand", "monsoon", "palm oil", "input cost", "GST", "volume growth"],
+      "thesis": "HINDUNILVR, ITC, NESTLEIND, BRITANNIA hinge on rural demand, monsoon, and input costs (palm oil, wheat, milk). Good monsoon + falling input costs + volume growth = POSITIVE. Input-cost inflation or rural weakness = NEGATIVE. ITC additionally moves on cigarette taxation.",
+      "negative_cues": ["input cost rise", "palm oil surge", "rural weakness", "volume decline", "gst hike cigarette", "down-trading"],
+      "positive_cues": ["volume growth", "good monsoon", "input cost fall", "rural recovery", "price hike", "margin expansion"]
+    },
+    "Cement": {
+      "bellwethers": ["cement price", "demand", "fuel/petcoke cost", "capacity", "housing demand", "infra spend"],
+      "thesis": "GRASIM, ULTRACEMCO move on cement realisations, regional price hikes, demand (housing+infra), and energy (petcoke/coal) costs. Price hikes + strong demand + lower fuel cost = POSITIVE. Price wars / weak demand / fuel inflation = NEGATIVE.",
+      "negative_cues": ["price cut", "demand weak", "petcoke surge", "oversupply", "price war"],
+      "positive_cues": ["price hike", "demand strong", "infra spend", "fuel cost fall", "capacity utilisation", "housing demand"]
+    },
+    "Utilities": {
+      "bellwethers": ["power demand", "transmission capex", "US 10Y yield", "regulated RoE"],
+      "thesis": "POWERGRID earns regulated returns — a defensive bond-proxy. Falling yields/rate cuts = POSITIVE (re-rating); rising yields = NEGATIVE. New transmission project awards and strong power demand are POSITIVE.",
+      "negative_cues": ["yields spike", "regulated return cut", "project delay", "capex cut"],
+      "positive_cues": ["transmission award", "power demand surge", "yields fall", "capex order", "rate cut"]
+    },
+    "Power": {
+      "bellwethers": ["grid capex", "transmission order", "power demand", "T&D spending"],
+      "thesis": "POWERINDIA (grid/transmission & industrial automation) is order-book and capex driven. New T&D/grid orders, electrification and data-centre power demand = POSITIVE. Order deferrals or margin pressure = NEGATIVE.",
+      "negative_cues": ["order deferral", "margin pressure", "execution delay", "capex cut"],
+      "positive_cues": ["grid order", "transmission order", "power demand surge", "data centre", "electrification", "capex"]
+    },
+    "Infra": {
+      "bellwethers": ["order inflow", "govt capex", "cargo volume", "road awards", "budget capex"],
+      "thesis": "LT moves on order inflows and the govt capex cycle (a record order book / strong inflows = POSITIVE). ADANIPORTS moves on cargo volumes and acquisitions. Govt capex cuts, award slowdowns or group-level overhang = NEGATIVE.",
+      "negative_cues": ["order slowdown", "capex cut", "award delay", "cargo decline", "group overhang"],
+      "positive_cues": ["record order", "order inflow", "strong inflow", "govt capex", "cargo growth", "new concession", "budget capex hike"]
+    },
+    "Consumer": {
+      "bellwethers": ["gold price", "jewellery demand", "crude oil", "discretionary demand", "wedding season"],
+      "thesis": "TITAN is jewellery-led: stable/rising gold with strong studded demand and store adds = POSITIVE, sharp gold spikes hurt volumes. ASIANPAINT is crude-input (crude down = margin POSITIVE) and demand-led; new competition (e.g. Grasim paints) is a structural NEGATIVE.",
+      "negative_cues": ["gold price spike", "demand slowdown", "crude surge", "competition intensif", "margin pressure", "down-trading"],
+      "positive_cues": ["jewellery demand", "store addition", "crude falls", "wedding season", "volume growth", "margin expansion"]
+    },
+    "Exchange": {
+      "bellwethers": ["F&O volumes", "SEBI", "STT", "derivative turnover", "cash volumes", "options curbs"],
+      "thesis": "MCX (commodities) and BSE (cash+derivatives) earn on volumes. SEBI tightening of F&O/expiry rules or STT/transaction-charge hikes = NEGATIVE (volume hit). Rising turnover, new products and expiry-day strength = POSITIVE.",
+      "negative_cues": ["sebi curb", "f&o restriction", "stt hike", "transaction charge", "volume decline", "expiry rule"],
+      "positive_cues": ["record volume", "turnover surge", "new product", "derivative growth", "options volume"]
+    }
+  },
+  "macro_drivers": {
+    "US markets overnight (S&P/Nasdaq, futures)": {
+      "affects": ["IT", "Defence Electronics", "Metals"],
+      "logic": "A sharp overnight US selloff (esp. Nasdaq/tech) sets a RISK-OFF tone for NSE open and hits IT/tech-linked names hardest. Strong US close = supportive. Always check US futures pre-open."
+    },
+    "Brent crude": {
+      "affects": ["Energy", "Auto", "Aviation", "FMCG"],
+      "logic": "Crude UP = NEGATIVE for OMCs (BPCL) and for India's import bill/inflation (broad headwind); paint/FMCG input costs rise. Crude DOWN = broad POSITIVE. India imports ~85% of oil, so crude is the single biggest macro swing factor."
+    },
+    "USD/INR": {
+      "affects": ["IT", "Pharma", "Metals", "Energy"],
+      "logic": "Rupee WEAKER (USD/INR up) = POSITIVE for exporters (IT, Pharma) via margins, NEGATIVE for importers (OMC, metals buying USD inputs) and adds imported inflation. Sharp rupee depreciation also pressures FII flows."
+    },
+    "US Fed / US 10Y yield": {
+      "affects": ["Banking", "NBFC", "IT", "Utilities"],
+      "logic": "Falling US yields / dovish Fed = POSITIVE for rate-sensitives (NBFC, Banks, POWERGRID bond-proxy) and supports EM/FII inflows. Rising yields / hawkish Fed = NEGATIVE, pressures rate-sensitives and can trigger FII outflows."
+    },
+    "RBI policy (repo, CRR, liquidity)": {
+      "affects": ["Banking", "NBFC", "Auto", "Insurance"],
+      "logic": "Rate cut / liquidity easing = POSITIVE for credit-linked demand (Auto, NBFC) and bond gains; near-term bank NIM compression. Hike/tightening = NEGATIVE for rate-sensitives."
+    },
+    "India VIX spike": {
+      "affects": ["ALL"],
+      "logic": "A VIX spike (>=70th pctile / level >=18) signals RISK-OFF; size down, defined-risk only. Handled by the existing regime engine — the brain should flag it but not double-count."
+    },
+    "FII / FPI flows": {
+      "affects": ["ALL", "Banking", "IT"],
+      "logic": "Heavy FII selling = broad NEGATIVE, hits high-FII-ownership sectors (private banks, IT) hardest. Strong inflows = broad POSITIVE. Watch the prior-day cash-market FII/DII provisional figures."
+    },
+    "China stimulus / China demand": {
+      "affects": ["Metals", "Mining"],
+      "logic": "China stimulus or property support lifts LME base metals = POSITIVE for TATASTEEL/HINDALCO/HINDZINC/VEDL. China weakness / steel dumping = NEGATIVE."
+    },
+    "Semiconductor cycle (Micron/Nvidia/TSMC/Broadcom)": {
+      "affects": ["Defence Electronics", "IT"],
+      "logic": "Strong AI/semis demand and capex support EMS (DIXON) and AI-server names (NETWEB) sentiment; a semis downturn or memory-price crash is NEGATIVE for the electronics/hardware complex."
+    }
+  }
+}

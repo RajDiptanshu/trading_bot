@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "recommender",
+      "runtimeExecutable": "C:/trading_bot/venv/Scripts/python.exe",
+      "runtimeArgs": ["C:/trading_bot/Algo Trading/recommender/app.py"],
+      "port": 8650,
+      "autoPort": false
+    }
+  ]
+}

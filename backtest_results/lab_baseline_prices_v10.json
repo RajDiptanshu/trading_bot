@@ -1,0 +1,117 @@
+{
+ "full": {
+  "label": "baseline/full",
+  "trades": 210,
+  "win_rate": 56.2,
+  "expectancy": 1307.0,
+  "profit_factor": 2.38,
+  "total_pnl": 274570.0,
+  "total_costs": 21213.0,
+  "max_dd_inr": -24886.0,
+  "return_pct": 54.9,
+  "sharpe": 3.05,
+  "k_ratio": 0.151,
+  "by_year": {
+   "2019": 678.0,
+   "2020": 62159.0,
+   "2021": 139542.0,
+   "2022": -11689.0,
+   "2023": 33049.0,
+   "2024": 48100.0,
+   "2025": -2861.0,
+   "2026": 5592.0
+  },
+  "by_reason": {
+   "SL": {
+    "count": 125,
+    "sum": 147689.0
+   },
+   "SL_GAP": {
+    "count": 8,
+    "sum": -2260.0
+   },
+   "TARGET_HALF": {
+    "count": 65,
+    "sum": 143089.0
+   },
+   "TIME_DEAD": {
+    "count": 12,
+    "sum": -13947.0
+   }
+  }
+ },
+ "IS": {
+  "label": "baseline/IS",
+  "trades": 114,
+  "win_rate": 59.6,
+  "expectancy": 1963.0,
+  "profit_factor": 3.26,
+  "total_pnl": 223739.0,
+  "total_costs": 11505.0,
+  "max_dd_inr": -23009.0,
+  "return_pct": 44.7,
+  "sharpe": 3.6,
+  "k_ratio": 0.2,
+  "by_year": {
+   "2019": 678.0,
+   "2020": 62159.0,
+   "2021": 139542.0,
+   "2022": -11689.0,
+   "2023": 33049.0
+  },
+  "by_reason": {
+   "SL": {
+    "count": 63,
+    "sum": 149793.0
+   },
+   "SL_GAP": {
+    "count": 3,
+    "sum": 1395.0
+   },
+   "TARGET_HALF": {
+    "count": 38,
+    "sum": 86412.0
+   },
+   "TIME_DEAD": {
+    "count": 10,
+    "sum": -13861.0
+   }
+  }
+ },
+ "OOS": {
+  "label": "baseline/OOS",
+  "trades": 96,
+  "win_rate": 52.1,
+  "expectancy": 529.0,
+  "profit_factor": 1.51,
+  "total_pnl": 50831.0,
+  "total_costs": 9709.0,
+  "max_dd_inr": -24886.0,
+  "return_pct": 10.2,
+  "sharpe": 2.25,
+  "k_ratio": 0.099,
+  "by_year": {
+   "2024": 48100.0,
+   "2025": -2861.0,
+   "2026": 5592.0
+  },
+  "by_reason": {
+   "SL": {
+    "count": 62,
+    "sum": -2105.0
+   },
+   "SL_GAP": {
+    "count": 5,
+    "sum": -3655.0
+   },
+   "TARGET_HALF": {
+    "count": 27,
+    "sum": 56677.0
+   },
+   "TIME_DEAD": {
+    "count": 2,
+    "sum": -86.0
+   }
+  }
+ }
+}

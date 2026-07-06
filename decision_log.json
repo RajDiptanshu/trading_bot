@@ -1,0 +1,3199 @@
+[
+  {
+    "date": "2026-05-17",
+    "time": "16:45",
+    "signals_received": 0,
+    "claude_approved": 0,
+    "orders_placed": 0,
+    "trades": [],
+    "skipped": [],
+    "approved_by_claude": []
+  },
+  {
+    "date": "2026-05-17",
+    "time": "17:05",
+    "signals_received": 8,
+    "claude_approved": 0,
+    "orders_placed": 0,
+    "trades": [],
+    "skipped": [
+      {
+        "symbol": "HINDALCO",
+        "score": "6",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "BHARTIARTL",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "KOTAKBANK",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "TATASTEEL",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "GRASIM",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "DRREDDY",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "ITC",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "NESTLEIND",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      }
+    ],
+    "approved_by_claude": []
+  },
+  {
+    "date": "2026-05-17",
+    "time": "17:29",
+    "signals_received": 8,
+    "claude_approved": 0,
+    "orders_placed": 0,
+    "trades": [],
+    "skipped": [
+      {
+        "symbol": "HINDALCO",
+        "score": "6",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "BHARTIARTL",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "KOTAKBANK",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "TATASTEEL",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "GRASIM",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "DRREDDY",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "ITC",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "NESTLEIND",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      }
+    ],
+    "approved_by_claude": []
+  },
+  {
+    "date": "2026-05-17",
+    "time": "17:42",
+    "signals_received": 8,
+    "claude_approved": 0,
+    "orders_placed": 0,
+    "trades": [],
+    "skipped": [
+      {
+        "symbol": "HINDALCO",
+        "score": "6",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "BHARTIARTL",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "KOTAKBANK",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "TATASTEEL",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "GRASIM",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "DRREDDY",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "ITC",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "NESTLEIND",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      }
+    ],
+    "approved_by_claude": []
+  },
+  {
+    "date": "2026-05-17",
+    "time": "17:48",
+    "signals_received": 8,
+    "claude_approved": 1,
+    "orders_placed": 0,
+    "trades": [],
+    "skipped": [
+      {
+        "symbol": "HINDALCO",
+        "score": "6",
+        "reason": "Score 6/9 (highest among candidates), RSI 58.1 healthy momentum, no bearish news keywords, Metals sector not overexposed, ATR SL/target ratio acceptable"
+      },
+      {
+        "symbol": "BHARTIARTL",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "KOTAKBANK",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "TATASTEEL",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "GRASIM",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "DRREDDY",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "ITC",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "NESTLEIND",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      }
+    ],
+    "approved_by_claude": [
+      {
+        "symbol": "HINDALCO",
+        "approved": true,
+        "score": 6,
+        "direction": "LONG",
+        "strategy": "MOMENTUM",
+        "sector": "Metals",
+        "price": 1067.5,
+        "atr_sl": 1010.1,
+        "atr_target": 1153.6,
+        "news_sentiment": "NEUTRAL",
+        "reasoning": "Score 6/9 (highest among candidates), RSI 58.1 healthy momentum, no bearish news keywords, Metals sector not overexposed, ATR SL/target ratio acceptable"
+      }
+    ]
+  },
+  {
+    "date": "2026-05-17",
+    "time": "18:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-05-17",
+    "time": "18:38",
+    "type": "MIDDAY_SENTINEL",
+    "summary": {
+      "open_positions": 0,
+      "flags_raised": 0
+    },
+    "flags": {}
+  },
+  {
+    "date": "2026-05-17",
+    "time": "18:45",
+    "signals_received": 8,
+    "claude_approved": 1,
+    "orders_placed": 0,
+    "trades": [],
+    "approved_by_claude": [
+      {
+        "symbol": "HINDALCO",
+        "approved": true,
+        "score": 6,
+        "direction": "LONG",
+        "strategy": "MOMENTUM",
+        "sector": "Metals",
+        "price": 1067.5,
+        "atr_sl": 1010.1,
+        "atr_target": 1153.6,
+        "news_sentiment": "NEUTRAL",
+        "reasoning": "Only stock meeting min_score of 6. RSI 58.1 in healthy momentum zone, no kill words in news, no earnings risk, Metals sector clear, circuit not active."
+      }
+    ],
+    "skipped": [
+      {
+        "symbol": "HINDALCO",
+        "score": "6",
+        "reason": "Only stock meeting min_score of 6. RSI 58.1 in healthy momentum zone, no kill words in news, no earnings risk, Metals sector clear, circuit not active."
+      },
+      {
+        "symbol": "BHARTIARTL",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "KOTAKBANK",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "TATASTEEL",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "GRASIM",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "DRREDDY",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "ITC",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "NESTLEIND",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      }
+    ]
+  },
+  {
+    "date": "2026-05-18",
+    "time": "18:26",
+    "signals_received": 8,
+    "claude_approved": 3,
+    "orders_placed": 0,
+    "trades": [],
+    "approved_by_claude": [
+      {
+        "symbol": "POWERGRID",
+        "approved": true,
+        "score": 8,
+        "direction": "LONG",
+        "strategy": "MEAN_REVERSION",
+        "sector": "Utilities",
+        "price": 296.55,
+        "atr_sl": 282.27,
+        "atr_target": 317.97,
+        "news_sentiment": "NEUTRAL",
+        "reasoning": "Top score 8/9, MEAN_REVERSION preferred strategy, RSI 34.2 oversold indicating strong reversion potential, no kill words in news, sector Utilities clear, no open positions conflict"
+      },
+      {
+        "symbol": "HINDALCO",
+        "approved": true,
+        "score": 6,
+        "direction": "LONG",
+        "strategy": "MOMENTUM",
+        "sector": "Metals",
+        "price": 1053.1,
+        "atr_sl": 996.44,
+        "atr_target": 1138.09,
+        "news_sentiment": "NEUTRAL",
+        "reasoning": "Score 6/9 meets min threshold, RSI 54.7 in momentum sweet spot, no kill words in news, Metals sector clear, favorable R:R ratio"
+      },
+      {
+        "symbol": "ITC",
+        "approved": true,
+        "score": 6,
+        "direction": "LONG",
+        "strategy": "MOMENTUM",
+        "sector": "FMCG",
+        "price": 310.15,
+        "atr_sl": 299.93,
+        "atr_target": 325.48,
+        "news_sentiment": "NEUTRAL",
+        "reasoning": "Score 6/9 meets min threshold, RSI 54.7 in momentum sweet spot, low ATR 1.65% indicating controlled volatility, no kill words in news, FMCG sector clear"
+      }
+    ],
+    "skipped": [
+      {
+        "symbol": "POWERGRID",
+        "score": 8,
+        "reason": "Top score 8/9, MEAN_REVERSION preferred strategy, RSI 34.2 oversold indicating strong reversion potential, no kill words in news, sector Utilities clear, no open positions conflict"
+      },
+      {
+        "symbol": "HINDALCO",
+        "score": "6",
+        "reason": "Score 6/9 meets min threshold, RSI 54.7 in momentum sweet spot, no kill words in news, Metals sector clear, favorable R:R ratio"
+      },
+      {
+        "symbol": "ITC",
+        "score": "6",
+        "reason": "Score 6/9 meets min threshold, RSI 54.7 in momentum sweet spot, low ATR 1.65% indicating controlled volatility, no kill words in news, FMCG sector clear"
+      },
+      {
+        "symbol": "HDFCBANK",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "BAJFINANCE",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "TATASTEEL",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "APOLLOHOSP",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "BAJAJ-AUTO",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      }
+    ]
+  },
+  {
+    "date": "2026-05-18",
+    "time": "18:28",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-05-18",
+    "time": "18:28",
+    "type": "MIDDAY_SENTINEL",
+    "summary": {
+      "open_positions": 0,
+      "flags_raised": 0
+    },
+    "flags": {}
+  },
+  {
+    "date": "2026-05-18",
+    "time": "23:55",
+    "signals_received": 8,
+    "claude_approved": 3,
+    "orders_placed": 0,
+    "trades": [],
+    "approved_by_claude": [
+      {
+        "symbol": "POWERGRID",
+        "approved": true,
+        "score": 8,
+        "direction": "LONG",
+        "strategy": "MEAN_REVERSION",
+        "sector": "Utilities",
+        "price": 296.55,
+        "atr_sl": 282.27,
+        "atr_target": 317.97,
+        "news_sentiment": "NEUTRAL",
+        "reasoning": "Highest score 8/9, RSI 34.2 oversold ideal for mean reversion, no kill words in news, sector Utilities clear, no open sectors conflict"
+      },
+      {
+        "symbol": "HINDALCO",
+        "approved": true,
+        "score": 6,
+        "direction": "LONG",
+        "strategy": "MOMENTUM",
+        "sector": "Metals",
+        "price": 1053.1,
+        "atr_sl": 996.44,
+        "atr_target": 1138.09,
+        "news_sentiment": "POSITIVE",
+        "reasoning": "Score 6/9 meets minimum, RSI 54.7 in momentum sweet spot, news indicates earnings beat positive sentiment, no kill words, Metals sector clear"
+      },
+      {
+        "symbol": "ITC",
+        "approved": true,
+        "score": 6,
+        "direction": "LONG",
+        "strategy": "MOMENTUM",
+        "sector": "FMCG",
+        "price": 310.15,
+        "atr_sl": 299.93,
+        "atr_target": 325.48,
+        "news_sentiment": "NEUTRAL",
+        "reasoning": "Score 6/9 meets minimum, RSI 54.7 momentum sweet spot, low ATR 1.65% reduces risk, no kill words in news, FMCG sector clear, favorable R:R ratio"
+      }
+    ],
+    "skipped": [
+      {
+        "symbol": "POWERGRID",
+        "score": 8,
+        "reason": "Highest score 8/9, RSI 34.2 oversold ideal for mean reversion, no kill words in news, sector Utilities clear, no open sectors conflict"
+      },
+      {
+        "symbol": "HINDALCO",
+        "score": "6",
+        "reason": "Score 6/9 meets minimum, RSI 54.7 in momentum sweet spot, news indicates earnings beat positive sentiment, no kill words, Metals sector clear"
+      },
+      {
+        "symbol": "ITC",
+        "score": "6",
+        "reason": "Score 6/9 meets minimum, RSI 54.7 momentum sweet spot, low ATR 1.65% reduces risk, no kill words in news, FMCG sector clear, favorable R:R ratio"
+      },
+      {
+        "symbol": "HDFCBANK",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "BAJFINANCE",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "TATASTEEL",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "APOLLOHOSP",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "BAJAJ-AUTO",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      }
+    ]
+  },
+  {
+    "date": "2026-05-19",
+    "time": "09:02",
+    "signals_received": 8,
+    "claude_approved": 3,
+    "orders_placed": 0,
+    "trades": [],
+    "approved_by_claude": [
+      {
+        "symbol": "POWERGRID",
+        "approved": true,
+        "score": 8,
+        "direction": "LONG",
+        "strategy": "MEAN_REVERSION",
+        "sector": "Utilities",
+        "price": 296.55,
+        "atr_sl": 282.27,
+        "atr_target": 317.97,
+        "news_sentiment": "NEUTRAL",
+        "reasoning": "Top score 8/9, MEAN_REVERSION preferred strategy, RSI 34.2 oversold indicating strong mean reversion setup, no kill words in news, sector Utilities clear, no open positions conflict"
+      },
+      {
+        "symbol": "HINDALCO",
+        "approved": true,
+        "score": 6,
+        "direction": "LONG",
+        "strategy": "MOMENTUM",
+        "sector": "Metals",
+        "price": 1053.1,
+        "atr_sl": 996.44,
+        "atr_target": 1138.09,
+        "news_sentiment": "NEUTRAL",
+        "reasoning": "Score 6/9 meets min threshold, RSI 54.7 in momentum sweet spot, no kill words in news, Metals sector clear, favorable risk/reward ratio"
+      },
+      {
+        "symbol": "ITC",
+        "approved": true,
+        "score": 6,
+        "direction": "LONG",
+        "strategy": "MOMENTUM",
+        "sector": "FMCG",
+        "price": 310.15,
+        "atr_sl": 299.93,
+        "atr_target": 325.48,
+        "news_sentiment": "NEUTRAL",
+        "reasoning": "Score 6/9 meets min threshold, RSI 54.7 momentum sweet spot, lowest ATR pct 1.65 among peers indicating controlled risk, no kill words in news, FMCG sector clear"
+      }
+    ],
+    "skipped": [
+      {
+        "symbol": "POWERGRID",
+        "score": 8,
+        "reason": "Top score 8/9, MEAN_REVERSION preferred strategy, RSI 34.2 oversold indicating strong mean reversion setup, no kill words in news, sector Utilities clear, no open positions conflict"
+      },
+      {
+        "symbol": "HINDALCO",
+        "score": "6",
+        "reason": "Score 6/9 meets min threshold, RSI 54.7 in momentum sweet spot, no kill words in news, Metals sector clear, favorable risk/reward ratio"
+      },
+      {
+        "symbol": "ITC",
+        "score": "6",
+        "reason": "Score 6/9 meets min threshold, RSI 54.7 momentum sweet spot, lowest ATR pct 1.65 among peers indicating controlled risk, no kill words in news, FMCG sector clear"
+      },
+      {
+        "symbol": "HDFCBANK",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "BAJFINANCE",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "TATASTEEL",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "APOLLOHOSP",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "BAJAJ-AUTO",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      }
+    ]
+  },
+  {
+    "date": "2026-05-19",
+    "time": "09:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-05-19",
+    "time": "10:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-05-19",
+    "time": "10:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-05-19",
+    "time": "11:00",
+    "type": "MIDDAY_SENTINEL",
+    "summary": {
+      "open_positions": 0,
+      "flags_raised": 0
+    },
+    "flags": {}
+  },
+  {
+    "date": "2026-05-19",
+    "time": "11:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-05-19",
+    "time": "11:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-05-19",
+    "time": "12:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-05-19",
+    "time": "12:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-05-19",
+    "time": "13:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-05-19",
+    "time": "13:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-05-19",
+    "time": "14:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-05-19",
+    "time": "14:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-05-19",
+    "time": "15:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-05-20",
+    "time": "09:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-05-20",
+    "time": "10:01",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-05-20",
+    "time": "10:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-05-20",
+    "time": "11:00",
+    "type": "MIDDAY_SENTINEL",
+    "summary": {
+      "open_positions": 0,
+      "flags_raised": 0
+    },
+    "flags": {}
+  },
+  {
+    "date": "2026-05-20",
+    "time": "11:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-05-20",
+    "time": "16:20",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-05-20",
+    "time": "16:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-05-20",
+    "time": "17:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-05-20",
+    "time": "18:49",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-05-20",
+    "time": "19:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-05-20",
+    "time": "19:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-05-21",
+    "time": "09:03",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-05-21",
+    "time": "09:07",
+    "signals_received": 7,
+    "claude_approved": 3,
+    "orders_placed": 0,
+    "trades": [],
+    "approved_by_claude": [
+      {
+        "symbol": "HINDALCO",
+        "approved": true,
+        "score": 6,
+        "direction": "LONG",
+        "strategy": "MOMENTUM",
+        "sector": "Metals",
+        "price": 1085.5,
+        "atr_sl": 1027.12,
+        "atr_target": 1173.07,
+        "news_sentiment": "NEUTRAL",
+        "reasoning": "Score 6/9, RSI 60.4 in bullish momentum zone, no kill words in news, no earnings conflict, Metals sector clear, best score among candidates"
+      },
+      {
+        "symbol": "BAJAJ-AUTO",
+        "approved": true,
+        "score": 6,
+        "direction": "LONG",
+        "strategy": "MOMENTUM",
+        "sector": "Auto",
+        "price": 10462.5,
+        "atr_sl": 9943.94,
+        "atr_target": 11240.34,
+        "news_sentiment": "NEUTRAL",
+        "reasoning": "Score 6/9, RSI 60.7 strong momentum, no kill words in news, no earnings conflict, Auto sector clear, favorable risk/reward ratio"
+      },
+      {
+        "symbol": "INDUSINDBK",
+        "approved": true,
+        "score": 5,
+        "direction": "LONG",
+        "strategy": "MOMENTUM",
+        "sector": "Banking",
+        "price": 897.15,
+        "atr_sl": 847.59,
+        "atr_target": 971.49,
+        "news_sentiment": "NEUTRAL",
+        "reasoning": "Score 5/9, RSI 52 neutral-bullish, MOMENTUM preferred over SHORT, no kill words in news, Banking sector clear, selected over HDFCBANK SHORT due to strategy preference rule"
+      }
+    ],
+    "skipped": [
+      {
+        "symbol": "HDFCBANK",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "TATASTEEL",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "HCLTECH",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "TECHM",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      }
+    ]
+  },
+  {
+    "date": "2026-05-21",
+    "time": "09:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-05-21",
+    "time": "09:55",
+    "signals_received": 5,
+    "claude_approved": 0,
+    "orders_placed": 0,
+    "trades": [],
+    "approved_by_claude": [],
+    "skipped": [
+      {
+        "symbol": "HDFCBANK",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "HINDALCO",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "BAJAJ-AUTO",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "HCLTECH",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "INDUSINDBK",
+        "score": "5",
+        "reason": "not in Claude approval list"
+      }
+    ]
+  },
+  {
+    "date": "2026-05-21",
+    "time": "10:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-05-21",
+    "time": "10:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-05-21",
+    "time": "11:00",
+    "type": "MIDDAY_SENTINEL",
+    "summary": {
+      "open_positions": 0,
+      "flags_raised": 0
+    },
+    "flags": {}
+  },
+  {
+    "date": "2026-05-21",
+    "time": "11:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-05-21",
+    "time": "11:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-05-21",
+    "time": "12:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-05-21",
+    "time": "12:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-05-21",
+    "time": "13:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-05-21",
+    "time": "13:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-05-21",
+    "time": "14:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-05-21",
+    "time": "14:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-05-21",
+    "time": "15:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-05-22",
+    "time": "09:04",
+    "signals_received": 14,
+    "claude_approved": 3,
+    "orders_placed": 3,
+    "trades": [
+      {
+        "id": 1,
+        "date": "2026-05-22",
+        "time": "09:04",
+        "symbol": "HINDALCO",
+        "direction": "LONG",
+        "strategy": "MOMENTUM",
+        "instrument": "EQUITY",
+        "score": 10,
+        "sector": "Metals",
+        "entry_price": 1099.3,
+        "quantity": 45,
+        "lot_size": 1,
+        "position_value": 49468.5,
+        "stop_loss": 1041.46,
+        "target": 1186.06,
+        "max_risk_inr": 2602.8,
+        "atm_strike": null,
+        "vol_regime": "low_vix",
+        "news_sentiment": "NEUTRAL",
+        "reasoning": "Score 10/14, RSI 62.7 in healthy momentum zone, no kill words in news, sector Metals clear, ATR 2.63% manageable risk-reward",
+        "status": "OPEN",
+        "exit_price": null,
+        "exit_date": null,
+        "pnl": null,
+        "result": null
+      },
+      {
+        "id": 2,
+        "date": "2026-05-22",
+        "time": "09:04",
+        "symbol": "BAJAJ-AUTO",
+        "direction": "LONG",
+        "strategy": "MOMENTUM",
+        "instrument": "EQUITY",
+        "score": 10,
+        "sector": "Auto",
+        "entry_price": 10667.0,
+        "quantity": 4,
+        "lot_size": 1,
+        "position_value": 42668.0,
+        "stop_loss": 10146.56,
+        "target": 11447.66,
+        "max_risk_inr": 2081.76,
+        "atm_strike": null,
+        "vol_regime": "low_vix",
+        "news_sentiment": "NEUTRAL",
+        "reasoning": "Score 10/14, RSI 64.6 ideal momentum range, no kill words in news, sector Auto clear, ATR 2.44% low volatility with solid upside target",
+        "status": "OPEN",
+        "exit_price": null,
+        "exit_date": null,
+        "pnl": null,
+        "result": null
+      },
+      {
+        "id": 3,
+        "date": "2026-05-22",
+        "time": "09:04",
+        "symbol": "ADANIPORTS",
+        "direction": "LONG",
+        "strategy": "MOMENTUM",
+        "instrument": "EQUITY",
+        "score": 10,
+        "sector": "Infra",
+        "entry_price": 1793.3,
+        "quantity": 27,
+        "lot_size": 1,
+        "position_value": 48419.1,
+        "stop_loss": 1696.2,
+        "target": 1938.95,
+        "max_risk_inr": 2621.7,
+        "atm_strike": null,
+        "vol_regime": "low_vix",
+        "news_sentiment": "NEUTRAL",
+        "reasoning": "Score 10/14, RSI 66.8 strong momentum without overbought, no kill words in news, sector Infra clear, ATR 2.71% with favorable risk-reward ratio",
+        "status": "OPEN",
+        "exit_price": null,
+        "exit_date": null,
+        "pnl": null,
+        "result": null
+      }
+    ],
+    "approved_by_claude": [
+      {
+        "symbol": "HINDALCO",
+        "approved": true,
+        "score": 10,
+        "direction": "LONG",
+        "strategy": "MOMENTUM",
+        "sector": "Metals",
+        "price": 1099.3,
+        "atr_sl": 1041.46,
+        "atr_target": 1186.06,
+        "news_sentiment": "NEUTRAL",
+        "reasoning": "Score 10/14, RSI 62.7 in healthy momentum zone, no kill words in news, sector Metals clear, ATR 2.63% manageable risk-reward"
+      },
+      {
+        "symbol": "BAJAJ-AUTO",
+        "approved": true,
+        "score": 10,
+        "direction": "LONG",
+        "strategy": "MOMENTUM",
+        "sector": "Auto",
+        "price": 10667.0,
+        "atr_sl": 10146.56,
+        "atr_target": 11447.66,
+        "news_sentiment": "NEUTRAL",
+        "reasoning": "Score 10/14, RSI 64.6 ideal momentum range, no kill words in news, sector Auto clear, ATR 2.44% low volatility with solid upside target"
+      },
+      {
+        "symbol": "ADANIPORTS",
+        "approved": true,
+        "score": 10,
+        "direction": "LONG",
+        "strategy": "MOMENTUM",
+        "sector": "Infra",
+        "price": 1793.3,
+        "atr_sl": 1696.2,
+        "atr_target": 1938.95,
+        "news_sentiment": "NEUTRAL",
+        "reasoning": "Score 10/14, RSI 66.8 strong momentum without overbought, no kill words in news, sector Infra clear, ATR 2.71% with favorable risk-reward ratio"
+      }
+    ],
+    "skipped": [
+      {
+        "symbol": "DSSL",
+        "score": 11,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "POWERINDIA",
+        "score": 10,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "MCX",
+        "score": 10,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "BSE",
+        "score": 10,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "ASIANPAINT",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "NESTLEIND",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "APOLLOHOSP",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "GRASIM",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "NETWEB",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "HINDZINC",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "DATAPATTNS",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      }
+    ]
+  },
+  {
+    "date": "2026-05-22",
+    "time": "09:16",
+    "type": "EXECUTION_ENGINE",
+    "confirmed_trades": 3,
+    "skipped_trades": 0,
+    "live_prices": {
+      "HINDALCO": 1097.6,
+      "BAJAJ-AUTO": 10731.5,
+      "ADANIPORTS": 1799.4
+    },
+    "confirmed": [
+      {
+        "id": 1,
+        "date": "2026-05-22",
+        "time": "09:04",
+        "symbol": "HINDALCO",
+        "direction": "LONG",
+        "strategy": "MOMENTUM",
+        "instrument": "EQUITY",
+        "score": 10,
+        "sector": "Metals",
+        "entry_price": 1098.7,
+        "quantity": 45,
+        "lot_size": 1,
+        "position_value": 49468.5,
+        "stop_loss": 1039.76,
+        "target": 1184.36,
+        "max_risk_inr": 2602.8,
+        "atm_strike": null,
+        "vol_regime": "low_vix",
+        "news_sentiment": "NEUTRAL",
+        "reasoning": "Score 10/14, RSI 62.7 in healthy momentum zone, no kill words in news, sector Metals clear, ATR 2.63% manageable risk-reward",
+        "status": "OPEN",
+        "exit_price": null,
+        "exit_date": null,
+        "pnl": null,
+        "result": null,
+        "signal_price": 1099.3,
+        "price_gap_pct": -0.15,
+        "slippage_applied_pct": 0.1,
+        "execution_time": "09:16:10",
+        "data_source": "angel_one_live"
+      },
+      {
+        "id": 2,
+        "date": "2026-05-22",
+        "time": "09:04",
+        "symbol": "BAJAJ-AUTO",
+        "direction": "LONG",
+        "strategy": "MOMENTUM",
+        "instrument": "EQUITY",
+        "score": 10,
+        "sector": "Auto",
+        "entry_price": 10742.23,
+        "quantity": 4,
+        "lot_size": 1,
+        "position_value": 42668.0,
+        "stop_loss": 10211.06,
+        "target": 11512.16,
+        "max_risk_inr": 2081.76,
+        "atm_strike": null,
+        "vol_regime": "low_vix",
+        "news_sentiment": "NEUTRAL",
+        "reasoning": "Score 10/14, RSI 64.6 ideal momentum range, no kill words in news, sector Auto clear, ATR 2.44% low volatility with solid upside target",
+        "status": "OPEN",
+        "exit_price": null,
+        "exit_date": null,
+        "pnl": null,
+        "result": null,
+        "signal_price": 10667.0,
+        "price_gap_pct": 0.6,
+        "slippage_applied_pct": 0.1,
+        "execution_time": "09:16:10",
+        "data_source": "angel_one_live"
+      },
+      {
+        "id": 3,
+        "date": "2026-05-22",
+        "time": "09:04",
+        "symbol": "ADANIPORTS",
+        "direction": "LONG",
+        "strategy": "MOMENTUM",
+        "instrument": "EQUITY",
+        "score": 10,
+        "sector": "Infra",
+        "entry_price": 1801.2,
+        "quantity": 27,
+        "lot_size": 1,
+        "position_value": 48419.1,
+        "stop_loss": 1702.3,
+        "target": 1945.05,
+        "max_risk_inr": 2621.7,
+        "atm_strike": null,
+        "vol_regime": "low_vix",
+        "news_sentiment": "NEUTRAL",
+        "reasoning": "Score 10/14, RSI 66.8 strong momentum without overbought, no kill words in news, sector Infra clear, ATR 2.71% with favorable risk-reward ratio",
+        "status": "OPEN",
+        "exit_price": null,
+        "exit_date": null,
+        "pnl": null,
+        "result": null,
+        "signal_price": 1793.3,
+        "price_gap_pct": 0.34,
+        "slippage_applied_pct": 0.1,
+        "execution_time": "09:16:10",
+        "data_source": "angel_one_live"
+      }
+    ],
+    "skipped": []
+  },
+  {
+    "date": "2026-05-22",
+    "time": "09:31",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1102.3,
+      "BAJAJ-AUTO": 10636.0,
+      "ADANIPORTS": 1794.3
+    }
+  },
+  {
+    "date": "2026-05-22",
+    "time": "09:35",
+    "signals_received": 18,
+    "claude_approved": 0,
+    "orders_placed": 0,
+    "trades": [],
+    "approved_by_claude": [],
+    "skipped": [
+      {
+        "symbol": "HINDALCO",
+        "score": 11,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "BSE",
+        "score": 11,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "HINDZINC",
+        "score": 11,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "DSSL",
+        "score": 11,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "ADANIPORTS",
+        "score": 10,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "POWERINDIA",
+        "score": 10,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "MCX",
+        "score": 10,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "DATAPATTNS",
+        "score": 10,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "TATASTEEL",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "COALINDIA",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "SUNPHARMA",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "BAJAJ-AUTO",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "ASIANPAINT",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "NESTLEIND",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "APOLLOHOSP",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "ADANIENT",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "NETWEB",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "HFCL",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      }
+    ]
+  },
+  {
+    "date": "2026-05-22",
+    "time": "09:48",
+    "signals_received": 17,
+    "claude_approved": 3,
+    "orders_placed": 0,
+    "trades": [],
+    "approved_by_claude": [
+      {
+        "symbol": "MCX",
+        "approved": true,
+        "score": 11,
+        "direction": "LONG",
+        "strategy": "MOMENTUM",
+        "sector": "Exchange",
+        "price": 3274.0,
+        "atr_sl": 3064.64,
+        "atr_target": 3588.04,
+        "news_sentiment": "NEUTRAL",
+        "reasoning": "Score 11/14, RSI 63.3 in momentum sweet spot, Exchange sector limit is 2 and currently 0 open, no kill words in news, no earnings risk, strong trend and RS signals"
+      },
+      {
+        "symbol": "BSE",
+        "approved": true,
+        "score": 11,
+        "direction": "LONG",
+        "strategy": "MOMENTUM",
+        "sector": "Exchange",
+        "price": 4154.3,
+        "atr_sl": 3925.66,
+        "atr_target": 4497.26,
+        "news_sentiment": "NEUTRAL",
+        "reasoning": "Score 11/14, Exchange sector allows up to 2 positions, MCX fills slot 1 so BSE fills slot 2, RSI 73.5 elevated but within momentum regime, no kill words, no earnings risk, strong technical setup"
+      },
+      {
+        "symbol": "HINDZINC",
+        "approved": false,
+        "score": 11,
+        "direction": "LONG",
+        "strategy": "MOMENTUM",
+        "sector": "Metals",
+        "price": 634.8,
+        "atr_sl": 598.3,
+        "atr_target": 689.55,
+        "news_sentiment": "NEUTRAL",
+        "reasoning": "REJECTED: Metals sector already at limit (HINDALCO open). Cannot open second Metals position per sector rules."
+      }
+    ],
+    "skipped": [
+      {
+        "symbol": "HINDALCO",
+        "score": 11,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "DSSL",
+        "score": 11,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "ADANIPORTS",
+        "score": 10,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "POWERINDIA",
+        "score": 10,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "DATAPATTNS",
+        "score": 10,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "TATASTEEL",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "COALINDIA",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "SUNPHARMA",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "BAJAJ-AUTO",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "NESTLEIND",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "APOLLOHOSP",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "ADANIENT",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "NETWEB",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "HFCL",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      }
+    ]
+  },
+  {
+    "date": "2026-05-22",
+    "time": "10:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1101.3,
+      "BAJAJ-AUTO": 10667.5,
+      "ADANIPORTS": 1794.5
+    }
+  },
+  {
+    "date": "2026-05-22",
+    "time": "10:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1101.6,
+      "BAJAJ-AUTO": 10620.0,
+      "ADANIPORTS": 1790.5
+    }
+  },
+  {
+    "date": "2026-05-22",
+    "time": "11:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1101.8,
+      "BAJAJ-AUTO": 10635.0,
+      "ADANIPORTS": 1786.3
+    }
+  },
+  {
+    "date": "2026-05-22",
+    "time": "11:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1100.8,
+      "BAJAJ-AUTO": 10586.0,
+      "ADANIPORTS": 1789.0
+    }
+  },
+  {
+    "date": "2026-05-22",
+    "time": "12:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1101.6,
+      "BAJAJ-AUTO": 10601.5,
+      "ADANIPORTS": 1794.2
+    }
+  },
+  {
+    "date": "2026-05-22",
+    "time": "12:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1096.1,
+      "BAJAJ-AUTO": 10573.5,
+      "ADANIPORTS": 1791.2
+    }
+  },
+  {
+    "date": "2026-05-22",
+    "time": "13:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1094.8,
+      "BAJAJ-AUTO": 10614.0,
+      "ADANIPORTS": 1795.3
+    }
+  },
+  {
+    "date": "2026-05-22",
+    "time": "13:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1096.8,
+      "BAJAJ-AUTO": 10622.0,
+      "ADANIPORTS": 1792.1
+    }
+  },
+  {
+    "date": "2026-05-22",
+    "time": "14:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1101.6,
+      "BAJAJ-AUTO": 10583.0,
+      "ADANIPORTS": 1787.1
+    }
+  },
+  {
+    "date": "2026-05-22",
+    "time": "14:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1103.7,
+      "BAJAJ-AUTO": 10573.5,
+      "ADANIPORTS": 1786.8
+    }
+  },
+  {
+    "date": "2026-05-22",
+    "time": "15:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1107.5,
+      "BAJAJ-AUTO": 10551.0,
+      "ADANIPORTS": 1782.8
+    }
+  },
+  {
+    "date": "2026-05-26",
+    "time": "09:04",
+    "signals_received": 18,
+    "claude_approved": 0,
+    "orders_placed": 0,
+    "trades": [],
+    "approved_by_claude": [],
+    "skipped": [
+      {
+        "symbol": "HINDALCO",
+        "score": 13,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "EICHERMOT",
+        "score": 11,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "POWERINDIA",
+        "score": 11,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "MCX",
+        "score": 11,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "HINDZINC",
+        "score": 11,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "DSSL",
+        "score": 11,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "BAJAJ-AUTO",
+        "score": 10,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "ADANIPORTS",
+        "score": 10,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "ADANIENT",
+        "score": 10,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "BSE",
+        "score": 10,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "TATASTEEL",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "COALINDIA",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "NESTLEIND",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "INDUSINDBK",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "NETWEB",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "DATAPATTNS",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "HFCL",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "DCXINDIA",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      }
+    ]
+  },
+  {
+    "date": "2026-05-26",
+    "time": "09:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1114.1,
+      "BAJAJ-AUTO": 10508.5,
+      "ADANIPORTS": 1807.6
+    }
+  },
+  {
+    "date": "2026-05-26",
+    "time": "10:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1116.3,
+      "BAJAJ-AUTO": 10470.5,
+      "ADANIPORTS": 1806.5
+    }
+  },
+  {
+    "date": "2026-05-26",
+    "time": "10:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1109.3,
+      "BAJAJ-AUTO": 10495.5,
+      "ADANIPORTS": 1812.8
+    }
+  },
+  {
+    "date": "2026-05-26",
+    "time": "11:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1108.5,
+      "BAJAJ-AUTO": 10555.0,
+      "ADANIPORTS": 1814.4
+    }
+  },
+  {
+    "date": "2026-05-26",
+    "time": "11:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1109.6,
+      "BAJAJ-AUTO": 10595.5,
+      "ADANIPORTS": 1810.0
+    }
+  },
+  {
+    "date": "2026-05-26",
+    "time": "12:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1111.8,
+      "BAJAJ-AUTO": 10602.5,
+      "ADANIPORTS": 1810.2
+    }
+  },
+  {
+    "date": "2026-05-26",
+    "time": "12:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1109.8,
+      "BAJAJ-AUTO": 10613.0,
+      "ADANIPORTS": 1809.6
+    }
+  },
+  {
+    "date": "2026-05-26",
+    "time": "13:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1106.1,
+      "BAJAJ-AUTO": 10597.5,
+      "ADANIPORTS": 1807.7
+    }
+  },
+  {
+    "date": "2026-05-26",
+    "time": "13:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1106.3,
+      "BAJAJ-AUTO": 10579.5,
+      "ADANIPORTS": 1806.0
+    }
+  },
+  {
+    "date": "2026-05-26",
+    "time": "14:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1108.2,
+      "BAJAJ-AUTO": 10570.0,
+      "ADANIPORTS": 1809.0
+    }
+  },
+  {
+    "date": "2026-05-26",
+    "time": "14:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1105.0,
+      "BAJAJ-AUTO": 10594.0,
+      "ADANIPORTS": 1808.2
+    }
+  },
+  {
+    "date": "2026-05-26",
+    "time": "15:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1105.2,
+      "BAJAJ-AUTO": 10585.0,
+      "ADANIPORTS": 1810.9
+    }
+  },
+  {
+    "date": "2026-05-27",
+    "time": "09:05",
+    "signals_received": 19,
+    "claude_approved": 0,
+    "orders_placed": 0,
+    "trades": [],
+    "approved_by_claude": [],
+    "skipped": [
+      {
+        "symbol": "HINDALCO",
+        "score": 13,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "HINDZINC",
+        "score": 12,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "BAJAJ-AUTO",
+        "score": 11,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "ADANIENT",
+        "score": 11,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "POWERINDIA",
+        "score": 11,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "MCX",
+        "score": 11,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "DSSL",
+        "score": 11,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "COALINDIA",
+        "score": 10,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "EICHERMOT",
+        "score": 10,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "ADANIPORTS",
+        "score": 10,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "INDUSINDBK",
+        "score": 10,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "BSE",
+        "score": 10,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "GRAVITA",
+        "score": 10,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "TATASTEEL",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "NESTLEIND",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "APOLLOHOSP",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "NETWEB",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "DATAPATTNS",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "DCXINDIA",
+        "score": 9,
+        "reason": "not in Claude approval list"
+      }
+    ]
+  },
+  {
+    "date": "2026-05-27",
+    "time": "09:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1148.3,
+      "BAJAJ-AUTO": 10644.0,
+      "ADANIPORTS": 1829.5
+    }
+  },
+  {
+    "date": "2026-05-27",
+    "time": "10:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1147.2,
+      "BAJAJ-AUTO": 10626.0,
+      "ADANIPORTS": 1815.0
+    }
+  },
+  {
+    "date": "2026-05-27",
+    "time": "10:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1151.4,
+      "BAJAJ-AUTO": 10703.5,
+      "ADANIPORTS": 1829.4
+    }
+  },
+  {
+    "date": "2026-05-27",
+    "time": "11:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1146.5,
+      "BAJAJ-AUTO": 10735.0,
+      "ADANIPORTS": 1834.7
+    }
+  },
+  {
+    "date": "2026-05-27",
+    "time": "11:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1149.0,
+      "BAJAJ-AUTO": 10790.0,
+      "ADANIPORTS": 1829.1
+    }
+  },
+  {
+    "date": "2026-05-27",
+    "time": "12:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1146.1,
+      "BAJAJ-AUTO": 10787.5,
+      "ADANIPORTS": 1828.5
+    }
+  },
+  {
+    "date": "2026-05-27",
+    "time": "12:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1146.1,
+      "BAJAJ-AUTO": 10783.0,
+      "ADANIPORTS": 1825.8
+    }
+  },
+  {
+    "date": "2026-05-27",
+    "time": "13:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1142.8,
+      "BAJAJ-AUTO": 10822.5,
+      "ADANIPORTS": 1825.0
+    }
+  },
+  {
+    "date": "2026-05-27",
+    "time": "13:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1142.4,
+      "BAJAJ-AUTO": 10804.5,
+      "ADANIPORTS": 1823.7
+    }
+  },
+  {
+    "date": "2026-05-27",
+    "time": "14:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1141.7,
+      "BAJAJ-AUTO": 10819.5,
+      "ADANIPORTS": 1832.6
+    }
+  },
+  {
+    "date": "2026-05-27",
+    "time": "14:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1142.9,
+      "BAJAJ-AUTO": 10802.5,
+      "ADANIPORTS": 1829.7
+    }
+  },
+  {
+    "date": "2026-05-27",
+    "time": "15:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1149.2,
+      "BAJAJ-AUTO": 10815.5,
+      "ADANIPORTS": 1829.6
+    }
+  },
+  {
+    "date": "2026-05-28",
+    "time": "09:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1149.7,
+      "BAJAJ-AUTO": 10808.5,
+      "ADANIPORTS": 1824.5
+    }
+  },
+  {
+    "date": "2026-05-28",
+    "time": "10:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1149.7,
+      "BAJAJ-AUTO": 10808.5,
+      "ADANIPORTS": 1824.5
+    }
+  },
+  {
+    "date": "2026-05-28",
+    "time": "10:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1149.7,
+      "BAJAJ-AUTO": 10808.5,
+      "ADANIPORTS": 1824.5
+    }
+  },
+  {
+    "date": "2026-05-28",
+    "time": "11:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1149.7,
+      "BAJAJ-AUTO": 10808.5,
+      "ADANIPORTS": 1824.5
+    }
+  },
+  {
+    "date": "2026-05-28",
+    "time": "11:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1149.7,
+      "BAJAJ-AUTO": 10808.5,
+      "ADANIPORTS": 1824.5
+    }
+  },
+  {
+    "date": "2026-05-28",
+    "time": "12:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1149.7,
+      "BAJAJ-AUTO": 10808.5,
+      "ADANIPORTS": 1824.5
+    }
+  },
+  {
+    "date": "2026-05-28",
+    "time": "12:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1149.7,
+      "BAJAJ-AUTO": 10808.5,
+      "ADANIPORTS": 1824.5
+    }
+  },
+  {
+    "date": "2026-05-28",
+    "time": "13:01",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1149.7,
+      "BAJAJ-AUTO": 10808.5,
+      "ADANIPORTS": 1824.5
+    }
+  },
+  {
+    "date": "2026-05-28",
+    "time": "13:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1149.7,
+      "BAJAJ-AUTO": 10808.5,
+      "ADANIPORTS": 1824.5
+    }
+  },
+  {
+    "date": "2026-05-28",
+    "time": "14:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1149.7,
+      "BAJAJ-AUTO": 10808.5,
+      "ADANIPORTS": 1824.5
+    }
+  },
+  {
+    "date": "2026-05-28",
+    "time": "16:58",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1149.7,
+      "BAJAJ-AUTO": 10808.5,
+      "ADANIPORTS": 1824.5
+    }
+  },
+  {
+    "date": "2026-05-28",
+    "time": "20:26",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1149.7,
+      "BAJAJ-AUTO": 10808.5,
+      "ADANIPORTS": 1824.5
+    }
+  },
+  {
+    "date": "2026-05-29",
+    "time": "09:50",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1144.0,
+      "BAJAJ-AUTO": 10715.0,
+      "ADANIPORTS": 1814.6
+    }
+  },
+  {
+    "date": "2026-05-29",
+    "time": "10:19",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1141.3,
+      "BAJAJ-AUTO": 10681.5,
+      "ADANIPORTS": 1807.6
+    }
+  },
+  {
+    "date": "2026-05-29",
+    "time": "10:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1142.3,
+      "BAJAJ-AUTO": 10607.5,
+      "ADANIPORTS": 1805.3
+    }
+  },
+  {
+    "date": "2026-05-29",
+    "time": "11:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1143.6,
+      "BAJAJ-AUTO": 10592.0,
+      "ADANIPORTS": 1805.0
+    }
+  },
+  {
+    "date": "2026-05-29",
+    "time": "11:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1145.8,
+      "BAJAJ-AUTO": 10586.0,
+      "ADANIPORTS": 1814.3
+    }
+  },
+  {
+    "date": "2026-05-29",
+    "time": "12:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1146.5,
+      "BAJAJ-AUTO": 10622.0,
+      "ADANIPORTS": 1815.3
+    }
+  },
+  {
+    "date": "2026-05-29",
+    "time": "12:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1144.8,
+      "BAJAJ-AUTO": 10631.0,
+      "ADANIPORTS": 1813.3
+    }
+  },
+  {
+    "date": "2026-05-29",
+    "time": "13:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1145.9,
+      "BAJAJ-AUTO": 10610.0,
+      "ADANIPORTS": 1816.6
+    }
+  },
+  {
+    "date": "2026-05-29",
+    "time": "13:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1143.7,
+      "BAJAJ-AUTO": 10567.0,
+      "ADANIPORTS": 1807.8
+    }
+  },
+  {
+    "date": "2026-05-29",
+    "time": "14:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1146.7,
+      "BAJAJ-AUTO": 10626.5,
+      "ADANIPORTS": 1807.8
+    }
+  },
+  {
+    "date": "2026-05-29",
+    "time": "14:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1144.9,
+      "BAJAJ-AUTO": 10610.0,
+      "ADANIPORTS": 1802.8
+    }
+  },
+  {
+    "date": "2026-05-29",
+    "time": "15:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1141.9,
+      "BAJAJ-AUTO": 10607.5,
+      "ADANIPORTS": 1800.1
+    }
+  },
+  {
+    "date": "2026-06-01",
+    "time": "21:28",
+    "signals_received": 3,
+    "claude_approved": 0,
+    "orders_placed": 0,
+    "trades": [],
+    "approved_by_claude": [],
+    "skipped": [
+      {
+        "symbol": "HINDALCO",
+        "score": 12,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "POWERINDIA",
+        "score": 12,
+        "reason": "not in Claude approval list"
+      },
+      {
+        "symbol": "NETWEB",
+        "score": 11,
+        "reason": "not in Claude approval list"
+      }
+    ]
+  },
+  {
+    "date": "2026-06-01",
+    "time": "21:37",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1141.3,
+      "BAJAJ-AUTO": 10376.0,
+      "ADANIPORTS": 1783.5
+    }
+  },
+  {
+    "date": "2026-06-02",
+    "time": "09:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1143.7,
+      "BAJAJ-AUTO": 10300.0,
+      "ADANIPORTS": 1768.5
+    }
+  },
+  {
+    "date": "2026-06-02",
+    "time": "10:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1156.8,
+      "BAJAJ-AUTO": 10355.0,
+      "ADANIPORTS": 1791.0
+    }
+  },
+  {
+    "date": "2026-06-02",
+    "time": "10:32",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": null,
+      "BAJAJ-AUTO": 10412.0,
+      "ADANIPORTS": 1785.2
+    }
+  },
+  {
+    "date": "2026-06-02",
+    "time": "11:01",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1157.4,
+      "BAJAJ-AUTO": 10366.0,
+      "ADANIPORTS": 1779.6
+    }
+  },
+  {
+    "date": "2026-06-02",
+    "time": "11:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1154.8,
+      "BAJAJ-AUTO": 10400.0,
+      "ADANIPORTS": 1783.3
+    }
+  },
+  {
+    "date": "2026-06-02",
+    "time": "12:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1149.6,
+      "BAJAJ-AUTO": 10335.0,
+      "ADANIPORTS": 1778.1
+    }
+  },
+  {
+    "date": "2026-06-02",
+    "time": "12:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1149.4,
+      "BAJAJ-AUTO": 10305.0,
+      "ADANIPORTS": 1777.9
+    }
+  },
+  {
+    "date": "2026-06-02",
+    "time": "13:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1153.5,
+      "BAJAJ-AUTO": 10323.0,
+      "ADANIPORTS": 1802.5
+    }
+  },
+  {
+    "date": "2026-06-02",
+    "time": "13:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1153.3,
+      "BAJAJ-AUTO": 10360.0,
+      "ADANIPORTS": 1814.0
+    }
+  },
+  {
+    "date": "2026-06-02",
+    "time": "14:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1151.1,
+      "BAJAJ-AUTO": 10318.0,
+      "ADANIPORTS": 1812.1
+    }
+  },
+  {
+    "date": "2026-06-02",
+    "time": "14:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1147.9,
+      "BAJAJ-AUTO": 10297.0,
+      "ADANIPORTS": 1815.5
+    }
+  },
+  {
+    "date": "2026-06-02",
+    "time": "15:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {
+      "HINDALCO": 1142.5,
+      "BAJAJ-AUTO": 10280.0,
+      "ADANIPORTS": 1809.2
+    }
+  },
+  {
+    "date": "2026-06-04",
+    "time": "01:06",
+    "signals_received": 2,
+    "claude_approved": 2,
+    "orders_placed": 2,
+    "trades": [
+      {
+        "id": 4,
+        "date": "2026-06-04",
+        "time": "01:06",
+        "symbol": "POWERINDIA",
+        "direction": "LONG",
+        "strategy": "MOMENTUM",
+        "instrument": "EQUITY",
+        "score": 12,
+        "sector": "Power",
+        "entry_price": 35105.0,
+        "quantity": 1,
+        "lot_size": 1,
+        "position_value": 35105.0,
+        "stop_loss": 32316.2,
+        "target": 39288.2,
+        "max_risk_inr": 2788.8,
+        "atm_strike": null,
+        "vol_regime": "low_vix",
+        "news_sentiment": "NEUTRAL",
+        "reasoning": "Score 12/14, RSI 54.8 in healthy range, no kill words in news, Power sector not in open sectors, circuit not active, no earnings flag",
+        "status": "OPEN",
+        "exit_price": null,
+        "exit_date": null,
+        "pnl": null,
+        "result": null
+      },
+      {
+        "id": 5,
+        "date": "2026-06-04",
+        "time": "01:06",
+        "symbol": "NETWEB",
+        "direction": "LONG",
+        "strategy": "MOMENTUM",
+        "instrument": "EQUITY",
+        "score": 11,
+        "sector": "IT",
+        "entry_price": 4782.8,
+        "quantity": 10,
+        "lot_size": 1,
+        "position_value": 47828.0,
+        "stop_loss": 4334.04,
+        "target": 5455.94,
+        "max_risk_inr": 4487.6,
+        "atm_strike": null,
+        "vol_regime": "low_vix",
+        "news_sentiment": "NEUTRAL",
+        "reasoning": "Score 11/14, RSI 74.3 elevated but momentum strategy supports it, no kill words in news, IT sector not in open sectors, circuit not active, no earnings flag",
+        "status": "OPEN",
+        "exit_price": null,
+        "exit_date": null,
+        "pnl": null,
+        "result": null
+      }
+    ],
+    "approved_by_claude": [
+      {
+        "symbol": "POWERINDIA",
+        "approved": true,
+        "score": 12,
+        "direction": "LONG",
+        "strategy": "MOMENTUM",
+        "sector": "Power",
+        "price": 35105.0,
+        "atr_sl": 32316.2,
+        "atr_target": 39288.2,
+        "news_sentiment": "NEUTRAL",
+        "reasoning": "Score 12/14, RSI 54.8 in healthy range, no kill words in news, Power sector not in open sectors, circuit not active, no earnings flag"
+      },
+      {
+        "symbol": "NETWEB",
+        "approved": true,
+        "score": 11,
+        "direction": "LONG",
+        "strategy": "MOMENTUM",
+        "sector": "IT",
+        "price": 4782.8,
+        "atr_sl": 4334.04,
+        "atr_target": 5455.94,
+        "news_sentiment": "NEUTRAL",
+        "reasoning": "Score 11/14, RSI 74.3 elevated but momentum strategy supports it, no kill words in news, IT sector not in open sectors, circuit not active, no earnings flag"
+      }
+    ],
+    "skipped": []
+  },
+  {
+    "date": "2026-06-10",
+    "time": "19:53",
+    "type": "POSITION_MONITOR",
+    "open_checked": 3,
+    "closed_today": 3,
+    "today_pnl": -5070.97,
+    "closures": [
+      {
+        "symbol": "HINDALCO",
+        "direction": "LONG",
+        "instrument": "EQUITY",
+        "entry_price": 1098.7,
+        "exit_price": 1039.3,
+        "pnl": -2861.5,
+        "result": "LOSS",
+        "exit_reason": "STOPLOSS_HIT",
+        "days_held": 19
+      },
+      {
+        "symbol": "BAJAJ-AUTO",
+        "direction": "LONG",
+        "instrument": "EQUITY",
+        "entry_price": 10742.23,
+        "exit_price": 10144.0,
+        "pnl": -2556.53,
+        "result": "LOSS",
+        "exit_reason": "STOPLOSS_HIT",
+        "days_held": 19
+      },
+      {
+        "symbol": "ADANIPORTS",
+        "direction": "LONG",
+        "instrument": "EQUITY",
+        "entry_price": 1801.2,
+        "exit_price": 1821.2,
+        "pnl": 347.06,
+        "result": "WIN",
+        "exit_reason": "TIME_STOP_19d",
+        "days_held": 19
+      }
+    ],
+    "live_prices_checked": {
+      "HINDALCO": 1039.3,
+      "BAJAJ-AUTO": 10144.0,
+      "ADANIPORTS": 1821.2
+    }
+  },
+  {
+    "date": "2026-06-10",
+    "time": "20:14",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-06-11",
+    "time": "09:03",
+    "signals_received": 1,
+    "claude_approved": 0,
+    "orders_placed": 0,
+    "trades": [],
+    "approved_by_claude": [],
+    "skipped": [
+      {
+        "symbol": "DATAPATTNS",
+        "score": 11,
+        "reason": "not in Claude approval list"
+      }
+    ]
+  },
+  {
+    "date": "2026-06-11",
+    "time": "09:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-06-11",
+    "time": "10:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-06-11",
+    "time": "10:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-06-11",
+    "time": "11:00",
+    "type": "MIDDAY_SENTINEL",
+    "summary": {
+      "open_positions": 0,
+      "flags_raised": 0
+    },
+    "flags": {}
+  },
+  {
+    "date": "2026-06-11",
+    "time": "11:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-06-11",
+    "time": "11:30",
+    "type": "MISSED_RUN",
+    "details": [
+      {
+        "script": "midday_sentinel",
+        "problem": "NO_START"
+      }
+    ]
+  },
+  {
+    "date": "2026-06-11",
+    "time": "11:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-06-11",
+    "time": "12:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-06-11",
+    "time": "12:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-06-11",
+    "time": "13:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-06-11",
+    "time": "13:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-06-11",
+    "time": "14:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-06-11",
+    "time": "14:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-06-11",
+    "time": "15:00",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-06-11",
+    "time": "15:30",
+    "type": "POSITION_MONITOR",
+    "open_checked": 0,
+    "closed_today": 0,
+    "today_pnl": 0,
+    "closures": [],
+    "live_prices_checked": {}
+  },
+  {
+    "date": "2026-06-11",
+    "time": "15:45",
+    "type": "MISSED_RUN",
+    "details": [
+      {
+        "script": "midday_sentinel",
+        "problem": "NO_START"
+      }
+    ]
+  }
+]

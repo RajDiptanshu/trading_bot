@@ -1,0 +1,67 @@
+MORNING SCAN — 2026-06-01 09:50 PM
+==================================================================
+
+ACTIVE SIGNALS (3):
+  HINDALCO ₹1141.3 Score:12/14 MOMENTUM LONG SL:₹1082.32 Target:₹1229.77
+    Conditions: Price>MA20>MA50, Both MAs rising, Near 52W high, 30%+ above 52W low, RSI 64.9, Vol 1.25x, OBV rising, Breakout vol, %Range 0.0259
+  POWERINDIA ₹36380.0 Score:12/14 MOMENTUM LONG SL:₹33450.96 Target:₹40773.56
+    Conditions: Price>MA20>MA50, Both MAs rising, Near 52W high, 30%+ above 52W low, RSI 62.4, Vol 1.53x, OBV rising, Breakout vol, %Range 0.0426
+  NETWEB ₹4620.1 Score:11/14 MOMENTUM LONG SL:₹4178.7 Target:₹5282.2
+    Conditions: Price>MA20>MA50, Both MAs rising, Near 52W high, 30%+ above 52W low, Vol 2.38x, OBV rising, Breakout vol, %Range 0.0519
+
+FULL SCAN:
+  HINDALCO     ₹ 1141.3 RSI:64.9 Score:12/14 MOMENTUM
+  POWERINDIA   ₹36380.0 RSI:62.4 Score:12/14 MOMENTUM
+  NETWEB       ₹ 4620.1 RSI:71.5 Score:11/14 MOMENTUM
+  BAJAJ-AUTO   ₹10376.0 RSI:55.9 Score:10/14 WAIT
+  BSE          ₹ 4066.6 RSI:56.5 Score:10/14 WAIT
+  HINDZINC     ₹ 626.25 RSI:51.2 Score:10/14 WAIT
+  COALINDIA    ₹  472.6 RSI:60.1 Score:9/14 WAIT
+  EICHERMOT    ₹ 7100.5 RSI:48.7 Score:9/14 WAIT
+  TECHM        ₹ 1543.2 RSI:64.9 Score:9/14 WAIT
+  ASIANPAINT   ₹ 2632.4 RSI:59.7 Score:9/14 WAIT
+  ADANIPORTS   ₹ 1783.5 RSI:60.4 Score:9/14 WAIT
+  DSSL         ₹ 1571.4 RSI:55.7 Score:9/14 WAIT
+  DATAPATTNS   ₹ 3839.9 RSI:46.4 Score:9/14 WAIT
+  TATASTEEL    ₹ 210.57 RSI:49.5 Score:8/14 WAIT
+  APOLLOHOSP   ₹ 8108.5 RSI:54.2 Score:8/14 WAIT
+  LT           ₹ 4010.8 RSI:55.3 Score:8/14 WAIT
+  ADANIENT     ₹ 2909.4 RSI:73.1 Score:8/14 WAIT
+  INDUSINDBK   ₹ 901.15 RSI:49.3 Score:8/14 WAIT
+  MCX          ₹ 2890.5 RSI:38.2 Score:8/14 WAIT
+  HFCL         ₹ 182.28 RSI:82.9 Score:8/14 WAIT
+  SUNPHARMA    ₹ 1796.5 RSI:45.4 Score:7/14 WAIT
+  GRASIM       ₹ 3102.6 RSI:65.9 Score:7/14 WAIT
+  SHRIRAMFIN   ₹ 919.05 RSI:41.7 Score:7/14 WAIT
+  GRAVITA      ₹ 1625.8 RSI:47.3 Score:7/14 WAIT
+  WIPRO        ₹ 206.41 RSI:61.0 Score:6/14 WAIT
+  NESTLEIND    ₹ 1391.8 RSI:43.4 Score:6/14 WAIT
+  DIXON        ₹11463.0 RSI:54.7 Score:6/14 WAIT
+  DCXINDIA     ₹ 191.04 RSI:43.1 Score:6/14 WAIT
+  AXISBANK     ₹ 1275.9 RSI:48.5 Score:5/14 WAIT
+  KOTAKBANK    ₹  377.4 RSI:45.0 Score:5/14 WAIT
+  DRREDDY      ₹ 1290.4 RSI:47.0 Score:5/14 WAIT
+  HAL          ₹ 4254.1 RSI:40.7 Score:5/14 WAIT
+  INFY         ₹ 1202.5 RSI:54.4 Score:4/14 WAIT
+  TCS          ₹ 2297.4 RSI:44.5 Score:4/14 WAIT
+  SBILIFE      ₹ 1812.5 RSI:40.2 Score:4/14 WAIT
+  HEROMOTOCO   ₹ 4819.9 RSI:36.8 Score:4/14 WAIT
+  HCLTECH      ₹ 1195.1 RSI:48.6 Score:4/14 WAIT
+  BPCL         ₹ 296.85 RSI:47.4 Score:4/14 WAIT
+  ICICIBANK    ₹ 1239.7 RSI:41.8 Score:3/14 WAIT
+  SBIN         ₹  954.1 RSI:37.0 Score:3/14 WAIT
+  BAJFINANCE   ₹ 889.05 RSI:40.1 Score:3/14 WAIT
+  BAJAJFINSV   ₹ 1758.9 RSI:45.7 Score:3/14 WAIT
+  BHARTIARTL   ₹ 1810.6 RSI:42.1 Score:3/14 WAIT
+  TITAN        ₹ 4024.6 RSI:38.3 Score:3/14 WAIT
+  ULTRACEMCO   ₹11232.0 RSI:39.7 Score:3/14 WAIT
+  POWERGRID    ₹ 286.15 RSI:32.4 Score:3/14 WAIT
+  BEL          ₹  407.2 RSI:35.4 Score:3/14 WAIT
+  RELIANCE     ₹ 1320.0 RSI:38.2 Score:2/14 WAIT
+  HDFCBANK     ₹  742.7 RSI:38.2 Score:2/14 WAIT
+  MARUTI       ₹12946.0 RSI:43.0 Score:2/14 WAIT
+  HINDUNILVR   ₹ 2084.3 RSI:30.6 Score:2/14 WAIT
+  ITC          ₹ 279.65 RSI:28.5 Score:2/14 WAIT
+  BRITANNIA    ₹ 5157.5 RSI:28.0 Score:2/14 WAIT
+  VEDL         ₹ 337.15 RSI:33.8 Score:2/14 WAIT
+  HDFCLIFE     ₹ 586.55 RSI:38.8 Score:1/14 WAIT

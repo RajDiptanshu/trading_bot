@@ -1,0 +1,64 @@
+MORNING SCAN — 2026-05-17 06:43 PM
+==================================================================
+
+ACTIVE SIGNALS (8):
+  HINDALCO ₹1067.5 Score:6/9 MOMENTUM LONG SL:₹1010.1 Target:₹1153.6
+    Conditions: Price > MA20+MA50, MA20 rising, RSI 58.1, MACD bullish, Vol 1.57×, %Range 0.0227
+  BHARTIARTL ₹1905.4 Score:5/9 SHORT SHORT SL:₹1994.86 Target:₹1771.21
+    Conditions: MA20 falling, RSI 59.6, MACD bearish
+  KOTAKBANK ₹387.05 Score:5/9 MOMENTUM LONG SL:₹367.95 Target:₹415.7
+    Conditions: Price > MA20+MA50, MA20 rising, RSI 57.9, Vol 0.98×, %Range 0.0231
+  TATASTEEL ₹216.84 Score:5/9 MOMENTUM LONG SL:₹206.9 Target:₹231.75
+    Conditions: Price > MA20+MA50, MA20 rising, RSI 58.2, Vol 1.34×, %Range 0.0195
+  GRASIM ₹2933.8 Score:5/9 MOMENTUM LONG SL:₹2808.46 Target:₹3121.81
+    Conditions: Price > MA20+MA50, MA20 rising, RSI 62.6, Vol 1.77×, %Range 0.0198
+  DRREDDY ₹1336.7 Score:5/9 MOMENTUM LONG SL:₹1260.28 Target:₹1451.33
+    Conditions: Price > MA20+MA50, MA20 rising, RSI 59.9, Vol 1.21×, %Range 0.0301
+  ITC ₹309.45 Score:5/9 MOMENTUM LONG SL:₹299.35 Target:₹324.6
+    Conditions: Price > MA20+MA50, MA20 rising, RSI 53.8, MACD bullish, %Range 0.0153
+  NESTLEIND ₹1430.5 Score:5/9 MOMENTUM LONG SL:₹1371.5 Target:₹1519.0
+    Conditions: MA20 rising, RSI 58.1, MACD bullish, Vol 1.2×, %Range 0.0221
+
+FULL SCAN:
+  HINDALCO     ₹ 1067.5 RSI:58.1 Score:6/9 MOMENTUM
+  BHARTIARTL   ₹ 1905.4 RSI:59.6 Score:5/9 SHORT
+  KOTAKBANK    ₹ 387.05 RSI:57.9 Score:5/9 MOMENTUM
+  TATASTEEL    ₹ 216.84 RSI:58.2 Score:5/9 MOMENTUM
+  GRASIM       ₹ 2933.8 RSI:62.6 Score:5/9 MOMENTUM
+  DRREDDY      ₹ 1336.7 RSI:59.9 Score:5/9 MOMENTUM
+  ITC          ₹ 309.45 RSI:53.8 Score:5/9 MOMENTUM
+  NESTLEIND    ₹ 1430.5 RSI:58.1 Score:5/9 MOMENTUM
+  AXISBANK     ₹ 1244.8 RSI:39.3 Score:0/9 WAIT
+  SHRIRAMFIN   ₹  937.9 RSI:43.0 Score:0/9 WAIT
+  BEL          ₹ 423.65 RSI:42.1 Score:0/9 WAIT
+  SBIN         ₹  963.2 RSI:34.0 Score:0/9 WAIT
+  HDFCBANK     ₹  767.5 RSI:44.4 Score:0/9 WAIT
+  ICICIBANK    ₹ 1244.5 RSI:40.1 Score:0/9 WAIT
+  BAJFINANCE   ₹ 910.45 RSI:46.4 Score:0/9 WAIT
+  BAJAJFINSV   ₹ 1728.1 RSI:40.8 Score:0/9 WAIT
+  SBILIFE      ₹ 1864.5 RSI:50.1 Score:0/9 WAIT
+  COALINDIA    ₹  462.2 RSI:52.1 Score:0/9 WAIT
+  SUNPHARMA    ₹ 1878.2 RSI:65.0 Score:0/9 WAIT
+  MARUTI       ₹13221.0 RSI:47.3 Score:0/9 WAIT
+  HCLTECH      ₹ 1132.6 RSI:26.7 Score:0/9 WAIT
+  TECHM        ₹ 1370.5 RSI:40.5 Score:0/9 WAIT
+  INFY         ₹ 1119.0 RSI:33.8 Score:0/9 WAIT
+  TCS          ₹ 2264.0 RSI:29.8 Score:0/9 WAIT
+  WIPRO        ₹  190.0 RSI:35.8 Score:0/9 WAIT
+  TITAN        ₹ 4169.1 RSI:43.3 Score:0/9 WAIT
+  BRITANNIA    ₹ 5406.0 RSI:38.4 Score:0/9 WAIT
+  HEROMOTOCO   ₹ 5064.5 RSI:45.1 Score:0/9 WAIT
+  EICHERMOT    ₹ 7014.5 RSI:44.3 Score:0/9 WAIT
+  APOLLOHOSP   ₹ 8082.5 RSI:65.0 Score:0/9 WAIT
+  ADANIENT     ₹ 2716.0 RSI:75.6 Score:0/9 WAIT
+  ADANIPORTS   ₹ 1795.1 RSI:69.6 Score:0/9 WAIT
+  BPCL         ₹ 284.45 RSI:38.4 Score:0/9 WAIT
+  LT           ₹ 3909.0 RSI:46.7 Score:0/9 WAIT
+  RELIANCE     ₹ 1336.4 RSI:38.8 Score:0/9 WAIT
+  HINDUNILVR   ₹ 2272.2 RSI:51.8 Score:0/9 WAIT
+  ULTRACEMCO   ₹11487.0 RSI:44.0 Score:0/9 WAIT
+  POWERGRID    ₹ 305.85 RSI:44.0 Score:0/9 WAIT
+  HDFCLIFE     ₹  608.7 RSI:49.6 Score:0/9 WAIT
+  INDUSINDBK   ₹  886.4 RSI:49.3 Score:0/9 WAIT
+  ASIANPAINT   ₹ 2605.6 RSI:63.2 Score:0/9 WAIT
+  BAJAJ-AUTO   ₹10377.5 RSI:60.1 Score:0/9 WAIT

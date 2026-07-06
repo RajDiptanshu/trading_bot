@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-16"?>
+<Task version="1.2" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
+  <RegistrationInfo>
+    <Description>Runs morning_scan.py at 8:55 AM Mon-Fri for algo trading signals</Description>
+    <URI>\TradingBot\MorningScan</URI>
+  </RegistrationInfo>
+  <Triggers>
+    <CalendarTrigger>
+      <StartBoundary>2026-06-05T08:55:00</StartBoundary>
+      <Enabled>true</Enabled>
+      <ScheduleByWeek>
+        <WeeksInterval>1</WeeksInterval>
+        <DaysOfWeek>
+          <Monday />
+          <Tuesday />
+          <Wednesday />
+          <Thursday />
+          <Friday />
+        </DaysOfWeek>
+      </ScheduleByWeek>
+    </CalendarTrigger>
+  </Triggers>
+  <Principals>
+    <Principal id="Author">
+      <LogonType>InteractiveToken</LogonType>
+      <RunLevel>LeastPrivilege</RunLevel>
+    </Principal>
+  </Principals>
+  <Settings>
+    <MultipleInstancesPolicy>IgnoreNew</MultipleInstancesPolicy>
+    <DisallowStartIfOnBatteries>false</DisallowStartIfOnBatteries>
+    <StopIfGoingOnBatteries>false</StopIfGoingOnBatteries>
+    <AllowHardTerminate>true</AllowHardTerminate>
+    <StartWhenAvailable>true</StartWhenAvailable>
+    <RunOnlyIfNetworkAvailable>true</RunOnlyIfNetworkAvailable>
+    <IdleSettings>
+      <StopOnIdleEnd>false</StopOnIdleEnd>
+      <RestartOnIdle>false</RestartOnIdle>
+    </IdleSettings>
+    <AllowStartOnDemand>true</AllowStartOnDemand>
+    <Enabled>true</Enabled>
+    <Hidden>false</Hidden>
+    <RunOnlyIfIdle>false</RunOnlyIfIdle>
+    <WakeToRun>true</WakeToRun>
+    <ExecutionTimeLimit>PT1H</ExecutionTimeLimit>
+    <Priority>7</Priority>
+  </Settings>
+  <Actions Context="Author">
+    <Exec>
+      <Command>cmd.exe</Command>
+      <Arguments>/c cd /d C:\trading_bot &amp;&amp; "C:\trading_bot\venv\Scripts\python.exe" morning_scan.py &gt;&gt; C:\trading_bot\logs\scan_autorun.log 2&gt;&amp;1</Arguments>
+      <WorkingDirectory>C:\trading_bot</WorkingDirectory>
+    </Exec>
+  </Actions>
+</Task>

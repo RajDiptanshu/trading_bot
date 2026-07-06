@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>NSE Recommendation Engine</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
+<script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
+<style>
+:root{
+  --bg:#0d1117; --bg2:#131a23; --panel:#161e29; --panel2:#1b2533; --border:#232f3e;
+  --text:#d8e1ec; --dim:#7d8da1; --accent:#2962ff;
+  --green:#26a69a; --red:#ef5350; --amber:#ffb74d; --chip:#22304a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font:14px/1.45 'Segoe UI',system-ui,sans-serif;overflow:hidden}
+#root{height:100vh;display:flex;flex-direction:column}
+::-webkit-scrollbar{width:9px;height:9px}::-webkit-scrollbar-thumb{background:#2a3950;border-radius:6px}
+.topbar{display:flex;align-items:center;gap:10px;padding:9px 16px;background:var(--bg2);border-bottom:1px solid var(--border);flex-wrap:wrap}
+.logo{font-size:16px;font-weight:700;letter-spacing:.4px}
+.logo span{color:var(--accent)}
+.regime{display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--dim);margin-left:6px}
+.pill{padding:3px 10px;border-radius:20px;background:var(--chip);font-weight:600;font-size:12px;color:var(--text)}
+.pill.g{background:#10301f;color:#4cd98a}.pill.r{background:#3a1820;color:#ff7b86}.pill.a{background:#3a2c12;color:#ffc06e}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:4px}
+.spacer{flex:1}
+.btn{background:var(--accent);border:none;color:#fff;padding:7px 15px;border-radius:6px;font-weight:600;cursor:pointer;font-size:13px}
+.btn:hover{filter:brightness(1.12)}
+.btn.ghost{background:var(--chip);color:var(--text)}
+.btn:disabled{opacity:.5;cursor:default}
+.main{flex:1;display:flex;min-height:0}
+.sidebar{width:252px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column}
+.search{margin:10px;display:flex;gap:6px}
+.search input{flex:1;background:var(--panel);border:1px solid var(--border);color:var(--text);padding:7px 10px;border-radius:6px;font-size:13px;outline:none}
+.search input:focus{border-color:var(--accent)}
+.wl{flex:1;overflow-y:auto;padding:0 6px 10px}
+.wl-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:7px;cursor:pointer;border:1px solid transparent}
+.wl-item:hover{background:var(--panel)}
+.wl-item.sel{background:var(--panel2);border-color:var(--accent)}
+.wl-sym{font-weight:600;font-size:13px;flex:1}
+.wl-sec{font-size:10.5px;color:var(--dim)}
+.rs{font-size:10.5px;padding:2px 7px;border-radius:10px;background:var(--chip);min-width:34px;text-align:center}
+.rs.hi{color:#4cd98a}.rs.lo{color:#ff7b86}
+.content{flex:1;overflow-y:auto;padding:14px 18px;min-width:0}
+.head{display:flex;align-items:baseline;gap:14px;margin-bottom:10px;flex-wrap:wrap}
+.head h1{font-size:23px}
+.price{font-size:21px;font-weight:700}
+.scorebox{display:flex;align-items:center;gap:8px}
+.score-badge{font-size:17px;font-weight:800;padding:4px 13px;border-radius:8px}
+.grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(330px,1fr);gap:14px;align-items:start}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:13px}
+.panel h3{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);margin-bottom:10px}
+#chart{height:430px}
+.periods{display:flex;gap:6px;margin-bottom:8px}
+.periods button{background:var(--chip);border:none;color:var(--dim);padding:3px 11px;border-radius:5px;cursor:pointer;font-size:12px}
+.periods button.on{background:var(--accent);color:#fff}
+.buckets{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:10px}
+.bk{background:var(--panel2);border-radius:8px;padding:8px 10px}
+.bk .lbl{font-size:10.5px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px}
+.bk .val{font-size:15px;font-weight:700;margin:3px 0}
+.bar{height:5px;background:#0a0f16;border-radius:3px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:3px}
+.action{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.action .badge{font-size:21px;font-weight:800;padding:8px 22px;border-radius:10px;letter-spacing:1px}
+.badge.BUY{background:#10301f;color:#4cd98a;border:1px solid #1d5c3a}
+.badge.WAIT{background:#3a2c12;color:#ffc06e;border:1px solid #6b5320}
+.badge.SELL_AVOID{background:#3a1820;color:#ff7b86;border:1px solid #6b2a35}
+.conv{flex:1}.conv .bar{height:8px}
+.levels{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:10px 0}
+.lvl{background:var(--panel2);border-radius:8px;padding:9px 11px;text-align:center}
+.lvl .lbl{font-size:10.5px;color:var(--dim);text-transform:uppercase}
+.lvl .v{font-size:16px;font-weight:700;margin-top:3px}
+.reasons{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:11px}
+.reasons ul{list-style:none}
+.reasons li{padding:5px 0 5px 18px;position:relative;font-size:12.8px;color:var(--text)}
+.reasons .for li:before{content:"+";position:absolute;left:2px;color:var(--green);font-weight:800}
+.reasons .against li:before{content:"!";position:absolute;left:3px;color:var(--red);font-weight:800}
+.agents{display:flex;gap:9px;margin-bottom:12px}
+.agent{flex:1;background:var(--panel2);border-radius:8px;padding:9px 11px;border:1px solid var(--border)}
+.agent .nm{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px}
+.agent .st{font-size:12.5px;font-weight:600;margin-top:4px}
+.st.run{color:var(--amber)}.st.done{color:var(--green)}.st.idle{color:var(--dim)}
+.news li{padding:6px 0;border-bottom:1px solid var(--border);font-size:12.6px;list-style:none}
+.news .src{color:var(--dim);font-size:10.5px;margin-right:7px;text-transform:uppercase}
+.kill{color:var(--red);font-weight:600}
+.qual{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}
+.qual .pill{font-weight:500}
+.summary{margin-top:11px;padding:10px 12px;background:var(--panel2);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;font-size:13px}
+.invalid{margin-top:9px;font-size:12px;color:var(--amber)}
+.engine{margin-top:9px;font-size:11px;color:var(--dim)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{font-size:11px;text-transform:uppercase;color:var(--dim);text-align:left;padding:8px;border-bottom:1px solid var(--border);cursor:pointer;white-space:nowrap}
+td{padding:8px;border-bottom:1px solid #1b2533}
+tr.row:hover{background:var(--panel2);cursor:pointer}
+.center{display:flex;align-items:center;justify-content:center;height:60vh;color:var(--dim);flex-direction:column;gap:12px}
+.spin{width:34px;height:34px;border:3px solid var(--chip);border-top-color:var(--accent);border-radius:50%;animation:s 0.8s linear infinite}
+@keyframes s{to{transform:rotate(360deg)}}
+.modal-bg{position:fixed;inset:0;background:#000a;display:flex;align-items:center;justify-content:center;z-index:30}
+.modal{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px;width:330px}
+.modal h3{margin-bottom:12px;font-size:15px;color:var(--text);text-transform:none;letter-spacing:0}
+.modal input,.modal select{width:100%;background:var(--panel2);border:1px solid var(--border);color:var(--text);padding:8px 10px;border-radius:6px;margin-bottom:10px;font-size:13px;outline:none}
+.disclaimer{font-size:10.5px;color:var(--dim);padding:6px 16px;background:var(--bg2);border-top:1px solid var(--border)}
+.sel{background:var(--panel2);border:1px solid var(--border);color:var(--text);padding:5px 9px;border-radius:6px;font-size:12.5px;outline:none;margin-left:5px}
+.sel:focus{border-color:var(--accent)}
+.filters label{font-size:12.5px;color:var(--dim);display:inline-flex;align-items:center;gap:5px}
+.filters{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+td .score-badge{display:inline-block;min-width:26px;text-align:center}
+.flag{display:flex;align-items:flex-start;gap:9px;padding:8px 4px;border-bottom:1px solid var(--border)}
+.flag .pill{min-width:80px;text-align:center;flex-shrink:0}
+@media (max-width:1100px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" data-presets="react">
+const {useState,useEffect,useRef,useCallback} = React;
+const api = (p,opt)=>fetch(p,opt).then(r=>{ if(!r.ok) return r.json().then(j=>{throw new Error(j.detail||r.statusText)}); return r.json(); });
+
+function RegimeBar({regime}){
+  if(!regime) return <div className="regime">loading regime…</div>;
+  const vixCls = regime.vix>=24?'r':regime.vix>=18?'a':'g';
+  return <div className="regime">
+    <span className="pill">NIFTY {regime.nifty?.toLocaleString('en-IN')}</span>
+    <span className={"pill "+(regime.regime_pts===2?'g':regime.regime_pts===1?'a':'r')}>
+      <span className="dot" style={{background:regime.f1?'#4cd98a':'#ff7b86'}}></span>50dma
+      <span className="dot" style={{background:regime.f2?'#4cd98a':'#ff7b86',marginLeft:8}}></span>200dma
+      &nbsp;{regime.label}
+    </span>
+    <span className={"pill "+vixCls}>VIX {regime.vix??'—'} · {regime.vix_tier}</span>
+    <span className="pill">min score {regime.min_score}/14</span>
+  </div>;
+}
+
+function Chart({symbol,rec}){
+  const ref=useRef(null), chartRef=useRef(null);
+  const [period,setPeriod]=useState('13mo');
+  useEffect(()=>{
+    if(!symbol||!ref.current) return;
+    let dead=false;
+    api(`/api/chart/${symbol}?period=${period}`).then(d=>{
+      if(dead) return;
+      if(chartRef.current){chartRef.current.remove();chartRef.current=null;}
+      const intraday=['5m','15m','1h'].includes(period);
+      const chart=LightweightCharts.createChart(ref.current,{
+        layout:{background:{color:'transparent'},textColor:'#7d8da1'},
+        grid:{vertLines:{color:'#1b2533'},horzLines:{color:'#1b2533'}},
+        rightPriceScale:{borderColor:'#232f3e'},
+        timeScale:{borderColor:'#232f3e',timeVisible:intraday,secondsVisible:false},
+        height:430,autoSize:true});
+      chartRef.current=chart;
+      const cs=chart.addCandlestickSeries({upColor:'#26a69a',downColor:'#ef5350',borderVisible:false,wickUpColor:'#26a69a',wickDownColor:'#ef5350'});
+      cs.setData(d.candles);
+      const vol=chart.addHistogramSeries({priceScaleId:'',priceFormat:{type:'volume'}});
+      chart.priceScale('').applyOptions({scaleMargins:{top:0.82,bottom:0}});
+      vol.setData(d.volume);
+      chart.addLineSeries({color:'#42a5f5',lineWidth:1,priceLineVisible:false,lastValueVisible:false}).setData(d.ma20);
+      chart.addLineSeries({color:'#ffb74d',lineWidth:1,priceLineVisible:false,lastValueVisible:false}).setData(d.ma50);
+      if(rec&&rec.stop_loss){
+        cs.createPriceLine({price:rec.stop_loss,color:'#ef5350',lineStyle:2,title:'SL'});
+        cs.createPriceLine({price:rec.target,color:'#26a69a',lineStyle:2,title:'Target'});
+      }
+      chart.timeScale().fitContent();
+    }).catch(()=>{});
+    return ()=>{dead=true;};
+  },[symbol,period,rec&&rec.stop_loss]);
+  useEffect(()=>()=>{if(chartRef.current){chartRef.current.remove();chartRef.current=null;}},[]);
+  return <div className="panel">
+    <div className="periods">{['5m','15m','1h','6mo','13mo','3y','5y'].map(p=>
+      <button key={p} className={p===period?'on':''} onClick={()=>setPeriod(p)}>{p}</button>)}
+      <span style={{marginLeft:'auto',fontSize:11,color:'#7d8da1'}}>
+        {['5m','15m','1h'].includes(period)?'intraday ~15min delayed · ':''}MA20 <span style={{color:'#42a5f5'}}>━</span>&nbsp; MA50 <span style={{color:'#ffb74d'}}>━</span></span>
+    </div>
+    <div id="chart" ref={ref}></div>
+  </div>;
+}
+
+function Buckets({t}){
+  const max={trend:3,rs_52w:4,oscillator:1,volume:3,volatility:1,regime:2};
+  const lbl={trend:'Trend',rs_52w:'RS + 52W',oscillator:'RSI',volume:'Volume',volatility:'Volatility',regime:'Regime'};
+  return <div className="buckets">{Object.keys(max).map(k=>
+    <div className="bk" key={k}>
+      <div className="lbl">{lbl[k]}</div>
+      <div className="val">{t.buckets[k]}/{max[k]}</div>
+      <div className="bar"><i style={{width:(t.buckets[k]/max[k]*100)+'%'}}></i></div>
+    </div>)}
+  </div>;
+}
+
+function AgentStrip({phase}){
+  const states=[
+    {nm:'Agent 1 · Technical', st: phase>=1?(phase>1?'done':'run'):'idle'},
+    {nm:'Agent 2 · News + Fundamentals', st: phase>=2?(phase>2?'done':'run'):'idle'},
+    {nm:'Agent 3 · Claude Strategist', st: phase>=3?(phase>3?'done':'run'):'idle'}];
+  const txt={idle:'waiting',run:'running…',done:'✓ complete'};
+  return <div className="agents">{states.map(a=>
+    <div className="agent" key={a.nm}><div className="nm">{a.nm}</div><div className={'st '+a.st}>{txt[a.st]}</div></div>)}
+  </div>;
+}
+
+function Recommendation({rec}){
+  if(!rec) return null;
+  const r=rec.recommendation, t=rec.technical;
+  const conv=Math.round((r.conviction||0)*100);
+  return <div className="panel">
+    <h3>Recommendation · {rec.generated}</h3>
+    <div className="action">
+      <span className={"badge "+r.action}>{r.action.replace('_',' / ')}</span>
+      <div className="conv">
+        <div style={{fontSize:11,color:'#7d8da1',marginBottom:4}}>Conviction {conv}%</div>
+        <div className="bar"><i style={{width:conv+'%',background:r.action==='BUY'?'#26a69a':r.action==='WAIT'?'#ffb74d':'#ef5350'}}></i></div>
+      </div>
+    </div>
+    {r.action==='BUY' && <div className="levels">
+      <div className="lvl"><div className="lbl">Entry zone</div><div className="v">₹{r.entry_zone[0]} – {r.entry_zone[1]}</div></div>
+      <div className="lvl"><div className="lbl">Stop (2×ATR)</div><div className="v" style={{color:'#ff7b86'}}>₹{r.stop_loss}</div></div>
+      <div className="lvl"><div className="lbl">Target (3×ATR)</div><div className="v" style={{color:'#4cd98a'}}>₹{r.target}</div></div>
+    </div>}
+    {r.action==='BUY' && <div style={{fontSize:12.5,color:'#7d8da1'}}>
+      Instrument: <b style={{color:'#d8e1ec'}}>{r.instrument}</b> · Hold: {r.holding_period} · Size: {r.position_size_note}</div>}
+    <div className="reasons">
+      <div className="for"><h3>Reasons for</h3><ul>{(r.reasons_for||[]).map((x,i)=><li key={i}>{x}</li>)}</ul></div>
+      <div className="against"><h3>Reasons against</h3><ul>{(r.reasons_against||[]).map((x,i)=><li key={i}>{x}</li>)}</ul></div>
+    </div>
+    <div className="invalid">⚠ Invalidates: {r.what_invalidates}</div>
+    <div className="summary">{r.summary}</div>
+    <div className="engine">engine: {r.engine}{r.tokens?` · ${r.tokens.in}/${r.tokens.out} tok`:''}</div>
+  </div>;
+}
+
+function fmtAge(h){
+  if(h.age_h==null) return '';
+  if(h.age_h<1) return Math.max(1,Math.round(h.age_h*60))+'m ago';
+  if(h.age_h<24) return h.age_h.toFixed(1).replace('.0','')+'h ago';
+  return Math.round(h.age_h/24)+'d ago';
+}
+function NewsPanel({fund}){
+  if(!fund) return null;
+  const q=fund.quality||{};
+  const win=fund.news_window_hours||48;
+  const heads=fund.headlines||[];
+  return <div className="panel" style={{marginTop:14}}>
+    <h3>News & fundamentals · last {win}h {fund.earnings_in_days!=null && <span className={fund.earnings_risk?'kill':''}> · earnings in {fund.earnings_in_days}d</span>}</h3>
+    <ul className="news">
+      {heads.length===0 && <li style={{color:'#7d8da1'}}>No news for this stock in the last {win}h.</li>}
+      {heads.map((h,i)=>{
+        const killed=(fund.kill_word_hits||[]).some(k=>k.title===h.title);
+        return <li key={i}>
+          <div style={{display:'flex',justifyContent:'space-between',gap:8}}>
+            <span className="src">{h.src}</span>
+            {h.ts && <span className="src" title={h.ts} style={{textTransform:'none'}}>{fmtAge(h)}</span>}
+          </div>
+          <span className={killed?'kill':''}>{h.title}</span>
+        </li>;})}
+    </ul>
+    <div className="qual">
+      {q.roe_pct!=null && <span className="pill">ROE {q.roe_pct}%</span>}
+      {q.debt_to_equity!=null && <span className="pill">D/E {q.debt_to_equity}</span>}
+      {q.pe!=null && <span className="pill">P/E {q.pe}</span>}
+      {q.profit_margin_pct!=null && <span className="pill">Margin {q.profit_margin_pct}%</span>}
+      {q.market_cap_cr!=null && <span className="pill">MCap ₹{(q.market_cap_cr/100).toFixed(0)}00cr</span>}
+      <span className={"pill "+(fund.news_sentiment==='NEGATIVE'?'r':'g')}>{fund.news_sentiment}</span>
+    </div>
+  </div>;
+}
+
+function StockView({symbol}){
+  const [tech,setTech]=useState(null);
+  const [rec,setRec]=useState(null);
+  const [fund,setFund]=useState(null);
+  const [phase,setPhase]=useState(0);
+  const [err,setErr]=useState(null);
+  useEffect(()=>{
+    setTech(null);setRec(null);setFund(null);setPhase(0);setErr(null);
+    api(`/api/stock/${symbol}`).then(setTech).catch(e=>setErr(e.message));
+  },[symbol]);
+  const go=useCallback(()=>{
+    setPhase(1);setRec(null);
+    api(`/api/stock/${symbol}`).then(t=>{setTech(t);setPhase(2);
+      return api(`/api/news/${symbol}`);}).then(f=>{setFund(f);setPhase(3);
+      return api(`/api/recommend/${symbol}`,{method:'POST'});}).then(r=>{
+      setRec(r);setFund(r.fundamental);setPhase(4);}).catch(e=>{setErr(e.message);setPhase(0);});
+  },[symbol]);
+  if(err) return <div className="center">⚠ {err}</div>;
+  if(!tech) return <div className="center"><div className="spin"></div>loading {symbol}…</div>;
+  const sCol = tech.score>=tech.min_score_required?'#10301f':'#3a2c12';
+  const sTxt = tech.score>=tech.min_score_required?'#4cd98a':'#ffc06e';
+  return <div>
+    <div className="head">
+      <h1>{symbol}</h1>
+      <span className="price">₹{tech.price.toLocaleString('en-IN')}</span>
+      <span className="score-badge" style={{background:sCol,color:sTxt}}>{tech.score}/14</span>
+      <span className="pill">{tech.direction==='LONG'?'signal: LONG':'no signal'}</span>
+      <span className="pill">RS {tech.rs_rank}</span>
+      <span className="pill">{tech.pct_from_52w_high}% off 52w-high</span>
+      <span className="pill">ATR {tech.atr_pct}%</span>
+      {!tech.liquidity_ok && <span className="pill r">illiquid {tech.avg_traded_value_cr}cr/d</span>}
+      <div className="spacer"></div>
+      <button className="btn" disabled={phase>0&&phase<4} onClick={go}>
+        {phase>0&&phase<4?'agents working…':'▶ Get recommendation'}</button>
+    </div>
+    {phase>0 && <AgentStrip phase={phase}/>}
+    <div className="grid">
+      <div>
+        <Chart symbol={symbol} rec={rec?rec.recommendation:null}/>
+        <div className="panel" style={{marginTop:14}}>
+          <h3>14-point score breakdown</h3>
+          <Buckets t={tech}/>
+          <div className="qual" style={{marginTop:10}}>
+            <span className="pill">RSI {tech.rsi}</span>
+            <span className="pill">Vol {tech.vol_ratio}×</span>
+            <span className="pill">{tech.obv_rising?'OBV rising':'OBV flat/falling'}</span>
+            {tech.breakout_volume && <span className="pill g">Breakout volume ✓</span>}
+            {tech.mean_reversion_setup && <span className="pill a">MR setup</span>}
+            <span className="pill">12m {tech.ret_12m_pct??'—'}% (vs Nifty {tech.rs_vs_nifty_pct>0?'+':''}{tech.rs_vs_nifty_pct??'—'}%)</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        {rec ? <Recommendation rec={rec}/> :
+          <div className="panel"><h3>Recommendation</h3>
+            <div style={{color:'#7d8da1',fontSize:13,padding:'14px 0'}}>
+              Click <b>Get recommendation</b> — Agent 1 refreshes technicals, Agent 2 pulls news,
+              earnings & quality, Agent 3 (Claude) applies the strategy playbook and returns a
+              blueprint with entry, stop, target and the honest reasons against.</div></div>}
+        <NewsPanel fund={fund}/>
+      </div>
+    </div>
+  </div>;
+}
+
+function ScanView({onPick}){
+  const [data,setData]=useState(null);
+  const [sortK,setSortK]=useState('score');
+  useEffect(()=>{api('/api/scan').then(setData).catch(()=>{});},[]);
+  if(!data) return <div className="center"><div className="spin"></div>scanning whole watchlist… (first run ≈ 1–2 min)</div>;
+  const rows=[...data.rows].sort((a,b)=>(b[sortK]??-1e9)-(a[sortK]??-1e9));
+  const H=(k,l)=><th onClick={()=>setSortK(k)}>{l}{sortK===k?' ▾':''}</th>;
+  return <div className="panel">
+    <h3>Full watchlist scan · regime {data.regime.label} · min score {data.regime.min_score}</h3>
+    <table><thead><tr>
+      <th>Symbol</th>{H('score','Score')}{H('price','Price')}{H('rs_rank','RS')}{H('rsi','RSI')}
+      {H('vol_ratio','Vol×')}{H('atr_pct','ATR%')}{H('pct_from_52w_high','%↓52wH')}<th>Signal</th></tr></thead>
+    <tbody>{rows.map(r=><tr key={r.symbol} className="row" onClick={()=>onPick(r.symbol)}>
+      <td><b>{r.symbol}</b></td>
+      <td style={{color:r.score>=r.min_score_required?'#4cd98a':'#d8e1ec'}}><b>{r.score}</b>/14</td>
+      <td>₹{r.price}</td><td>{r.rs_rank}</td><td>{r.rsi}</td><td>{r.vol_ratio}</td>
+      <td>{r.atr_pct}</td><td>{r.pct_from_52w_high}%</td>
+      <td>{r.direction==='LONG'?<span className="pill g">LONG</span>:<span style={{color:'#7d8da1'}}>wait</span>}</td>
+    </tr>)}</tbody></table>
+  </div>;
+}
+
+function AddModal({onClose,onAdded}){
+  const [sym,setSym]=useState(''); const [sector,setSector]=useState('Other');
+  const [busy,setBusy]=useState(false); const [msg,setMsg]=useState(null);
+  const submit=()=>{ setBusy(true);setMsg(null);
+    api('/api/watchlist/add',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({symbol:sym,sector})})
+      .then(r=>{onAdded(r.symbol);onClose();})
+      .catch(e=>{setMsg(e.message);setBusy(false);});};
+  return <div className="modal-bg" onClick={onClose}>
+    <div className="modal" onClick={e=>e.stopPropagation()}>
+      <h3>Add NSE stock to watchlist</h3>
+      <input placeholder="Symbol e.g. TATAMOTORS" value={sym} onChange={e=>setSym(e.target.value.toUpperCase())} autoFocus/>
+      <select value={sector} onChange={e=>setSector(e.target.value)}>
+        {['Other','Banking','IT','Energy','Metals','Auto','Pharma','FMCG','Defence','Power','Telecom','Infra','Finance'].map(s=><option key={s}>{s}</option>)}
+      </select>
+      {msg && <div style={{color:'#ff7b86',fontSize:12,marginBottom:8}}>{msg}</div>}
+      <button className="btn" style={{width:'100%'}} disabled={busy||!sym} onClick={submit}>{busy?'checking NSE…':'Add'}</button>
+    </div>
+  </div>;
+}
+
+function PortfolioView(){
+  const [pf,setPf]=useState(null);
+  const [busy,setBusy]=useState(null);   // 'execute' | 'monitor' | null
+  const [last,setLast]=useState(null);
+  const [err,setErr]=useState(null);
+  const [openSel,setOpenSel]=useState(null);     // expanded open-position id
+  const [closedSel,setClosedSel]=useState(null); // expanded closed-trade id
+  const load=()=>api('/api/portfolio').then(setPf).catch(e=>setErr(e.message));
+  useEffect(()=>{load();},[]);
+  const run=(kind)=>{ setBusy(kind);setErr(null);
+    api(`/api/portfolio/${kind}`,{method:'POST'})
+      .then(r=>{setLast({kind,r});return load();})
+      .catch(e=>setErr(e.message)).finally(()=>setBusy(null)); };
+  if(err && !pf) return <div className="center">⚠ {err}</div>;
+  if(!pf) return <div className="center"><div className="spin"></div>loading portfolio…</div>;
+  const st=pf.stats||{}, fmt=n=>n==null?'—':'₹'+Math.round(n).toLocaleString('en-IN');
+  const pnlCol=v=>v>0?'#4cd98a':v<0?'#ff7b86':'#d8e1ec';
+  const pct=v=>v==null?'':` (${v>0?'+':''}${v}%)`;
+  const detCard=(lbl,val,col)=><div style={{background:'var(--panel2)',borderRadius:8,padding:'8px 11px'}}>
+    <div style={{fontSize:10.5,color:'#7d8da1',textTransform:'uppercase',letterSpacing:'.5px'}}>{lbl}</div>
+    <div style={{fontSize:15,fontWeight:700,marginTop:3,color:col||'#d8e1ec'}}>{val}</div></div>;
+  return <div>
+    <div className="head">
+      <h1>Paper Portfolio</h1>
+      <span className="price">{fmt(pf.equity)}</span>
+      <span className="pill" style={{color:pnlCol(pf.return_pct)}}>{pf.return_pct>0?'+':''}{pf.return_pct}%</span>
+      {pf.benchmark && <span className="pill" title={`bot ${pf.benchmark.bot_return_pct}% vs NIFTY ${pf.benchmark.nifty_return_pct}% since ${pf.benchmark.since}`}>
+        α vs NIFTY <b style={{color:pnlCol(pf.benchmark.alpha_pct),marginLeft:4}}>{pf.benchmark.alpha_pct>0?'+':''}{pf.benchmark.alpha_pct}%</b></span>}
+      <span className="pill">cash {fmt(pf.cash)}</span>
+      <span className="pill">heat {fmt(pf.open_heat_inr)} / {pf.limits.max_heat_pct}%</span>
+      <span className="pill">day P&L <b style={{color:pnlCol(pf.day.realized_pnl)}}>{fmt(pf.day.realized_pnl)}</b></span>
+      <div className="spacer"></div>
+      <button className="btn ghost" disabled={busy} onClick={()=>run('monitor')}>{busy==='monitor'?'monitoring…':'⟳ Monitor positions'}</button>
+      <button className="btn" style={{marginLeft:8}} disabled={busy||pf.halted} onClick={()=>run('execute')}>{busy==='execute'?'agents working…':'▶ Run entry cycle'}</button>
+    </div>
+    {(()=>{ const hb=pf.heartbeat||{}; const today=new Date().toISOString().slice(0,10);
+      const wd=new Date().getDay(); const isWd=wd>=1&&wd<=5;
+      const hhmm=new Date().toTimeString().slice(0,5);
+      const stale=isWd&&((hhmm>'09:40'&&(!hb.entry||hb.entry.date!==today))||(hhmm>'16:00'&&(!hb.monitor||hb.monitor.date!==today)));
+      return stale?<div className="panel" style={{borderColor:'#ffb74d',marginBottom:14}}>
+        <h3 style={{color:'#ffc06e'}}>⚠ Scheduled runs missing today</h3>
+        <div style={{fontSize:12.5,color:'#7d8da1'}}>entry: {hb.entry?`${hb.entry.date} ${hb.entry.ts}`:'never'} · monitor: {hb.monitor?`${hb.monitor.date} ${hb.monitor.ts} (${hb.monitor.runs_today||0}x)`:'never'} — check Task Scheduler / logs\agent4_*.log</div>
+      </div>:null; })()}
+    {pf.halted && <div className="panel" style={{borderColor:'#ef5350',marginBottom:14}}>
+      <h3 style={{color:'#ff7b86'}}>⛔ Kill switch active — {pf.halt_reason}</h3>
+      <div style={{fontSize:13,color:'#7d8da1'}}>No new entries. DAILY_LOSS resets tomorrow automatically.
+        MAX_DRAWDOWN requires a deliberate manual reset after you review what went wrong.</div>
+      {pf.halt_reason==='MAX_DRAWDOWN' &&
+        <button className="btn ghost" style={{marginTop:8}} onClick={()=>api('/api/portfolio/reset-halt',{method:'POST'}).then(load)}>Reset (I have reviewed)</button>}
+    </div>}
+    {err && <div style={{color:'#ff7b86',fontSize:13,marginBottom:10}}>⚠ {err}</div>}
+    {last && <div className="panel" style={{marginBottom:14}}>
+      <h3>Last {last.kind} result</h3>
+      <div style={{fontSize:12.5,color:'#7d8da1'}}>
+        {last.kind==='execute'
+          ? (last.r.blocked&&last.r.blocked.length ? '⛔ '+last.r.blocked.join(' · ')
+             : `entered ${last.r.entered} of ${(last.r.decisions||[]).length} recommended (${last.r.candidates_scanned} candidates scanned)`)
+          : `${(last.r.actions||[]).length} action(s) · equity ${fmt(last.r.equity)}`}
+      </div>
+      <ul className="news">{((last.kind==='execute'?last.r.decisions:last.r.actions)||[]).map((d,i)=>
+        <li key={i}><span className="src">{d.symbol||'—'}</span>
+          {d.action_taken==='ENTER'?<span style={{color:'#4cd98a'}}>ENTERED {d.instrument}{d.fallback_note?` (${d.fallback_note})`:''}</span>
+           :d.action_taken==='SKIP'?<span>skip — {d.skip_reason}</span>
+           :<span>{d.action}{d.pnl!=null?<b style={{color:pnlCol(d.pnl),marginLeft:6}}>{fmt(d.pnl)}</b>:null}{d.stop?` → ₹${d.stop}`:''}{d.reason?` — ${d.reason}`:''}</span>}
+        </li>)}</ul>
+    </div>}
+    <div className="grid">
+      <div>
+        <div className="panel">
+          <h3>Open positions ({pf.open_positions.length})</h3>
+          {pf.open_positions.length===0 && <div style={{color:'#7d8da1',fontSize:13,padding:'10px 0'}}>No open positions. Run the entry cycle on a trading morning.</div>}
+          {pf.open_positions.length>0 && <table><thead><tr>
+            <th>Symbol</th><th>Instr</th><th>Qty/Lots</th><th>Entry</th><th>Current</th><th>Stop</th><th>Target</th><th>Days</th><th>uP&L</th></tr></thead>
+          <tbody>{pf.open_positions.map(p=><React.Fragment key={p.id}>
+            <tr className="row" title="click for details" onClick={()=>setOpenSel(openSel===p.id?null:p.id)}>
+            <td><b>{openSel===p.id?'▾ ':'▸ '}{p.symbol}</b>{p.half_banked?<span className="pill g" style={{marginLeft:6}}>½ banked</span>:null}</td>
+            <td>{p.instrument}</td><td>{p.qty??p.lots}</td>
+            <td>{p.entry_price!=null?'₹'+p.entry_price:'—'}</td>
+            <td style={{color:p.current_price==null?'#d8e1ec':p.current_price>=p.entry_price?'#4cd98a':'#ff7b86'}}>{p.current_price!=null?'₹'+p.current_price:'—'}</td>
+            <td style={{color:'#ff7b86'}}>₹{p.stop}</td>
+            <td style={{color:'#4cd98a'}}>₹{p.target_half??p.target}</td>
+            <td>{p.sessions_held}</td>
+            <td style={{color:pnlCol(p.unrealized_pnl)}}><b>{fmt(p.unrealized_pnl)}</b></td>
+            </tr>
+            {openSel===p.id && <tr><td colSpan={9} style={{background:'var(--bg2)',padding:0,borderBottom:'2px solid var(--accent)'}}>
+              <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:10,padding:'12px 14px'}}>
+                {detCard('Total quantity',p.qty??p.lots)}
+                {detCard('Avg trade price',fmt(p.entry_price))}
+                {detCard('Current price',fmt(p.current_price),p.current_price==null?null:p.current_price>=p.entry_price?'#4cd98a':'#ff7b86')}
+                {detCard('Invested',fmt(p.invested))}
+                {detCard('Current market value',fmt(p.market_value))}
+                {detCard("Today's gain/loss",p.today_pnl!=null?fmt(p.today_pnl)+pct(p.today_pnl_pct):'—',pnlCol(p.today_pnl))}
+                {detCard('Total gain/loss',fmt(p.unrealized_pnl)+pct(p.total_pnl_pct),pnlCol(p.unrealized_pnl))}
+              </div></td></tr>}
+          </React.Fragment>)}</tbody></table>}
+        </div>
+        <div className="panel" style={{marginTop:14}}>
+          <h3>Closed trades</h3>
+          {(pf.closed_trades||[]).length===0 && <div style={{color:'#7d8da1',fontSize:13,padding:'10px 0'}}>None yet.</div>}
+          {(pf.closed_trades||[]).length>0 && <table><thead><tr>
+            <th>Symbol</th><th>Instr</th><th>Entry</th><th>Exit</th><th>Reason</th><th>P&L</th></tr></thead>
+          <tbody>{[...pf.closed_trades].reverse().map((c,i)=>{const cid=c.id??i; return <React.Fragment key={cid}>
+            <tr className="row" title="click for details" onClick={()=>setClosedSel(closedSel===cid?null:cid)}>
+            <td><b>{closedSel===cid?'▾ ':'▸ '}{c.symbol}</b></td><td>{c.instrument}</td>
+            <td>{c.entry_date}</td><td>{c.exit_date}</td>
+            <td style={{fontSize:11.5}}>{c.exit_reason}{c.mark_quality==='intrinsic_fallback'?' ⚠':''}</td>
+            <td style={{color:pnlCol(c.pnl)}}><b>{fmt(c.pnl)}</b></td>
+            </tr>
+            {closedSel===cid && <tr><td colSpan={6} style={{background:'var(--bg2)',padding:0,borderBottom:'2px solid var(--accent)'}}>
+              <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:10,padding:'12px 14px'}}>
+                {detCard('Quantity',c.qty)}
+                {detCard('Avg buy price',fmt(c.entry_price))}
+                {detCard('Avg sell price',fmt(c.exit_price))}
+                {detCard('Total buy value',c.entry_price!=null&&c.qty!=null?fmt(c.entry_price*c.qty):'—')}
+                {detCard('Total sell value',c.exit_price!=null&&c.qty!=null?fmt(c.exit_price*c.qty):'—')}
+                {detCard('Realised P&L',fmt(c.pnl),pnlCol(c.pnl))}
+              </div>
+              <div style={{padding:'0 14px 12px',fontSize:12,color:'#7d8da1'}}>Buy {c.entry_date} · Sell {c.exit_date} · {c.exit_reason}{c.sessions_held!=null?` · held ${c.sessions_held}d`:''}</div>
+            </td></tr>}
+          </React.Fragment>;})}</tbody></table>}
+        </div>
+      </div>
+      <div>
+        <div className="panel">
+          <h3>Performance</h3>
+          <div className="buckets">
+            {[['Trades',st.trades_closed??0],['Win rate',st.win_rate!=null?Math.round(st.win_rate*100)+'%':'—'],
+              ['Profit factor',st.profit_factor??'—'],['Expectancy',st.expectancy_inr!=null?fmt(st.expectancy_inr):'—'],
+              ['Avg win',st.avg_win!=null?fmt(st.avg_win):'—'],['Avg loss',st.avg_loss!=null?fmt(st.avg_loss):'—'],
+              ['Max DD',st.max_drawdown_pct!=null?st.max_drawdown_pct+'%':'—'],['Peak',fmt(pf.peak_equity)]].map(([l,v])=>
+              <div className="bk" key={l}><div className="lbl">{l}</div><div className="val">{v}</div></div>)}
+          </div>
+          <div style={{fontSize:11.5,color:'#7d8da1',marginTop:10}}>
+            Judge nothing before ~30 closed trades — small samples lie. Targets: PF &gt; 1.3,
+            expectancy &gt; 0 after costs, max DD &lt; {pf.limits.max_dd_halt_pct}%.</div>
+        </div>
+        <div className="panel" style={{marginTop:14}}>
+          <h3>Risk rules (enforced in code)</h3>
+          <ul className="news" style={{fontSize:12.5}}>
+            <li><span className="src">risk</span>{pf.limits.risk_pct}% of equity per trade · heat cap {pf.limits.max_heat_pct}%</li>
+            <li><span className="src">size</span>max {pf.limits.max_positions} positions · 20% value cap each</li>
+            <li><span className="src">halt</span>day loss {pf.limits.daily_loss_halt_pct}% · drawdown {pf.limits.max_dd_halt_pct}%</li>
+            <li><span className="src">conv</span>equity ≥ {pf.limits.conviction_min} · options ≥ {pf.limits.opt_conviction_min}</li>
+            <li><span className="src">opts</span>defined-risk only, real NSE premiums, else falls back to equity</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>;
+}
+
+const biasCls=(x)=>x==='NEGATIVE'?'r':x==='POSITIVE'?'g':x==='RISK_OFF'?'r':x==='RISK_ON'?'g':'a';
+
+function ScreenerView({onPick}){
+  const [scope,setScope]=useState('nifty210');
+  const [data,setData]=useState(null);
+  const [loading,setLoading]=useState(false);
+  const [sector,setSector]=useState('');
+  const [minScore,setMinScore]=useState(0);
+  const [longOnly,setLongOnly]=useState(true);
+  const [sortK,setSortK]=useState('score');
+  const load=(refresh)=>{setLoading(true);
+    const qs=`scope=${scope}&direction=${longOnly?'LONG':''}&min_score=${minScore}&limit=500`+(refresh?'&refresh=true':'');
+    api('/api/screener?'+qs).then(d=>{setData(d);setLoading(false);}).catch(()=>setLoading(false));};
+  useEffect(()=>{load(false);},[scope,longOnly,minScore]);
+  const rows=(data?.rows||[]).filter(r=>!sector||r.sector===sector);
+  const sorted=[...rows].sort((a,b)=>{const av=a[sortK]??-1,bv=b[sortK]??-1; const m=sortK==='symbol'||sortK==='sector'?1:-1; return (av>bv?1:av<bv?-1:0)*m;});
+  const cols=[['symbol','Symbol'],['sector','Sector'],['score','Score'],['direction','Dir'],['rs_rank','RS'],['ret_12m','12m %'],['atr_pct','ATR%'],['turnover_cr','₹Cr/d'],['news_sector_bias','News']];
+  return <div>
+    <div className="head"><h1>🌐 Screener</h1>
+      {data && <span className="wl-sec">{data.universe_size} stocks · {sorted.length} shown · scan {data.cached?'cached':data.elapsed_s+'s'} · brief {data.news_brief||'—'}</span>}</div>
+    <div className="panel" style={{marginBottom:12}}><div className="filters">
+      <label>Universe
+        <select value={scope} onChange={e=>setScope(e.target.value)} className="sel">
+          <option value="core">Curated 55</option><option value="nifty50">Nifty 50</option>
+          <option value="nifty210">Nifty 50+Bank+Midcap (~210)</option><option value="nifty500">Nifty 500</option></select></label>
+      <label>Sector
+        <select value={sector} onChange={e=>setSector(e.target.value)} className="sel">
+          <option value="">All</option>{(data?.sectors||[]).map(s=><option key={s} value={s}>{s}</option>)}</select></label>
+      <label>Min score<input type="number" min="0" max="14" value={minScore} onChange={e=>setMinScore(+e.target.value||0)} className="sel" style={{width:58}}/></label>
+      <label><input type="checkbox" checked={longOnly} onChange={e=>setLongOnly(e.target.checked)}/> LONG only</label>
+      <button className="btn ghost" onClick={()=>load(true)} disabled={loading}>↻ Rescan</button>
+    </div></div>
+    {loading && !data ? <div className="center"><div className="spin"></div>scanning {scope} (~30–60s first time)…</div> :
+     <div className="panel" style={{padding:0}}><table><thead><tr>
+       {cols.map(([k,l])=><th key={k} onClick={()=>setSortK(k)} className={sortK===k?'on':''} style={sortK===k?{color:'var(--accent)'}:{}}>{l}</th>)}
+     </tr></thead><tbody>
+       {sorted.map(r=><tr key={r.symbol} className="row" onClick={()=>onPick(r.symbol)}>
+         <td><b>{r.symbol}</b><div className="wl-sec">{(r.company||'').slice(0,24)}{r.curated?' ★':''}</div></td>
+         <td>{r.sector}</td>
+         <td><span className="score-badge" style={{background:r.score>=r.min_score?'#10301f':'#22304a',color:r.score>=r.min_score?'#4cd98a':'#d8e1ec'}}>{r.score}</span></td>
+         <td>{r.direction==='LONG'?<span style={{color:'#4cd98a',fontWeight:600}}>LONG</span>:<span className="wl-sec">—</span>}</td>
+         <td><span className={"rs "+(r.rs_rank>=75?'hi':r.rs_rank<40?'lo':'')}>{Math.round(r.rs_rank)}</span></td>
+         <td>{r.ret_12m!=null?r.ret_12m+'%':'—'}</td><td>{r.atr_pct}%</td><td>{r.turnover_cr}</td>
+         <td>{(r.news_stock_flag||r.news_sector_bias)?<span className={"pill "+biasCls(r.news_stock_flag||r.news_sector_bias)} style={{fontSize:10}}>{r.news_stock_flag||r.news_sector_bias}</span>:''}</td>
+       </tr>)}
+       {sorted.length===0 && <tr><td colSpan={cols.length} style={{textAlign:'center',color:'var(--dim)',padding:20}}>No matches for these filters.</td></tr>}
+     </tbody></table></div>}
+  </div>;
+}
+
+function NewsBriefView({onPick}){
+  const [b,setB]=useState(null), [err,setErr]=useState(null);
+  useEffect(()=>{api('/api/news-brief').then(setB).catch(e=>setErr(e.message));},[]);
+  if(err) return <div className="center">News brief unavailable: {err}</div>;
+  if(!b) return <div className="center"><div className="spin"></div>loading briefing…</div>;
+  if(b.status) return <div className="center">{b.status}<br/><span className="wl-sec">{b.hint}</span></div>;
+  const sv=Object.entries(b.sector_view||{}).sort((a,c)=>(c[1].confidence||0)-(a[1].confidence||0));
+  const sf=Object.entries(b.stock_flags||{});
+  return <div>
+    <div className="head"><h1>📰 Pre-market Brief</h1>
+      <span className={"pill "+biasCls(b.market_bias)} style={{fontSize:14}}>{b.market_bias}</span>
+      <span className="wl-sec">{b.date} · {b.engine} · {b.n_headlines} headlines</span></div>
+    <div className="summary" style={{marginBottom:12}}>{b.summary}</div>
+    <div className="grid">
+      <div className="panel"><h3>Sector contagion</h3>
+        {sv.length?sv.map(([s,v])=><div key={s} className="flag">
+          <span className={"pill "+biasCls(v.bias)}>{v.bias}</span>
+          <div style={{flex:1}}><b>{s}</b> <span className="wl-sec">conf {v.confidence}</span><div className="wl-sec" style={{marginTop:2}}>{v.reason}</div></div>
+        </div>):<div className="wl-sec">No strong sector signal today.</div>}</div>
+      <div className="panel"><h3>Stock flags (click to open)</h3>
+        {sf.length?sf.map(([s,v])=><div key={s} className="flag row" onClick={()=>onPick(s)} style={{cursor:'pointer'}}>
+          <span className={"pill "+biasCls(v.bias)}>{v.bias}</span>
+          <div style={{flex:1}}><b>{s}</b><div className="wl-sec" style={{marginTop:2}}>{v.reason}</div></div>
+        </div>):<div className="wl-sec">No single-stock flags today.</div>}</div>
+    </div>
+    {(b.global_cues||[]).length>0 && <div className="panel" style={{marginTop:12}}><h3>Global cues</h3>
+      {b.global_cues.map((g,i)=><div key={i} style={{padding:'7px 0',borderBottom:'1px solid var(--border)',fontSize:12.8}}>
+        <b>{g.headline}</b> <span className="wl-sec">— {g.implication}</span> {(g.affects||[]).map(a=><span key={a} className="pill" style={{fontSize:10,marginLeft:4}}>{a}</span>)}</div>)}</div>}
+  </div>;
+}
+
+function EquityChart({curve}){
+  const ref=useRef(null), chartRef=useRef(null);
+  useEffect(()=>{
+    if(!ref.current||!curve||curve.length<2) return;
+    if(chartRef.current){chartRef.current.remove();chartRef.current=null;}
+    const chart=LightweightCharts.createChart(ref.current,{
+      layout:{background:{color:'transparent'},textColor:'#7d8da1'},
+      grid:{vertLines:{color:'#1b2533'},horzLines:{color:'#1b2533'}},
+      rightPriceScale:{borderColor:'#232f3e'},timeScale:{borderColor:'#232f3e'},height:300,autoSize:true});
+    chartRef.current=chart;
+    const e0=curve[0].equity;
+    chart.addLineSeries({color:'#2962ff',lineWidth:2,title:'Bot'}).setData(curve.map(p=>({time:p.date,value:+(p.equity/e0*100).toFixed(2)})));
+    const np=curve.filter(p=>p.nifty);
+    if(np.length>1){const n0=np[0].nifty;
+      chart.addLineSeries({color:'#ffb74d',lineWidth:2,title:'NIFTY'}).setData(np.map(p=>({time:p.date,value:+(p.nifty/n0*100).toFixed(2)})));}
+    chart.timeScale().fitContent();
+    return ()=>{if(chartRef.current){chartRef.current.remove();chartRef.current=null;}};
+  },[curve]);
+  return <div ref={ref} style={{height:300}}></div>;
+}
+
+function ReportView(){
+  const [r,setR]=useState(null),[err,setErr]=useState(null),[busy,setBusy]=useState(false);
+  const load=(rebuild)=>{setBusy(true);api('/api/report'+(rebuild?'?rebuild=true':'')).then(d=>{setR(d);setBusy(false);}).catch(e=>{setErr(e.message);setBusy(false);});};
+  useEffect(()=>{load(false);},[]);
+  if(err) return <div className="center">Report unavailable: {err}</div>;
+  if(!r) return <div className="center"><div className="spin"></div>building report…</div>;
+  const s=r.stats||{},g=r.gates||{},b=r.benchmark,p=r.pnl||{};
+  const rs=(n)=>n==null?'—':'₹'+Math.round(n).toLocaleString('en-IN');
+  const sign=(n)=>n==null?'':(n>=0?'#4cd98a':'#ff7b86');
+  const card=(lbl,val,cls)=><div className="lvl"><div className="lbl">{lbl}</div><div className="v" style={cls?{color:cls}:{}}>{val}</div></div>;
+  return <div>
+    <div className="head"><h1>📊 Daily Report</h1><span className="wl-sec">{r.date}{r.halted?' · ⚠ HALTED':''}</span>
+      <span className={"pill "+(r.total_return_pct>=0?'g':'r')} style={{fontSize:14}}>{r.total_return_pct>=0?'+':''}{r.total_return_pct}%</span>
+      <button className="btn ghost" style={{marginLeft:'auto'}} onClick={()=>load(true)} disabled={busy}>{busy?'…':'↻ Rebuild'}</button></div>
+    <div className="panel"><h3>Equity vs NIFTY (indexed to 100)</h3><EquityChart curve={r.equity_curve}/>
+      <div style={{fontSize:11,color:'#7d8da1',marginTop:4}}>Bot <span style={{color:'#2962ff'}}>━</span>&nbsp; NIFTY <span style={{color:'#ffb74d'}}>━</span></div></div>
+    <div className="levels" style={{gridTemplateColumns:'repeat(4,1fr)',marginTop:12}}>
+      {card('Equity',rs(r.equity))}{card('Total P&L',rs(p.total),sign(p.total))}
+      {card('Realized',rs(p.realized),sign(p.realized))}{card('Unrealized',rs(p.unrealized),sign(p.unrealized))}
+      {card('Win rate',s.win_rate!=null?Math.round(s.win_rate*100)+'%':'—')}{card('Profit factor',s.profit_factor??'—')}
+      {card('Payoff',s.payoff_ratio??'—')}{card('Expectancy',rs(s.expectancy_inr),sign(s.expectancy_inr))}
+      {card('Trades',s.trades_closed??0)}{card('Avg hold',s.avg_holding_sessions!=null?s.avg_holding_sessions+'d':'—')}
+      {card('Max DD',(s.max_drawdown_pct??'—')+'%')}{card('Alpha',b?(b.alpha_pct>=0?'+':'')+b.alpha_pct+'%':'—',b?sign(b.alpha_pct):'')}
+    </div>
+    <div className="grid" style={{marginTop:12}}>
+      <div className="panel"><h3>Go-live gates · {g._passed}/{g._total} passed</h3>
+        {Object.entries(g).filter(([k])=>!k.startsWith('_')).map(([k,v])=><div key={k} className="flag">
+          <span className={"pill "+(v.pass?'g':'r')} style={{minWidth:54,textAlign:'center'}}>{v.pass?'PASS':'WAIT'}</span>
+          <div style={{flex:1}}><b style={{fontSize:12.5}}>{k}</b> <span className="wl-sec">now {v.value} · target {v.target}</span></div></div>)}
+      </div>
+      <div className="panel"><h3>Today · {r.today.entered.length} in / {r.today.exited.length} out · realized {rs(r.today.realized_pnl)}</h3>
+        {r.today.entered.map((e,i)=><div key={'i'+i} className="flag"><span className="pill g" style={{minWidth:46,textAlign:'center'}}>BUY</span><div style={{flex:1}}><b>{e.symbol}</b> <span className="wl-sec">{e.instrument} · {e.qty}@{rs(e.entry_price)}</span><div className="wl-sec">{e.reason}</div></div></div>)}
+        {r.today.exited.map((e,i)=><div key={'x'+i} className="flag"><span className={"pill "+(e.pnl>=0?'g':'r')} style={{minWidth:46,textAlign:'center'}}>{e.result||'EXIT'}</span><div style={{flex:1}}><b>{e.symbol}</b> {rs(e.pnl)} <span className="wl-sec">{e.exit_reason}</span></div></div>)}
+        {r.today.entered.length+r.today.exited.length===0 && <div className="wl-sec">No trades today.</div>}
+      </div>
+    </div>
+    {r.narrative && <div className="panel" style={{marginTop:12}}><h3>EOD note (Claude)</h3>
+      <div style={{whiteSpace:'pre-wrap',fontSize:13,lineHeight:1.55}}>{r.narrative}</div></div>}
+    <div className="panel" style={{marginTop:12,padding:0}}><table><thead><tr>
+      <th>Open position</th><th>Entry</th><th>Unreal. P&L</th><th>Days</th><th>Why entered</th></tr></thead><tbody>
+      {(r.open_positions||[]).map((pos,i)=><tr key={i}>
+        <td><b>{pos.symbol}</b> <span className="wl-sec">{pos.instrument}</span></td><td>{rs(pos.entry_price)}</td>
+        <td style={{color:sign(pos.unrealized_pnl)}}>{rs(pos.unrealized_pnl)}</td><td>{pos.sessions_held}</td>
+        <td className="wl-sec">{(pos.reasoning||'').slice(0,64)}</td></tr>)}
+      {(r.open_positions||[]).length===0 && <tr><td colSpan={5} style={{textAlign:'center',color:'#7d8da1',padding:16}}>No open positions.</td></tr>}
+    </tbody></table></div>
+  </div>;
+}
+
+function App(){
+  const [wl,setWl]=useState([]);
+  const [regime,setRegime]=useState(null);
+  const [sel,setSel]=useState(null);
+  const [q,setQ]=useState('');
+  const [view,setView]=useState('stock');
+  const [showAdd,setShowAdd]=useState(false);
+  const loadWl=()=>api('/api/watchlist').then(d=>{setWl(d); if(!sel&&d.length) setSel(d[0].symbol);});
+  useEffect(()=>{loadWl(); api('/api/regime').then(setRegime).catch(()=>{});},[]);
+  const list=wl.filter(s=>s.symbol.includes(q.toUpperCase())||s.sector.toUpperCase().includes(q.toUpperCase()));
+  return <React.Fragment>
+    <div className="topbar">
+      <div className="logo">◭ NSE <span>Recommendation Engine</span></div>
+      <RegimeBar regime={regime}/>
+      <div className="spacer"></div>
+      <button className={"btn "+(view==='screener'?'':'ghost')} onClick={()=>setView('screener')} style={{marginRight:8}}>🌐 Screener</button>
+      <button className={"btn "+(view==='news'?'':'ghost')} onClick={()=>setView('news')} style={{marginRight:8}}>📰 News</button>
+      <button className={"btn "+(view==='report'?'':'ghost')} onClick={()=>setView('report')} style={{marginRight:8}}>📊 Report</button>
+      <button className={"btn "+(view==='portfolio'?'':'ghost')} onClick={()=>setView('portfolio')} style={{marginRight:8}}>💼 Portfolio</button>
+      <button className={"btn "+(view==='stock'?'':'ghost')} onClick={()=>setView('stock')}>📈 Stock</button>
+    </div>
+    <div className="main">
+      <div className="sidebar">
+        <div className="search">
+          <input placeholder="Search watchlist…" value={q} onChange={e=>setQ(e.target.value)}/>
+          <button className="btn ghost" title="Add stock" onClick={()=>setShowAdd(true)}>＋</button>
+        </div>
+        <div className="wl">
+          {list.map(s=><div key={s.symbol} className={"wl-item"+(sel===s.symbol&&view==='stock'?' sel':'')}
+            onClick={()=>{setSel(s.symbol);setView('stock');}}>
+            <div style={{flex:1}}><div className="wl-sym">{s.symbol}</div><div className="wl-sec">{s.sector} · {s.tier}</div></div>
+            {s.rs_rank!=null && <span className={"rs "+(s.rs_rank>=75?'hi':s.rs_rank<40?'lo':'')}>{Math.round(s.rs_rank)}</span>}
+          </div>)}
+        </div>
+      </div>
+      <div className="content">
+        {view==='portfolio' ? <PortfolioView/> :
+         view==='report' ? <ReportView/> :
+         view==='screener' ? <ScreenerView onPick={s=>{setSel(s);setView('stock');}}/> :
+         view==='news' ? <NewsBriefView onPick={s=>{setSel(s);setView('stock');}}/> :
+         view==='scan' ? <ScanView onPick={s=>{setSel(s);setView('stock');}}/> :
+         sel ? <StockView symbol={sel}/> : <div className="center">Select a stock</div>}
+      </div>
+    </div>
+    <div className="disclaimer">Paper-trading research tool. Not investment advice. Signals are V10 system output (Agents 1–6) net of nothing — apply your own judgment and the cost model before any trade. Data: Angel One + Yahoo Finance (delayed).</div>
+    {showAdd && <AddModal onClose={()=>setShowAdd(false)} onAdded={s=>{loadWl().then(()=>setSel(s));}}/>}
+  </React.Fragment>;
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

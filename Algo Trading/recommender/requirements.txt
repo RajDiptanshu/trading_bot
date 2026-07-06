@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+yfinance
+pandas
+numpy
+anthropic
+python-dotenv
+ddgs
+requests
+# ML layer (ml_signal.py / train_ml.py — Sunday retrain task needs these)
+scikit-learn
+scipy
+joblib
+lightgbm

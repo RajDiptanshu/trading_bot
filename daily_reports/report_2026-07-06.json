@@ -1,0 +1,549 @@
+{
+  "date": "2026-07-06",
+  "generated": "2026-07-06T10:20:27+00:00",
+  "start_capital": 2000000.0,
+  "equity": 2067698.93,
+  "cash": 527655.03,
+  "peak_equity": 2067698.93,
+  "total_return_pct": 3.38,
+  "current_drawdown_pct": 0.0,
+  "halted": false,
+  "halt_reason": null,
+  "pnl": {
+    "realized": -15588.54,
+    "unrealized": 85139.31,
+    "total": 69550.77
+  },
+  "stats": {
+    "trades_closed": 5,
+    "full_exits": 3,
+    "win_rate": 0.4,
+    "profit_factor": 0.64,
+    "avg_win": 14069.0,
+    "avg_loss": -14575.0,
+    "expectancy_inr": -3118.0,
+    "max_drawdown_pct": 2.4,
+    "payoff_ratio": 0.97,
+    "avg_holding_sessions": 8.4
+  },
+  "benchmark": {
+    "since": "2026-06-12",
+    "bot_return_pct": 3.38,
+    "nifty_return_pct": 3.42,
+    "alpha_pct": -0.03
+  },
+  "today": {
+    "entered": [],
+    "exited": [],
+    "realized_pnl": 0.0
+  },
+  "gates": {
+    "trades_>=50": {
+      "value": 5,
+      "target": 50,
+      "pass": false
+    },
+    "profit_factor_>1.3": {
+      "value": 0.64,
+      "target": 1.3,
+      "pass": false
+    },
+    "max_drawdown_<10%": {
+      "value": 2.4,
+      "target": 10,
+      "pass": true
+    },
+    "positive_expectancy": {
+      "value": -3118.0,
+      "target": 0,
+      "pass": false
+    },
+    "_passed": 1,
+    "_total": 4
+  },
+  "open_positions": [
+    {
+      "id": 2,
+      "symbol": "DATAPATTNS",
+      "instrument": "EQUITY",
+      "entry_date": "2026-06-15",
+      "entry_price": 4373.67,
+      "qty": 41,
+      "lots": null,
+      "stop": 3893.8,
+      "target_half": 5082.55,
+      "target": null,
+      "half_banked": false,
+      "sessions_held": 17,
+      "open_risk_inr": 19674.67,
+      "reasoning": "DATAPATTNS: BUY. Score 11/14 vs need 10, 3/3 confirmations, regime NEUTRAL, VIX 14.21 (pct 65.2). Enter in zone, stop 2xATR, bank half at 3xATR then trail; exit day 12 only if never +1xATR.",
+      "market_value": 189235.5,
+      "unrealized_pnl": 9915.03,
+      "invested": 179320.47,
+      "current_price": 4615.5,
+      "total_pnl_pct": 5.53,
+      "prev_close": 4507.0,
+      "today_pnl": 4448.5,
+      "today_pnl_pct": 2.41
+    },
+    {
+      "id": 3,
+      "symbol": "HFCL",
+      "instrument": "EQUITY",
+      "entry_date": "2026-06-15",
+      "entry_price": 180.63,
+      "qty": 507,
+      "lots": null,
+      "stop": 195.92,
+      "target_half": 209.73,
+      "target": null,
+      "half_banked": true,
+      "sessions_held": 17,
+      "open_risk_inr": 0.0,
+      "reasoning": "HFCL: BUY. Score 11/14 vs need 10, 3/3 confirmations, regime NEUTRAL, VIX 14.21 (pct 65.2). Enter in zone, stop 2xATR, bank half at 3xATR then trail; exit day 12 only if never +1xATR.",
+      "market_value": 114049.65,
+      "unrealized_pnl": 22470.24,
+      "invested": 91579.41,
+      "current_price": 224.95,
+      "total_pnl_pct": 24.54,
+      "prev_close": 214.48,
+      "today_pnl": 5308.29,
+      "today_pnl_pct": 4.88
+    },
+    {
+      "id": 6,
+      "symbol": "ABCAPITAL",
+      "instrument": "EQUITY",
+      "entry_date": "2026-06-22",
+      "entry_price": 383.33,
+      "qty": 935,
+      "lots": null,
+      "stop": 361.95,
+      "target_half": 414.45,
+      "target": null,
+      "half_banked": false,
+      "sessions_held": 10,
+      "open_risk_inr": 19990.3,
+      "reasoning": "ABCAPITAL: BUY. Score 10/14 vs need 10, 2/3 confirmations, regime NEUTRAL, VIX 12.95 (pct 56.6). Enter in zone, stop 2xATR, bank half at 3xATR then trail; exit day 12 only if never +1xATR.",
+      "market_value": 383116.25,
+      "unrealized_pnl": 24702.7,
+      "invested": 358413.55,
+      "current_price": 409.75,
+      "total_pnl_pct": 6.89,
+      "prev_close": 401.25,
+      "today_pnl": 7947.5,
+      "today_pnl_pct": 2.12
+    },
+    {
+      "id": 7,
+      "symbol": "NAM-INDIA",
+      "instrument": "EQUITY",
+      "entry_date": "2026-06-23",
+      "entry_price": 1183.38,
+      "qty": 285,
+      "lots": null,
+      "stop": 1113.44,
+      "target_half": 1285.34,
+      "target": null,
+      "half_banked": false,
+      "sessions_held": 9,
+      "open_risk_inr": 19932.9,
+      "reasoning": "NAM-INDIA: BUY. Score 10/14 vs need 10, 2/3 confirmations, regime NEUTRAL, VIX 12.72 (pct 55.4). Enter in zone, stop 2xATR, bank half at 3xATR then trail; exit day 12 only if never +1xATR.",
+      "market_value": 344137.5,
+      "unrealized_pnl": 6874.2,
+      "invested": 337263.3,
+      "current_price": 1207.5,
+      "total_pnl_pct": 2.04,
+      "prev_close": 1218.2,
+      "today_pnl": -3049.49,
+      "today_pnl_pct": -0.88
+    },
+    {
+      "id": 8,
+      "symbol": "ADANIENT",
+      "instrument": "EQUITY",
+      "entry_date": "2026-06-29",
+      "entry_price": 2984.48,
+      "qty": 60,
+      "lots": null,
+      "stop": 2988.11,
+      "target_half": 3224.29,
+      "target": null,
+      "half_banked": true,
+      "sessions_held": 6,
+      "open_risk_inr": 0.0,
+      "reasoning": "ADANIENT: BUY. Score 10/14 vs need 10, 2/3 confirmations, regime NEUTRAL, VIX 13.57 (pct 62.8). Enter in zone, stop 2xATR, bank half at 3xATR then trail; exit day 12 only if never +1xATR.",
+      "market_value": 192396.0,
+      "unrealized_pnl": 13327.2,
+      "invested": 179068.8,
+      "current_price": 3206.6,
+      "total_pnl_pct": 7.44,
+      "prev_close": 3212.1,
+      "today_pnl": -330.0,
+      "today_pnl_pct": -0.17
+    },
+    {
+      "id": 9,
+      "symbol": "AJANTPHARM",
+      "instrument": "EQUITY",
+      "entry_date": "2026-06-30",
+      "entry_price": 3289.99,
+      "qty": 94,
+      "lots": null,
+      "stop": 3080.56,
+      "target_half": 3595.91,
+      "target": null,
+      "half_banked": false,
+      "sessions_held": 5,
+      "open_risk_inr": 19686.42,
+      "reasoning": "Marginal threshold BUY on AJANTPHARM: score exactly 10, 2/3 confirmations, F1 clear, RISK_ON market bias. EV thin at 0.29R. Use defined-risk BULL_CALL_SPREAD (vix_pctile 65.8). Strict sizing, hard stop 3088.66, bank half at 3604.01, trail remainder.",
+      "market_value": 317109.0,
+      "unrealized_pnl": 7849.94,
+      "invested": 309259.06,
+      "current_price": 3373.5,
+      "total_pnl_pct": 2.54,
+      "prev_close": 3326.3,
+      "today_pnl": 4436.8,
+      "today_pnl_pct": 1.42
+    }
+  ],
+  "open_positions_brief": [
+    {
+      "symbol": "DATAPATTNS",
+      "instrument": "EQUITY",
+      "unrealized_pnl": 9915.03,
+      "sessions_held": 17
+    },
+    {
+      "symbol": "HFCL",
+      "instrument": "EQUITY",
+      "unrealized_pnl": 22470.24,
+      "sessions_held": 17
+    },
+    {
+      "symbol": "ABCAPITAL",
+      "instrument": "EQUITY",
+      "unrealized_pnl": 24702.7,
+      "sessions_held": 10
+    },
+    {
+      "symbol": "NAM-INDIA",
+      "instrument": "EQUITY",
+      "unrealized_pnl": 6874.2,
+      "sessions_held": 9
+    },
+    {
+      "symbol": "ADANIENT",
+      "instrument": "EQUITY",
+      "unrealized_pnl": 13327.2,
+      "sessions_held": 6
+    },
+    {
+      "symbol": "AJANTPHARM",
+      "instrument": "EQUITY",
+      "unrealized_pnl": 7849.94,
+      "sessions_held": 5
+    }
+  ],
+  "closed_trades": [
+    {
+      "id": 3,
+      "symbol": "HFCL",
+      "instrument": "EQUITY",
+      "entry_date": "2026-06-15",
+      "entry_price": 180.63,
+      "exit_date": "2026-06-22",
+      "exit_price": 209.52,
+      "qty": 507,
+      "pnl": 14392.04,
+      "exit_reason": "TARGET_HALF_BANKED",
+      "result": "WIN",
+      "sessions_held": 7,
+      "reasoning": "HFCL: BUY. Score 11/14 vs need 10, 3/3 confirmations, regime NEUTRAL, VIX 14.21 (pct 65.2). Enter in zone, stop 2xATR, bank half at 3xATR then trail; exit day 12 only if never +1xATR.",
+      "features": {
+        "score": 11,
+        "rs_rank": 96.4,
+        "n_confirmations": 3,
+        "adx": 55.3,
+        "rsi": 61.9,
+        "rsi2": 81.3,
+        "atr_pct": 5.41,
+        "vol_ratio": 0.01,
+        "mom_12_1_pct": 52.8,
+        "pct_from_52w_high": 13.7,
+        "obv_rising": true,
+        "breakout_volume": false,
+        "ml_prob": null,
+        "quality_score": 2,
+        "news_sentiment": "POSITIVE",
+        "earnings_in_days": null,
+        "regime_label": "NEUTRAL",
+        "vix": 14.21,
+        "vix_pctile": 65.2,
+        "vix_slope_5d": -2.82,
+        "conviction": 0.56,
+        "instrument_proposed": "BULL_CALL_SPREAD",
+        "engine": "rules-fallback (claude error: Unterminated string starting at: line 28 column 14 (char 2721))"
+      },
+      "note": "banked half; remainder trails (chandelier)"
+    },
+    {
+      "id": 4,
+      "symbol": "ASIANPAINT",
+      "instrument": "EQUITY",
+      "entry_date": "2026-06-15",
+      "entry_price": 2826.22,
+      "exit_date": "2026-06-22",
+      "exit_price": 2698.76,
+      "qty": 141,
+      "pnl": -18890.35,
+      "exit_reason": "STOPLOSS_HIT",
+      "result": "LOSS",
+      "sessions_held": 7,
+      "reasoning": "ASIANPAINT: BUY. Score 10/14 vs need 10, 2/3 confirmations, regime NEUTRAL, VIX 14.21 (pct 65.2). Enter in zone, stop 2xATR, bank half at 3xATR then trail; exit day 12 only if never +1xATR.",
+      "features": {
+        "score": 10,
+        "rs_rank": 78.2,
+        "n_confirmations": 2,
+        "adx": 35.0,
+        "rsi": 73.6,
+        "rsi2": 93.8,
+        "atr_pct": 2.16,
+        "vol_ratio": 0.54,
+        "mom_12_1_pct": 18.5,
+        "pct_from_52w_high": 5.6,
+        "obv_rising": true,
+        "breakout_volume": false,
+        "ml_prob": null,
+        "quality_score": 4,
+        "news_sentiment": "POSITIVE",
+        "earnings_in_days": 44,
+        "regime_label": "NEUTRAL",
+        "vix": 14.21,
+        "vix_pctile": 65.2,
+        "vix_slope_5d": -2.82,
+        "conviction": 0.45,
+        "instrument_proposed": "BULL_CALL_SPREAD",
+        "engine": "rules-fallback (claude error: Unterminated string starting at: line 28 column 14 (char 2920))"
+      }
+    },
+    {
+      "id": 1,
+      "symbol": "BSE",
+      "instrument": "EQUITY",
+      "entry_date": "2026-06-15",
+      "entry_price": 4100.5,
+      "exit_date": "2026-06-29",
+      "exit_price": 3943.55,
+      "qty": 71,
+      "pnl": -11829.27,
+      "exit_reason": "TIME_STOP_12D",
+      "result": "LOSS",
+      "sessions_held": 12,
+      "reasoning": "BSE: BUY. Score 11/14 vs need 10, 2/3 confirmations, regime NEUTRAL, VIX 14.21 (pct 65.2). Enter in zone, stop 2xATR, bank half at 3xATR then trail; exit day 12 only if never +1xATR.",
+      "features": {
+        "score": 11,
+        "rs_rank": 85.5,
+        "n_confirmations": 2,
+        "adx": 29.6,
+        "rsi": 56.8,
+        "rsi2": 86.6,
+        "atr_pct": 3.35,
+        "vol_ratio": 0.24,
+        "mom_12_1_pct": 43.0,
+        "pct_from_52w_high": 7.9,
+        "obv_rising": true,
+        "breakout_volume": false,
+        "ml_prob": null,
+        "quality_score": 3,
+        "news_sentiment": "POSITIVE",
+        "earnings_in_days": null,
+        "regime_label": "NEUTRAL",
+        "vix": 14.21,
+        "vix_pctile": 65.2,
+        "vix_slope_5d": -2.82,
+        "conviction": 0.51,
+        "instrument_proposed": "BULL_CALL_SPREAD",
+        "engine": "rules-fallback (claude error: Unterminated string starting at: line 27 column 14 (char 2723))"
+      }
+    },
+    {
+      "id": 5,
+      "symbol": "ADANIPORTS",
+      "instrument": "EQUITY",
+      "entry_date": "2026-06-15",
+      "entry_price": 1832.53,
+      "exit_date": "2026-06-29",
+      "exit_price": 1777.12,
+      "qty": 218,
+      "pnl": -13006.23,
+      "exit_reason": "TIME_STOP_12D",
+      "result": "LOSS",
+      "sessions_held": 12,
+      "reasoning": "Borderline BUY on ADANIPORTS: score meets threshold, RS strong, no veto triggers, positive EV. Weak ADX, absent volume, thin EV (0.29R) and neutral regime cap conviction to 0.52. Enter via bull-call spread, minimum size, strict 2*ATR stop.",
+      "features": {
+        "score": 10,
+        "rs_rank": 76.4,
+        "n_confirmations": 2,
+        "adx": 20.3,
+        "rsi": 61.6,
+        "rsi2": 79.3,
+        "atr_pct": 2.24,
+        "vol_ratio": 0.08,
+        "mom_12_1_pct": 23.3,
+        "pct_from_52w_high": 1.0,
+        "obv_rising": false,
+        "breakout_volume": false,
+        "ml_prob": null,
+        "quality_score": 4,
+        "news_sentiment": "POSITIVE",
+        "earnings_in_days": -46,
+        "regime_label": "NEUTRAL",
+        "vix": 14.21,
+        "vix_pctile": 65.2,
+        "vix_slope_5d": -2.82,
+        "conviction": 0.52,
+        "instrument_proposed": "BULL_CALL_SPREAD",
+        "engine": "claude"
+      }
+    },
+    {
+      "id": 8,
+      "symbol": "ADANIENT",
+      "instrument": "EQUITY",
+      "entry_date": "2026-06-29",
+      "entry_price": 2984.48,
+      "exit_date": "2026-07-02",
+      "exit_price": 3221.07,
+      "qty": 60,
+      "pnl": 13745.27,
+      "exit_reason": "TARGET_HALF_BANKED",
+      "result": "WIN",
+      "sessions_held": 4,
+      "reasoning": "ADANIENT: BUY. Score 10/14 vs need 10, 2/3 confirmations, regime NEUTRAL, VIX 13.57 (pct 62.8). Enter in zone, stop 2xATR, bank half at 3xATR then trail; exit day 12 only if never +1xATR.",
+      "features": {
+        "score": 10,
+        "rs_rank": 69.1,
+        "n_confirmations": 2,
+        "adx": 43.2,
+        "rsi": 57.7,
+        "rsi2": 29.3,
+        "atr_pct": 2.7,
+        "vol_ratio": 0.09,
+        "mom_12_1_pct": 17.2,
+        "pct_from_52w_high": 3.6,
+        "obv_rising": true,
+        "breakout_volume": false,
+        "ml_prob": null,
+        "quality_score": 2,
+        "news_sentiment": "NO_NEWS",
+        "earnings_in_days": 30,
+        "regime_label": "NEUTRAL",
+        "vix": 13.57,
+        "vix_pctile": 62.8,
+        "vix_slope_5d": 0.6,
+        "conviction": 0.45,
+        "instrument_proposed": "BULL_CALL_SPREAD",
+        "engine": "rules-fallback (claude error: Unterminated string starting at: line 27 column 14 (char 3016))"
+      },
+      "note": "banked half; remainder trails (chandelier)"
+    }
+  ],
+  "equity_curve": [
+    {
+      "date": "2026-06-12",
+      "equity": 2000000.0,
+      "nifty": 23622.9
+    },
+    {
+      "date": "2026-06-15",
+      "equity": 1983604.27,
+      "nifty": 23853.9
+    },
+    {
+      "date": "2026-06-17",
+      "equity": 2003530.18,
+      "nifty": 24085.7
+    },
+    {
+      "date": "2026-06-18",
+      "equity": 2020921.98,
+      "nifty": 24168.0
+    },
+    {
+      "date": "2026-06-19",
+      "equity": 2031749.49,
+      "nifty": 23943.2
+    },
+    {
+      "date": "2026-06-20",
+      "equity": 2027667.9,
+      "nifty": 24013.1
+    },
+    {
+      "date": "2026-06-22",
+      "equity": 2030717.0,
+      "nifty": 24102.9
+    },
+    {
+      "date": "2026-06-23",
+      "equity": 1997462.27,
+      "nifty": 23824.1
+    },
+    {
+      "date": "2026-06-24",
+      "equity": 1999680.69,
+      "nifty": 24021.7
+    },
+    {
+      "date": "2026-06-25",
+      "equity": 1986428.89,
+      "nifty": 24056.0
+    },
+    {
+      "date": "2026-06-26",
+      "equity": 1986428.89,
+      "nifty": 24056.0
+    },
+    {
+      "date": "2026-06-29",
+      "equity": 1983000.58,
+      "nifty": 23946.2
+    },
+    {
+      "date": "2026-06-30",
+      "equity": 2011752.77,
+      "nifty": 23865.8
+    },
+    {
+      "date": "2026-07-01",
+      "equity": 2028485.14,
+      "nifty": 24005.8
+    },
+    {
+      "date": "2026-07-02",
+      "equity": 2040585.31,
+      "nifty": 24175.7
+    },
+    {
+      "date": "2026-07-03",
+      "equity": 2048937.33,
+      "nifty": 24270.8
+    },
+    {
+      "date": "2026-07-06",
+      "equity": 2067698.93,
+      "nifty": 24430.3
+    }
+  ],
+  "limits": {
+    "risk_pct": 1.0,
+    "max_positions": 6,
+    "max_heat_pct": 5.0,
+    "daily_loss_halt_pct": 2.0,
+    "max_dd_halt_pct": 10.0,
+    "conviction_min": 0.35,
+    "opt_conviction_min": 0.55
+  },
+  "narrative": "**EOD Report — 6 Jul 2026 | Paper Trading**\n\n**Book:** ₹20,67,698.93 | Total return: +3.38% (+₹69,551)\n\n**Today:** No trades entered or exited. Zero realized P&L today. Book moved entirely on mark-to-market.\n\n**P&L Drivers:** All gains sit in unrealized (₹85,139). ABCAPITAL (+₹24,702), HFCL (+₹22,470), and ADANIENT (+₹13,327) are carrying the book. Realized side is underwater at -₹15,589 from 5 closed trades.\n\n**Alpha vs NIFTY:** -0.03% since inception (Jun 12). Essentially flat — no meaningful alpha generated yet.\n\n**Closed-trade stats are concerning:** Win rate 40%, profit factor 0.64, expectancy -₹3,118/trade, payoff ratio 0.97. Losses slightly exceed wins in both size and frequency.\n\n**Go-Live Gates:** 1/4 passing. Only drawdown (<10%) clears. Trade count, profit factor, and expectancy all fail.\n\n**Watch tomorrow:** HFCL (17 sessions held) — extended hold; assess whether thesis still intact or position is overstaying."
+}

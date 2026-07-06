@@ -1,0 +1,45 @@
+# ── secrets — NEVER commit ──
+.env
+.env.*
+!.env.example
+
+# ── python ──
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# ── operational logs (CAUTION: Angel One login-failure exceptions can embed
+# cleartext password/TOTP/session tokens in the request/response text — never
+# commit logs/, ever) ──
+logs/
+Algo Trading/recommender/logs/
+*.log
+
+# ── regenerable caches / machine-specific runtime state ──
+universe_cache/
+news_briefs/
+backtest_results/*.pkl
+option_chain_history.jsonl
+agent4_heartbeat.json
+heartbeat.json
+memory_backups/
+.~lock.*
+
+# ── large third-party reference material (linked in README instead) ──
+machine-learning-for-trading/
+Krono/
+Notes/*.pdf
+Notes/*.docx
+Notes/*.doc
+Notes/~$*
+
+# ── editor / OS ──
+.DS_Store
+Thumbs.db
+
+# stale editor backups / corrupt artifacts / stray files
+*.bak-*
+*.corrupt-backup-*.json
+/python
