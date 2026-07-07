@@ -41,6 +41,13 @@ C:\trading_bot\Algo Trading\recommender\   (the live system)
   agent4.py         Agent 4 executor + CLI (execute|monitor|summary|reset-halt); logs news ctx
   news_brain.py     Agent 6 News Brain: build|show|dry CLI -> news_briefs\latest.json
   agent5_report.py  Agent 5 Reporter: build|show CLI -> daily_reports\report_*.json (+ Claude EOD note)
+  chat_analyst.py   Conversational analyst (2026-07-07): agentic Claude tool-use loop over the
+                    system's OWN functions — 8 tools (price/technicals/news/briefing/full
+                    recommendation/option chain/screener/portfolio). GROUNDING RULE: every number
+                    must come from a tool result; tool failures are reported, never guessed.
+                    POST /api/chat (stateless — client sends history) + 💬 Analyst tab in the UI
+                    (tool-audit chips under each reply). Plain-text replies (UI renders no markdown).
+                    Env: CHAT_MODEL (defaults to STRATEGIST_MODEL). ~1-4 Claude calls/question.
   news_sources.py   NewsSource ABC + free impls (RSS/GDELT/yfinance/DDG); paid-pluggable
   universe.py       NSE index-constituent loader (Nifty 50/Bank/Midcap150/500 from NSE
                     archives CSVs); merges with watchlist (curated wins); load_universe(scope)
@@ -158,6 +165,7 @@ is the rules system WITHOUT ML.
 /api/regime · /api/watchlist (+/add POST) · /api/stock/{sym} · /api/chart/{sym} ·
 /api/news/{sym} · /api/news-brief (Agent 6 briefing) · POST /api/news-brief/build (slow) ·
 POST /api/recommend/{sym} · /api/scan · /api/universe · /api/screener?scope=nifty50|nifty210|nifty500&sector=&min_score=&direction=LONG (universe scan, no Claude) ·
+POST /api/chat {messages:[{role,content}...]} (conversational analyst, tool-grounded) ·
 /api/chart/{sym}?period=5m|15m|1h|6mo|13mo|3y|5y (intraday = display-only, Yahoo ~15min
 delayed; epochs IST-shifted +5:30 in chart_data via _ist_epoch so the lightweight-charts axis
 shows NSE hours 09:15-15:30 not UTC — fix 2026-06-22; signals remain daily-bar) ·

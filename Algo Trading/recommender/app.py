@@ -156,6 +156,17 @@ def portfolio_reset_halt():
     """Manually clear the MAX_DRAWDOWN kill switch (deliberate human decision)."""
     return agent4.reset_halt()
 
+class ChatBody(BaseModel):
+    messages: list[dict]     # [{role: user|assistant, content: str}, ...] ending with user
+
+@app.post("/api/chat")
+def chat(body: ChatBody):
+    """Conversational analyst: agentic Claude loop grounded in the system's own tools
+    (live quotes, technicals, news, briefing, recommendation, option chain, screener,
+    portfolio). Client holds history and sends it each turn (server stays stateless)."""
+    import chat_analyst
+    return chat_analyst.chat(body.messages)
+
 @app.get("/api/report")
 def report(rebuild: bool = False):
     """Agent 5 — daily performance report: equity/P&L, win-rate/PF/payoff/expectancy,
