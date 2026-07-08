@@ -1,13 +1,13 @@
 {
  "created": "2026-06-12 09:25",
  "start_capital": 2000000.0,
- "cash": 136185.13,
+ "cash": 146488.9,
  "peak_equity": 2067698.93,
  "halted": false,
  "halt_reason": null,
  "day": {
-  "date": "2026-07-07",
-  "realized_pnl": 0.0
+  "date": "2026-07-08",
+  "realized_pnl": -28802.68
  },
  "next_id": 17,
  "positions": [
@@ -29,8 +29,8 @@
    "reached_1atr": true,
    "atr_at_entry": 237.75,
    "highest_close": 4926.0,
-   "sessions_held": 18,
-   "last_session": "2026-07-07",
+   "sessions_held": 19,
+   "last_session": "2026-07-08",
    "open_risk_inr": 19674.67,
    "entry_costs": 237.3,
    "status": "OPEN",
@@ -80,8 +80,8 @@
    "reached_1atr": true,
    "atr_at_entry": 9.76,
    "highest_close": 226.73,
-   "sessions_held": 18,
-   "last_session": "2026-07-07",
+   "sessions_held": 19,
+   "last_session": "2026-07-08",
    "open_risk_inr": 0.0,
    "entry_costs": 241.87,
    "status": "OPEN",
@@ -131,8 +131,8 @@
    "reached_1atr": true,
    "atr_at_entry": 10.5,
    "highest_close": 410.0,
-   "sessions_held": 11,
-   "last_session": "2026-07-07",
+   "sessions_held": 12,
+   "last_session": "2026-07-08",
    "open_risk_inr": 19990.3,
    "entry_costs": 450.73,
    "status": "OPEN",
@@ -182,8 +182,8 @@
    "reached_1atr": true,
    "atr_at_entry": 34.38,
    "highest_close": 1226.0,
-   "sessions_held": 10,
-   "last_session": "2026-07-07",
+   "sessions_held": 11,
+   "last_session": "2026-07-08",
    "open_risk_inr": 19932.9,
    "entry_costs": 425.52,
    "status": "OPEN",
@@ -233,8 +233,8 @@
    "reached_1atr": true,
    "atr_at_entry": 80.93,
    "highest_close": 3230.9,
-   "sessions_held": 7,
-   "last_session": "2026-07-07",
+   "sessions_held": 8,
+   "last_session": "2026-07-08",
    "open_risk_inr": 0.0,
    "entry_costs": 450.4,
    "status": "OPEN",
@@ -284,8 +284,8 @@
    "reached_1atr": true,
    "atr_at_entry": 103.07,
    "highest_close": 3430.60009765625,
-   "sessions_held": 6,
-   "last_session": "2026-07-07",
+   "sessions_held": 7,
+   "last_session": "2026-07-08",
    "open_risk_inr": 19686.42,
    "entry_costs": 392.15,
    "status": "OPEN",
@@ -347,8 +347,8 @@
    "target": 1980.76,
    "reached_1atr": false,
    "atr_at_entry": 36.42,
-   "sessions_held": 1,
-   "last_session": "2026-07-07",
+   "sessions_held": 2,
+   "last_session": "2026-07-08",
    "max_loss_inr": 15375.0,
    "open_risk_inr": 15375.0,
    "entry_costs": 68.74,
@@ -400,8 +400,8 @@
    "reached_1atr": false,
    "atr_at_entry": 37.4,
    "highest_close": 1599.300048828125,
-   "sessions_held": 1,
-   "last_session": "2026-07-07",
+   "sessions_held": 2,
+   "last_session": "2026-07-08",
    "open_risk_inr": 19971.0,
    "entry_costs": 424.24,
    "status": "OPEN",
@@ -431,124 +431,6 @@
     "conviction": 0.54,
     "instrument_proposed": "BULL_CALL_SPREAD",
     "engine": "rules-fallback (claude error: Unterminated string starting at: line 30 column 23 (char 2841))"
-   }
-  },
-  {
-   "id": 15,
-   "symbol": "NIFTY",
-   "yahoo": "^NSEI",
-   "instrument": "BULL_CALL_SPREAD",
-   "direction": "LONG",
-   "entry_date": "2026-07-07",
-   "entry_time": "09:33",
-   "underlying_entry": 24433.4,
-   "legs": [
-    {
-     "type": "CE",
-     "side": "BUY",
-     "strike": 24450.0,
-     "entry_premium": 207.0
-    },
-    {
-     "type": "CE",
-     "side": "SELL",
-     "strike": 25150.0,
-     "entry_premium": 165.2
-    }
-   ],
-   "expiry": "21-Jul-2026",
-   "lots": 7,
-   "lot_size": 65,
-   "net_debit": 42.22,
-   "slippage_pct": 1.0,
-   "data_source": "live_angel",
-   "stop": 23971.48,
-   "target": 25126.28,
-   "reached_1atr": false,
-   "atr_at_entry": 230.96,
-   "sessions_held": 1,
-   "last_session": "2026-07-07",
-   "max_loss_inr": 19019.0,
-   "open_risk_inr": 19019.0,
-   "entry_costs": 203.08,
-   "status": "OPEN",
-   "reasoning": "NIFTY index trend 6/7 (stack_20_50, ma50_rising, breakout_5d, mom_63_pos, rsi_zone); BULL_CALL_SPREAD into 21-Jul-2026",
-   "features": {
-    "index_score": 6,
-    "details": {
-     "stack_20_50": true,
-     "ma50_rising": true,
-     "breakout_5d": true,
-     "mom_63_pos": true,
-     "rsi_zone": true,
-     "adx_trend": false
-    },
-    "rsi": 64.2,
-    "adx": 13.1,
-    "vix": 11.81,
-    "vix_pctile": 37.4,
-    "vix_slope_5d": -1.79,
-    "regime_label": "NEUTRAL",
-    "conviction": 0.6
-   }
-  },
-  {
-   "id": 16,
-   "symbol": "BANKNIFTY",
-   "yahoo": "^NSEBANK",
-   "instrument": "BULL_CALL_SPREAD",
-   "direction": "LONG",
-   "entry_date": "2026-07-07",
-   "entry_time": "09:33",
-   "underlying_entry": 58387.3,
-   "legs": [
-    {
-     "type": "CE",
-     "side": "BUY",
-     "strike": 58400.0,
-     "entry_premium": 838.4
-    },
-    {
-     "type": "CE",
-     "side": "SELL",
-     "strike": 60200.0,
-     "entry_premium": 190.8
-    }
-   ],
-   "expiry": "28-Jul-2026",
-   "lots": 1,
-   "lot_size": 30,
-   "net_debit": 654.08,
-   "slippage_pct": 1.0,
-   "data_source": "live_angel",
-   "stop": 57011.98,
-   "target": 60450.28,
-   "reached_1atr": false,
-   "atr_at_entry": 687.66,
-   "sessions_held": 1,
-   "last_session": "2026-07-07",
-   "max_loss_inr": 19428.0,
-   "open_risk_inr": 19428.0,
-   "entry_costs": 70.87,
-   "status": "OPEN",
-   "reasoning": "BANKNIFTY index trend 6/7 (stack_20_50, ma50_rising, mom_63_pos, rsi_zone, adx_trend); BULL_CALL_SPREAD into 28-Jul-2026",
-   "features": {
-    "index_score": 6,
-    "details": {
-     "stack_20_50": true,
-     "ma50_rising": true,
-     "breakout_5d": false,
-     "mom_63_pos": true,
-     "rsi_zone": true,
-     "adx_trend": true
-    },
-    "rsi": 65.3,
-    "adx": 20.9,
-    "vix": 11.81,
-    "vix_pctile": 37.4,
-    "vix_slope_5d": -1.79,
-    "regime_label": "NEUTRAL",
-    "conviction": 0.6
    }
   }
  ],
@@ -754,6 +636,74 @@
     "engine": "rules-fallback (claude error: Unterminated string starting at: line 27 column 14 (char 3016))"
    },
    "note": "banked half; remainder trails (chandelier)"
+  },
+  {
+   "id": 15,
+   "symbol": "NIFTY",
+   "instrument": "BULL_CALL_SPREAD",
+   "entry_date": "2026-07-07",
+   "net_debit": 42.22,
+   "exit_date": "2026-07-08",
+   "exit_mark": 0.0,
+   "lots": 7,
+   "pnl": -19460.38,
+   "exit_reason": "UNDERLYING_STOP_HIT",
+   "mark_quality": "intrinsic_fallback",
+   "result": "LOSS",
+   "sessions_held": 2,
+   "reasoning": "NIFTY index trend 6/7 (stack_20_50, ma50_rising, breakout_5d, mom_63_pos, rsi_zone); BULL_CALL_SPREAD into 21-Jul-2026",
+   "features": {
+    "index_score": 6,
+    "details": {
+     "stack_20_50": true,
+     "ma50_rising": true,
+     "breakout_5d": true,
+     "mom_63_pos": true,
+     "rsi_zone": true,
+     "adx_trend": false
+    },
+    "rsi": 64.2,
+    "adx": 13.1,
+    "vix": 11.81,
+    "vix_pctile": 37.4,
+    "vix_slope_5d": -1.79,
+    "regime_label": "NEUTRAL",
+    "conviction": 0.6
+   }
+  },
+  {
+   "id": 16,
+   "symbol": "BANKNIFTY",
+   "instrument": "BULL_CALL_SPREAD",
+   "entry_date": "2026-07-07",
+   "net_debit": 654.08,
+   "exit_date": "2026-07-08",
+   "exit_mark": 347.04,
+   "lots": 1,
+   "pnl": -9342.3,
+   "exit_reason": "UNDERLYING_STOP_HIT",
+   "mark_quality": "intrinsic_fallback",
+   "result": "LOSS",
+   "sessions_held": 2,
+   "reasoning": "BANKNIFTY index trend 6/7 (stack_20_50, ma50_rising, mom_63_pos, rsi_zone, adx_trend); BULL_CALL_SPREAD into 28-Jul-2026",
+   "features": {
+    "index_score": 6,
+    "details": {
+     "stack_20_50": true,
+     "ma50_rising": true,
+     "breakout_5d": false,
+     "mom_63_pos": true,
+     "rsi_zone": true,
+     "adx_trend": true
+    },
+    "rsi": 65.3,
+    "adx": 20.9,
+    "vix": 11.81,
+    "vix_pctile": 37.4,
+    "vix_slope_5d": -1.79,
+    "regime_label": "NEUTRAL",
+    "conviction": 0.6
+   }
   }
  ],
  "equity_curve": [
@@ -846,6 +796,11 @@
    "date": "2026-07-07",
    "equity": 2011805.29,
    "nifty": 24398.7
+  },
+  {
+   "date": "2026-07-08",
+   "equity": 1948694.31,
+   "nifty": 23878.9
   }
  ],
  "config_version": "V10.1",
