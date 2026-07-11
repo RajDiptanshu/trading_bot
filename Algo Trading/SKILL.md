@@ -147,6 +147,23 @@ the gate (best fold most recent, +0.072). Breadth, not features, was the ML fix.
 Caveats: OOS samples 84-145 trades; universe backtests carry survivorship bias
 (today's constituents on their own past); index-sleeve params unchanged (not re-validated).
 
+## 5c. V10.2 (2026-07-10) — options RCA + exit fix + expert chat
+OPTIONS RCA: both closed option spreads (NIFTY/BANKNIFTY bull-call) exited UNDERLYING_STOP_HIT at
+2 days for -Rs28,803 (~96% of max loss each) — vs -Rs15,589 on 5 equity trades. ROOT CAUSE: the
+2.5*ATR equity stop was applied to defined-risk debit spreads (whose max loss is ALREADY the debit),
+so a 2-day underlying wiggle crystallised near-max loss and killed all recovery. FIX (run_monitor
+options branch): removed the underlying noise-stop; spreads now managed on (1) SPREAD_TARGET —
+bank at OPT_PROFIT_TAKE_FRAC (0.6) of max profit on the spread's own mark, (2) EXPIRY_EXIT
+(OPT_EXIT_DTE), (3) UNDERLYING_THESIS_BREAK — only on underlying CLOSE past OPT_DISASTER_ATR (4.0)
+ATR. Max loss stays capped at the debit; losers get theta/recovery time. Verified on live spreads
+(NIFTY spread was +Rs65/sh and would've been noise-stopped under old logic).
+RECOMMENDED-NOT-YET-DONE (need the option_chain_history.jsonl IV dataset to validate first): ITM
+long leg instead of ATM (cut theta), per-stock IV-percentile gating (don't buy rich premium),
+bearish/neutral structures (book is 100% long-delta). CHAT ANALYST (chat_analyst.py): added
+Anthropic native web_search (server tool, India user_location) + a 15+yr-analyst persona that
+mandates MOVE/VERDICT/LEVELS/WATCH with a stop+target every time — fixed the "no news driver" punt
+(now finds real catalysts, e.g. TRENT's Q1 miss, with levels).
+
 ## 6. ML layer (ML4T) — exact lineage
 Features ch4 (19, incl. 12-1 momentum, alpha#101), cross-sectional rank transform per date;
 label = beats watchlist median fwd 5d; LightGBM->HGB->logistic fallback chain ch11/12;

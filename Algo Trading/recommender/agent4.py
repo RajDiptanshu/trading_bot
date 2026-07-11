@@ -98,6 +98,10 @@ ENTRY_ZONE_TOL      = 0.005        # live price may exceed entry zone top by max
 TIME_STOP_SESSIONS  = 8            # exit if never reached +1*ATR by session 8
                                    # [V10.1 2026-07-06] 12->8: backtest_lab OOS PF 1.51->1.58, maxDD halved
 OPT_EXIT_DTE        = 4            # close options this many calendar days before expiry
+# [V10.2 2026-07-10] defined-risk options MANAGEMENT (the old 2.5*ATR underlying stop RCA'd as the
+# #1 loss driver — both closed spreads exited UNDERLYING_STOP_HIT at 2 days for ~96% of max loss).
+OPT_PROFIT_TAKE_FRAC = float(os.getenv("OPT_PROFIT_TAKE_FRAC", "0.6"))  # bank a debit spread at 60% of max profit
+OPT_DISASTER_ATR     = float(os.getenv("OPT_DISASTER_ATR", "4.0"))      # only exit on underlying CLOSE this many ATR against (real thesis break, not a wick)
 TOP_N_RECS          = int(os.getenv("AGENT4_TOP_N_RECS", "5"))   # max Claude recs/cycle — SPEED LEVER (lower = faster)
 # Universe Agent 4 scans for NEW entries. core = curated 55; nifty210 = Nifty 50+Bank+Midcap150
 # (~204); nifty500 = full. Only the top TOP_N_RECS by score get a Claude call, so cost is
@@ -934,22 +938,27 @@ def run_monitor() -> dict:
                     r = _close_equity(state, pos, px, 1.0, "TIME_STOP_12D")
                     actions.append({"symbol": pos["symbol"], "action": "TIME_STOP_12D", "pnl": r["pnl"]})
             else:
-                # options: managed off the UNDERLYING levels + expiry clock
-                if not pos["reached_1atr"] and bar["high"] >= pos["underlying_entry"] + pos["atr_at_entry"]:
-                    pos["reached_1atr"] = True
+                # [V10.2 2026-07-10] OPTIONS = DEFINED-RISK MANAGEMENT, not equity stops.
+                # A debit spread's max loss IS the premium paid — never stop it out on a 2.5*ATR
+                # underlying wiggle (RCA: that realised ~96% of max loss at 2 days and killed all
+                # recovery). Manage on: (1) profit target on the SPREAD's own value, (2) the expiry
+                # clock, (3) a WIDE disaster stop on the underlying CLOSE (real thesis break).
                 try:
                     dte = (datetime.strptime(pos["expiry"], "%d-%b-%Y").date() - date.today()).days
                 except ValueError:
                     dte = 99
+                mark, _mq, _ = _option_mark(pos)                  # current spread value per share
+                debit = pos.get("net_debit") or 0.0               # >0 debit spread, <0 credit spread
+                strikes = [l["strike"] for l in pos["legs"]]
+                width = abs(max(strikes) - min(strikes)) if len(strikes) >= 2 else None
                 reason = None
-                if bar["low"] <= pos["stop"]:
-                    reason = "UNDERLYING_STOP_HIT"
-                elif bar["high"] >= pos["target"]:
-                    reason = "UNDERLYING_TARGET_HIT"
+                if width and debit > 0 and mark >= debit + OPT_PROFIT_TAKE_FRAC * (width - debit):
+                    reason = f"SPREAD_TARGET_{int(OPT_PROFIT_TAKE_FRAC * 100)}PCT"      # bank the winner
                 elif dte <= OPT_EXIT_DTE:
                     reason = f"EXPIRY_EXIT_{dte}DTE"
-                elif not pos["reached_1atr"] and pos["sessions_held"] >= TIME_STOP_SESSIONS:
-                    reason = "TIME_STOP_12D"
+                elif bar and bar["close"] <= pos["underlying_entry"] - OPT_DISASTER_ATR * pos["atr_at_entry"]:
+                    reason = "UNDERLYING_THESIS_BREAK"            # genuinely wrong (4*ATR, on close)
+                # else: HOLD — max loss is already capped at the debit; give theta/recovery a chance
                 if reason:
                     r = _close_options(state, pos, reason)
                     actions.append({"symbol": pos["symbol"], "action": reason,
