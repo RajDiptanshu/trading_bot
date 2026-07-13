@@ -42,7 +42,7 @@ HISTORY_CAP = 16          # messages of history accepted from the client
 # Anthropic native web search (server tool) — the analyst's live "why did it move" grounding.
 # Self-heals: if the account/model rejects it, the loop retries without it (see chat()).
 CHAT_WEB_SEARCH = os.getenv("CHAT_WEB_SEARCH", "1").strip().lower() not in ("0", "false", "no", "")
-WEB_SEARCH_TOOL = {"type": "web_search_20250305", "name": "web_search", "max_uses": 4,
+WEB_SEARCH_TOOL = {"type": "web_search_20250305", "name": "web_search", "max_uses": 2,  # 4->2: cap latency
                    "user_location": {"type": "approximate", "country": "IN",
                                      "timezone": "Asia/Kolkata"}}
 
@@ -166,16 +166,23 @@ def _t_screen(scope: str = "nifty210", sector: str | None = None,
             "note": "first uncached scan takes ~30-60s; rows ranked by score then RS"}
 
 def _t_portfolio() -> dict:
+    """[V11] Two separate paper books: EQUITY-only (10L) and F&O-only options (10L)."""
     import agent4
     s = agent4.summary()
-    pos = [{k: p.get(k) for k in ("symbol", "instrument", "entry_price", "current_price",
-                                  "qty", "unrealized_pnl", "sessions_held", "stop")}
-           for p in s.get("open_positions", [])]
-    return {"equity": s.get("equity"), "return_pct": s.get("return_pct"),
-            "cash": s.get("cash"), "halted": s.get("halted"),
-            "open_positions": pos, "stats": s.get("stats"),
-            "benchmark_vs_nifty": s.get("benchmark"),
-            "note": "PAPER portfolio (virtual Rs 20L) — no real money"}
+    out = {"combined": s.get("combined"), "books": {}}
+    for name, b in (s.get("books") or {}).items():
+        pos = [{k: p.get(k) for k in ("symbol", "instrument", "entry_price", "current_price",
+                                      "qty", "lots", "unrealized_pnl", "sessions_held", "stop")}
+               for p in b.get("open_positions", [])]
+        out["books"][name] = {"label": b.get("label"), "equity": b.get("equity"),
+                              "return_pct": b.get("return_pct"), "cash": b.get("cash"),
+                              "halted": b.get("halted"), "open_positions": pos,
+                              "stats": b.get("stats"),
+                              "benchmark_vs_nifty": b.get("benchmark")}
+    out["note"] = ("PAPER portfolios — no real money. TWO separate books since 2026-07-12: "
+                   "EQUITY book (Rs 10L, shares only) and OPTIONS book (Rs 10L, F&O only, "
+                   "defined-risk spreads, no equity fallback).")
+    return out
 
 TOOL_IMPLS = {
     "get_stock_price": lambda a: _t_price(a["symbol"]),
@@ -225,7 +232,8 @@ TOOLS = [
          "min_score": {"type": "integer"}, "direction": {"type": "string"},
          "limit": {"type": "integer"}}}},
     {"name": "get_portfolio", "description":
-     "The user's PAPER portfolio: equity, open positions with live P&L, closed-trade stats, alpha vs NIFTY.",
+     "The user's TWO PAPER books [V11]: EQUITY-only (Rs 10L) and F&O-only options (Rs 10L) — "
+     "per-book equity, open positions with live P&L, closed-trade stats, alpha vs NIFTY.",
      "input_schema": {"type": "object", "properties": {}}},
 ]
 
@@ -264,17 +272,23 @@ blank line, plain paragraphs, and "label: value" or "- " lines. Emojis sparingly
 HONESTY (never drop this): you are decision support, not SEBI-registered advice; be confident but
 never promise returns — edges are probabilistic (the system's own backtests show ~52-57% hit rates,
 profit factor ~1.5-2.0 out-of-sample). When the real call is "no clean setup", say exactly that — and
-still give the levels that would create one. The portfolio is PAPER money (virtual Rs 20L)."""
+still give the levels that would create one. The portfolios are PAPER money — two separate books
+since 2026-07-12: an EQUITY-only book (Rs 10L) and an F&O-only options book (Rs 10L)."""
 
 
 # ───────────────────────────── the agentic loop ─────────────────────────────
-def chat(messages: list[dict]) -> dict:
-    """messages: [{role: user|assistant, content: str}, ...] ending with the new user turn.
-    Returns {reply, tools_used, tool_trace, usage, model}."""
+def chat_stream(messages: list[dict]):
+    """Generator form of the analyst loop — yields progress so the UI shows live
+    activity instead of a 1-2 min frozen spinner (a grounded buy/sell answer does
+    several Claude rounds + web search + a nested 3-agent recommendation):
+        {"type":"status","tools":[<tool names being / just fetched>]}
+        {"type":"final", reply, tools_used, tool_trace, usage, model}
+    chat() below drains this and returns the final event (CLI + non-stream fallback)."""
     api_key = os.getenv("ANTHROPIC_API_KEY")
     if not api_key:
-        return {"reply": "Chat needs ANTHROPIC_API_KEY in .env — it's missing.", "tools_used": [],
-                "tool_trace": [], "usage": None, "model": None}
+        yield {"type": "final", "reply": "Chat needs ANTHROPIC_API_KEY in .env — it's missing.",
+               "tools_used": [], "tool_trace": [], "usage": None, "model": None}
+        return
     import anthropic
     client = anthropic.Anthropic(api_key=api_key, timeout=120.0, max_retries=1)
 
@@ -283,13 +297,15 @@ def chat(messages: list[dict]) -> dict:
              if m.get("role") in ("user", "assistant") and isinstance(m.get("content"), str)
              and m["content"].strip()]
     if not convo or convo[-1]["role"] != "user":
-        return {"reply": "Send a question to start.", "tools_used": [], "tool_trace": [],
-                "usage": None, "model": MODEL}
+        yield {"type": "final", "reply": "Send a question to start.", "tools_used": [],
+               "tool_trace": [], "usage": None, "model": MODEL}
+        return
 
     system = SYSTEM.replace("{today}", datetime.now().strftime("%A, %d %B %Y %H:%M IST"))
     trace, in_tok, out_tok = [], 0, 0
     use_search = CHAT_WEB_SEARCH
     resp = None
+    yield {"type": "status", "tools": [], "stage": "thinking"}     # immediate feedback
     try:
         for _ in range(MAX_STEPS):
             tools = (TOOLS + [WEB_SEARCH_TOOL]) if use_search else TOOLS
@@ -310,9 +326,13 @@ def chat(messages: list[dict]) -> dict:
                 if getattr(b, "type", "") == "server_tool_use" and getattr(b, "name", "") == "web_search":
                     trace.append({"tool": "web_search",
                                   "input": {"query": (getattr(b, "input", {}) or {}).get("query")}, "ok": True})
+                    yield {"type": "status", "tools": ["web_search"]}
             if resp.stop_reason != "tool_use":
                 break
             convo.append({"role": "assistant", "content": resp.content})
+            toolnames = [b.name for b in resp.content if b.type == "tool_use"]
+            if toolnames:
+                yield {"type": "status", "tools": toolnames}   # show what's being fetched
             results = []
             for block in resp.content:
                 if block.type != "tool_use":
@@ -334,8 +354,18 @@ def chat(messages: list[dict]) -> dict:
                      "or narrow the question.")
     except Exception as e:
         reply = f"The analyst hit an error: {str(e)[:160]}"
-    return {"reply": reply, "tools_used": sorted({t["tool"] for t in trace}),
-            "tool_trace": trace, "usage": {"in": in_tok, "out": out_tok}, "model": MODEL}
+    yield {"type": "final", "reply": reply, "tools_used": sorted({t["tool"] for t in trace}),
+           "tool_trace": trace, "usage": {"in": in_tok, "out": out_tok}, "model": MODEL}
+
+
+def chat(messages: list[dict]) -> dict:
+    """Non-streaming wrapper (CLI + /api/chat fallback): drains chat_stream -> final event.
+    Returns {reply, tools_used, tool_trace, usage, model}."""
+    final = {"reply": "", "tools_used": [], "tool_trace": [], "usage": None, "model": MODEL}
+    for ev in chat_stream(messages):
+        if ev.get("type") == "final":
+            final = {k: v for k, v in ev.items() if k != "type"}
+    return final
 
 
 if __name__ == "__main__":          # smoke test:  python chat_analyst.py "your question"

@@ -16,7 +16,7 @@ load_dotenv(Path(os.getenv("TRADING_BOT_DIR", BASE_DIR.parents[1])) / ".env", ov
 
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, StreamingResponse
 from pydantic import BaseModel
 import agents
 import agent4
@@ -132,10 +132,10 @@ def screener(scope: str = "nifty210", sector: str | None = None, min_score: int 
     return screener_engine.scan_universe(scope, min_score=min_score, sector=sector,
                                          direction=direction, liquid_only=liquid_only, limit=limit)
 
-# ───────────── Agent 4 — paper-trading portfolio (Rs 20,00,000) ─────────────
+# ───── Agent 4 — paper portfolios [V11: EQUITY 10L + OPTIONS 10L, separate books] ─────
 @app.get("/api/portfolio")
 def portfolio():
-    """Portfolio summary: equity, positions, closed trades, stats, kill-switch state."""
+    """Both books side by side {books:{equity,options}, combined:{...}} + heartbeat."""
     return agent4.summary()
 
 class ExecuteBody(BaseModel):
@@ -152,9 +152,10 @@ def portfolio_monitor():
     return agent4.run_monitor()
 
 @app.post("/api/portfolio/reset-halt")
-def portfolio_reset_halt():
-    """Manually clear the MAX_DRAWDOWN kill switch (deliberate human decision)."""
-    return agent4.reset_halt()
+def portfolio_reset_halt(book: str | None = None):
+    """Manually clear the MAX_DRAWDOWN kill switch (deliberate human decision).
+    ?book=equity|options resets one book; omitted resets both [V11]."""
+    return agent4.reset_halt(book)
 
 class ChatBody(BaseModel):
     messages: list[dict]     # [{role: user|assistant, content: str}, ...] ending with user
@@ -166,6 +167,22 @@ def chat(body: ChatBody):
     portfolio). Client holds history and sends it each turn (server stays stateless)."""
     import chat_analyst
     return chat_analyst.chat(body.messages)
+
+@app.post("/api/chat/stream")
+def chat_stream_ep(body: ChatBody):
+    """Streaming analyst (Server-Sent Events): emits {type:status,tools:[...]} as each
+    tool round runs, then a {type:final,...} with the answer — so the UI shows live
+    progress instead of a 1-2 min frozen spinner. Falls back client-side to /api/chat."""
+    import chat_analyst, json as _json
+    def gen():
+        try:
+            for ev in chat_analyst.chat_stream(body.messages):
+                yield f"data: {_json.dumps(ev, default=str)}\n\n"
+        except Exception as e:
+            yield "data: " + _json.dumps({"type": "final", "reply": f"stream error: {str(e)[:120]}",
+                   "tools_used": [], "tool_trace": [], "usage": None, "model": None}) + "\n\n"
+    return StreamingResponse(gen(), media_type="text/event-stream",
+                             headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
 
 @app.get("/api/report")
 def report(rebuild: bool = False):
@@ -185,5 +202,11 @@ def index():
 
 if __name__ == "__main__":
     import uvicorn
-    print("\n  NSE Recommendation Engine -> http://127.0.0.1:8650\n")
-    uvicorn.run(app, host="127.0.0.1", port=8650, log_level="warning")
+    port = int(os.getenv("APP_PORT", "8650"))     # override for side-by-side test instances
+    # SECURITY: default 127.0.0.1 = loopback only. Remote access uses `tailscale serve`,
+    # which proxies the tailnet to this loopback port (nothing exposed on LAN/public).
+    # Only set APP_HOST=0.0.0.0 for the direct-Tailscale-IP fallback (see remote_access.bat) —
+    # the app has NO auth, so binding wider than loopback trusts your whole LAN.
+    host = os.getenv("APP_HOST", "127.0.0.1")
+    print(f"\n  NSE Recommendation Engine -> http://{host}:{port}\n")
+    uvicorn.run(app, host=host, port=port, log_level="warning")

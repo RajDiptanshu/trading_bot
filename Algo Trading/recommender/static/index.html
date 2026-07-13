@@ -388,41 +388,36 @@ function AddModal({onClose,onAdded}){
 }
 
 function PortfolioView(){
-  const [pf,setPf]=useState(null);
+  // [V11] two separate books: EQUITY-only (10L) and F&O-only OPTIONS (10L)
+  const [data,setData]=useState(null);
   const [busy,setBusy]=useState(null);   // 'execute' | 'monitor' | null
   const [last,setLast]=useState(null);
   const [err,setErr]=useState(null);
-  const [openSel,setOpenSel]=useState(null);     // expanded open-position id
-  const [closedSel,setClosedSel]=useState(null); // expanded closed-trade id
-  const load=()=>api('/api/portfolio').then(setPf).catch(e=>setErr(e.message));
+  const load=()=>api('/api/portfolio').then(setData).catch(e=>setErr(e.message));
   useEffect(()=>{load();},[]);
   const run=(kind)=>{ setBusy(kind);setErr(null);
     api(`/api/portfolio/${kind}`,{method:'POST'})
       .then(r=>{setLast({kind,r});return load();})
       .catch(e=>setErr(e.message)).finally(()=>setBusy(null)); };
-  if(err && !pf) return <div className="center">⚠ {err}</div>;
-  if(!pf) return <div className="center"><div className="spin"></div>loading portfolio…</div>;
-  const st=pf.stats||{}, fmt=n=>n==null?'—':'₹'+Math.round(n).toLocaleString('en-IN');
+  if(err && !data) return <div className="center">⚠ {err}</div>;
+  if(!data||!data.books) return <div className="center"><div className="spin"></div>loading portfolios…</div>;
+  const cb=data.combined||{}, fmt=n=>n==null?'—':'₹'+Math.round(n).toLocaleString('en-IN');
   const pnlCol=v=>v>0?'#4cd98a':v<0?'#ff7b86':'#d8e1ec';
-  const pct=v=>v==null?'':` (${v>0?'+':''}${v}%)`;
-  const detCard=(lbl,val,col)=><div style={{background:'var(--panel2)',borderRadius:8,padding:'8px 11px'}}>
-    <div style={{fontSize:10.5,color:'#7d8da1',textTransform:'uppercase',letterSpacing:'.5px'}}>{lbl}</div>
-    <div style={{fontSize:15,fontWeight:700,marginTop:3,color:col||'#d8e1ec'}}>{val}</div></div>;
+  const bookTag=b=>b==='options'?<span className="pill" style={{fontSize:10,color:'#ffb74d',marginRight:5}}>OPT</span>
+                 :b==='equity'?<span className="pill" style={{fontSize:10,color:'#82aaff',marginRight:5}}>EQ</span>:null;
   return <div>
     <div className="head">
-      <h1>Paper Portfolio</h1>
-      <span className="price">{fmt(pf.equity)}</span>
-      <span className="pill" style={{color:pnlCol(pf.return_pct)}}>{pf.return_pct>0?'+':''}{pf.return_pct}%</span>
-      {pf.benchmark && <span className="pill" title={`bot ${pf.benchmark.bot_return_pct}% vs NIFTY ${pf.benchmark.nifty_return_pct}% since ${pf.benchmark.since}`}>
-        α vs NIFTY <b style={{color:pnlCol(pf.benchmark.alpha_pct),marginLeft:4}}>{pf.benchmark.alpha_pct>0?'+':''}{pf.benchmark.alpha_pct}%</b></span>}
-      <span className="pill">cash {fmt(pf.cash)}</span>
-      <span className="pill">heat {fmt(pf.open_heat_inr)} / {pf.limits.max_heat_pct}%</span>
-      <span className="pill">day P&L <b style={{color:pnlCol(pf.day.realized_pnl)}}>{fmt(pf.day.realized_pnl)}</b></span>
+      <h1>Paper Portfolios</h1>
+      <span className="price">{fmt(cb.equity)}</span>
+      <span className="pill" style={{color:pnlCol(cb.return_pct)}}>{cb.return_pct>0?'+':''}{cb.return_pct}%</span>
+      <span className="pill">cash {fmt(cb.cash)}</span>
+      <span className="pill">day P&L <b style={{color:pnlCol(cb.day_realized_pnl)}}>{fmt(cb.day_realized_pnl)}</b></span>
+      <span className="pill" title="Two independent books since 2026-07-12: EQUITY-only and F&O-only, ₹10L each">2 books · ₹10L each</span>
       <div className="spacer"></div>
       <button className="btn ghost" disabled={busy} onClick={()=>run('monitor')}>{busy==='monitor'?'monitoring…':'⟳ Monitor positions'}</button>
-      <button className="btn" style={{marginLeft:8}} disabled={busy||pf.halted} onClick={()=>run('execute')}>{busy==='execute'?'agents working…':'▶ Run entry cycle'}</button>
+      <button className="btn" style={{marginLeft:8}} disabled={busy||(cb.halted_books||[]).length>=2} onClick={()=>run('execute')}>{busy==='execute'?'agents working…':'▶ Run entry cycle'}</button>
     </div>
-    {(()=>{ const hb=pf.heartbeat||{}; const today=new Date().toISOString().slice(0,10);
+    {(()=>{ const hb=data.heartbeat||{}; const today=new Date().toISOString().slice(0,10);
       const wd=new Date().getDay(); const isWd=wd>=1&&wd<=5;
       const hhmm=new Date().toTimeString().slice(0,5);
       const stale=isWd&&((hhmm>'09:40'&&(!hb.entry||hb.entry.date!==today))||(hhmm>'16:00'&&(!hb.monitor||hb.monitor.date!==today)));
@@ -430,30 +425,61 @@ function PortfolioView(){
         <h3 style={{color:'#ffc06e'}}>⚠ Scheduled runs missing today</h3>
         <div style={{fontSize:12.5,color:'#7d8da1'}}>entry: {hb.entry?`${hb.entry.date} ${hb.entry.ts}`:'never'} · monitor: {hb.monitor?`${hb.monitor.date} ${hb.monitor.ts} (${hb.monitor.runs_today||0}x)`:'never'} — check Task Scheduler / logs\agent4_*.log</div>
       </div>:null; })()}
-    {pf.halted && <div className="panel" style={{borderColor:'#ef5350',marginBottom:14}}>
-      <h3 style={{color:'#ff7b86'}}>⛔ Kill switch active — {pf.halt_reason}</h3>
-      <div style={{fontSize:13,color:'#7d8da1'}}>No new entries. DAILY_LOSS resets tomorrow automatically.
-        MAX_DRAWDOWN requires a deliberate manual reset after you review what went wrong.</div>
-      {pf.halt_reason==='MAX_DRAWDOWN' &&
-        <button className="btn ghost" style={{marginTop:8}} onClick={()=>api('/api/portfolio/reset-halt',{method:'POST'}).then(load)}>Reset (I have reviewed)</button>}
-    </div>}
     {err && <div style={{color:'#ff7b86',fontSize:13,marginBottom:10}}>⚠ {err}</div>}
     {last && <div className="panel" style={{marginBottom:14}}>
       <h3>Last {last.kind} result</h3>
       <div style={{fontSize:12.5,color:'#7d8da1'}}>
         {last.kind==='execute'
-          ? (last.r.blocked&&last.r.blocked.length ? '⛔ '+last.r.blocked.join(' · ')
-             : `entered ${last.r.entered} of ${(last.r.decisions||[]).length} recommended (${last.r.candidates_scanned} candidates scanned)`)
-          : `${(last.r.actions||[]).length} action(s) · equity ${fmt(last.r.equity)}`}
+          ? (last.r.blocked&&Object.keys(last.r.blocked).length===2 ? '⛔ '+Object.entries(last.r.blocked).map(([b,v])=>b+': '+v.join(' · ')).join(' | ')
+             : `entered ${last.r.entered} (${Object.entries(last.r.entered_by_book||{}).map(([b,n])=>`${b} ${n}`).join(' · ')}) of ${(last.r.decisions||[]).length} decisions (${last.r.candidates_scanned} candidates scanned)`)
+          : `${(last.r.actions||[]).length} action(s) · combined equity ${fmt(last.r.equity)}`}
       </div>
       <ul className="news">{((last.kind==='execute'?last.r.decisions:last.r.actions)||[]).map((d,i)=>
-        <li key={i}><span className="src">{d.symbol||'—'}</span>
+        <li key={i}><span className="src">{d.symbol||'—'}</span>{bookTag(d.book)}
           {d.action_taken==='ENTER'?<span style={{color:'#4cd98a'}}>ENTERED {d.instrument}{d.fallback_note?` (${d.fallback_note})`:''}</span>
            :d.action_taken==='SKIP'?<span>skip — {d.skip_reason}</span>
            :<span>{d.action}{d.pnl!=null?<b style={{color:pnlCol(d.pnl),marginLeft:6}}>{fmt(d.pnl)}</b>:null}{d.stop?` → ₹${d.stop}`:''}{d.reason?` — ${d.reason}`:''}</span>}
         </li>)}</ul>
     </div>}
-    <div className="grid">
+    <BookPanel pf={data.books.equity} onReload={load}/>
+    <div style={{height:10}}></div>
+    <BookPanel pf={data.books.options} onReload={load}/>
+  </div>;
+}
+
+function BookPanel({pf,onReload}){
+  const [openSel,setOpenSel]=useState(null);     // expanded open-position id
+  const [closedSel,setClosedSel]=useState(null); // expanded closed-trade id
+  const [open,setOpen]=useState(true);           // section collapsed/expanded
+  if(!pf) return null;
+  const st=pf.stats||{}, fmt=n=>n==null?'—':'₹'+Math.round(n).toLocaleString('en-IN');
+  const pnlCol=v=>v>0?'#4cd98a':v<0?'#ff7b86':'#d8e1ec';
+  const pct=v=>v==null?'':` (${v>0?'+':''}${v}%)`;
+  const detCard=(lbl,val,col)=><div style={{background:'var(--panel2)',borderRadius:8,padding:'8px 11px'}}>
+    <div style={{fontSize:10.5,color:'#7d8da1',textTransform:'uppercase',letterSpacing:'.5px'}}>{lbl}</div>
+    <div style={{fontSize:15,fontWeight:700,marginTop:3,color:col||'#d8e1ec'}}>{val}</div></div>;
+  const isOpt=pf.allow==='options';
+  return <div style={{borderLeft:'3px solid '+(isOpt?'#ffb74d':'#82aaff'),paddingLeft:12,marginBottom:20}}>
+    <div className="head" style={{marginBottom:10,cursor:'pointer',userSelect:'none'}}
+         onClick={()=>setOpen(!open)} title={open?'Click to collapse this book':'Click to expand this book'}>
+      <h1 style={{fontSize:18}}><span style={{marginRight:7,color:'#7d8da1',fontSize:14}}>{open?'▾':'▸'}</span>{isOpt?'🎯 Options Book — F&O only':'📈 Equity Book — shares only'}</h1>
+      <span className="price" style={{fontSize:18}}>{fmt(pf.equity)}</span>
+      <span className="pill" style={{color:pnlCol(pf.return_pct)}}>{pf.return_pct>0?'+':''}{pf.return_pct}%</span>
+      {pf.benchmark && <span className="pill" title={`bot ${pf.benchmark.bot_return_pct}% vs NIFTY ${pf.benchmark.nifty_return_pct}% since ${pf.benchmark.since}`}>
+        α vs NIFTY <b style={{color:pnlCol(pf.benchmark.alpha_pct),marginLeft:4}}>{pf.benchmark.alpha_pct>0?'+':''}{pf.benchmark.alpha_pct}%</b></span>}
+      <span className="pill">cash {fmt(pf.cash)}</span>
+      <span className="pill">heat {fmt(pf.open_heat_inr)} / {pf.limits.max_heat_pct}%</span>
+      <span className="pill">day P&L <b style={{color:pnlCol(pf.day.realized_pnl)}}>{fmt(pf.day.realized_pnl)}</b></span>
+      <span className="pill">risk {pf.limits.risk_pct}%/trade</span>
+    </div>
+    {pf.halted && <div className="panel" style={{borderColor:'#ef5350',marginBottom:14}}>
+      <h3 style={{color:'#ff7b86'}}>⛔ Kill switch active ({pf.label}) — {pf.halt_reason}</h3>
+      <div style={{fontSize:13,color:'#7d8da1'}}>No new entries in this book — the other book keeps trading.
+        DAILY_LOSS resets tomorrow automatically. MAX_DRAWDOWN requires a deliberate manual reset.</div>
+      {pf.halt_reason==='MAX_DRAWDOWN' &&
+        <button className="btn ghost" style={{marginTop:8}} onClick={()=>api('/api/portfolio/reset-halt?book='+pf.book,{method:'POST'}).then(onReload)}>Reset (I have reviewed)</button>}
+    </div>}
+    {open && <div className="grid">
       <div>
         <div className="panel">
           <h3>Open positions ({pf.open_positions.length})</h3>
@@ -527,21 +553,23 @@ function PortfolioView(){
           <h3>Risk rules (enforced in code)</h3>
           <ul className="news" style={{fontSize:12.5}}>
             <li><span className="src">risk</span>{pf.limits.risk_pct}% of equity per trade · heat cap {pf.limits.max_heat_pct}%</li>
-            <li><span className="src">size</span>max {pf.limits.max_positions} positions · 20% value cap each</li>
-            <li><span className="src">halt</span>day loss {pf.limits.daily_loss_halt_pct}% · drawdown {pf.limits.max_dd_halt_pct}%</li>
-            <li><span className="src">conv</span>equity ≥ {pf.limits.conviction_min} · options ≥ {pf.limits.opt_conviction_min}</li>
-            <li><span className="src">opts</span>defined-risk only, real NSE premiums, else falls back to equity</li>
+            <li><span className="src">size</span>max {pf.limits.max_positions} positions{isOpt?'':' · 20% value cap each'}</li>
+            <li><span className="src">halt</span>day loss {pf.limits.daily_loss_halt_pct}% · drawdown {pf.limits.max_dd_halt_pct}% (per book)</li>
+            <li><span className="src">conv</span>{isOpt?`options ≥ ${pf.limits.opt_conviction_min}`:`equity ≥ ${pf.limits.conviction_min}`}</li>
+            {isOpt
+              ? <li><span className="src">scope</span>F&O ONLY — defined-risk spreads (ITM ~0.65Δ long leg), real premiums; unmet checks SKIP, never fall back to equity</li>
+              : <li><span className="src">scope</span>shares only — option logic never runs in this book</li>}
           </ul>
         </div>
       </div>
-    </div>
+    </div>}
   </div>;
 }
 
 const biasCls=(x)=>x==='NEGATIVE'?'r':x==='POSITIVE'?'g':x==='RISK_OFF'?'r':x==='RISK_ON'?'g':'a';
 
 function ScreenerView({onPick}){
-  const [scope,setScope]=useState('nifty210');
+  const [scope,setScope]=useState('nifty50');   // default = fast ~50-name scan; wider scopes still in the dropdown
   const [data,setData]=useState(null);
   const [loading,setLoading]=useState(false);
   const [sector,setSector]=useState('');
@@ -640,29 +668,29 @@ function EquityChart({curve}){
   return <div ref={ref} style={{height:300}}></div>;
 }
 
-function ReportView(){
-  const [r,setR]=useState(null),[err,setErr]=useState(null),[busy,setBusy]=useState(false);
-  const load=(rebuild)=>{setBusy(true);api('/api/report'+(rebuild?'?rebuild=true':'')).then(d=>{setR(d);setBusy(false);}).catch(e=>{setErr(e.message);setBusy(false);});};
-  useEffect(()=>{load(false);},[]);
-  if(err) return <div className="center">Report unavailable: {err}</div>;
-  if(!r) return <div className="center"><div className="spin"></div>building report…</div>;
-  const s=r.stats||{},g=r.gates||{},b=r.benchmark,p=r.pnl||{};
+function BookReport({b}){
+  // [V11] one book's report block — same fields the single-book report used
+  if(!b) return null;
+  const s=b.stats||{},g=b.gates||{},bm=b.benchmark,p=b.pnl||{};
   const rs=(n)=>n==null?'—':'₹'+Math.round(n).toLocaleString('en-IN');
   const sign=(n)=>n==null?'':(n>=0?'#4cd98a':'#ff7b86');
   const card=(lbl,val,cls)=><div className="lvl"><div className="lbl">{lbl}</div><div className="v" style={cls?{color:cls}:{}}>{val}</div></div>;
-  return <div>
-    <div className="head"><h1>📊 Daily Report</h1><span className="wl-sec">{r.date}{r.halted?' · ⚠ HALTED':''}</span>
-      <span className={"pill "+(r.total_return_pct>=0?'g':'r')} style={{fontSize:14}}>{r.total_return_pct>=0?'+':''}{r.total_return_pct}%</span>
-      <button className="btn ghost" style={{marginLeft:'auto'}} onClick={()=>load(true)} disabled={busy}>{busy?'…':'↻ Rebuild'}</button></div>
-    <div className="panel"><h3>Equity vs NIFTY (indexed to 100)</h3><EquityChart curve={r.equity_curve}/>
-      <div style={{fontSize:11,color:'#7d8da1',marginTop:4}}>Bot <span style={{color:'#2962ff'}}>━</span>&nbsp; NIFTY <span style={{color:'#ffb74d'}}>━</span></div></div>
+  const isOpt=b.book==='options';
+  return <div style={{borderLeft:'3px solid '+(isOpt?'#ffb74d':'#82aaff'),paddingLeft:12,marginTop:16}}>
+    <div className="head" style={{marginBottom:8}}>
+      <h1 style={{fontSize:17}}>{isOpt?'🎯 Options Book':'📈 Equity Book'}</h1>
+      <span className="wl-sec">{b.halted?'⚠ HALTED — '+b.halt_reason:''}</span>
+      <span className={"pill "+(b.total_return_pct>=0?'g':'r')}>{b.total_return_pct>=0?'+':''}{b.total_return_pct}%</span>
+    </div>
+    <div className="panel"><h3>Equity vs NIFTY (indexed to 100)</h3><EquityChart curve={b.equity_curve}/>
+      <div style={{fontSize:11,color:'#7d8da1',marginTop:4}}>Book <span style={{color:'#2962ff'}}>━</span>&nbsp; NIFTY <span style={{color:'#ffb74d'}}>━</span></div></div>
     <div className="levels" style={{gridTemplateColumns:'repeat(4,1fr)',marginTop:12}}>
-      {card('Equity',rs(r.equity))}{card('Total P&L',rs(p.total),sign(p.total))}
+      {card('Equity',rs(b.equity))}{card('Total P&L',rs(p.total),sign(p.total))}
       {card('Realized',rs(p.realized),sign(p.realized))}{card('Unrealized',rs(p.unrealized),sign(p.unrealized))}
       {card('Win rate',s.win_rate!=null?Math.round(s.win_rate*100)+'%':'—')}{card('Profit factor',s.profit_factor??'—')}
       {card('Payoff',s.payoff_ratio??'—')}{card('Expectancy',rs(s.expectancy_inr),sign(s.expectancy_inr))}
       {card('Trades',s.trades_closed??0)}{card('Avg hold',s.avg_holding_sessions!=null?s.avg_holding_sessions+'d':'—')}
-      {card('Max DD',(s.max_drawdown_pct??'—')+'%')}{card('Alpha',b?(b.alpha_pct>=0?'+':'')+b.alpha_pct+'%':'—',b?sign(b.alpha_pct):'')}
+      {card('Max DD',(s.max_drawdown_pct??'—')+'%')}{card('Alpha',bm?(bm.alpha_pct>=0?'+':'')+bm.alpha_pct+'%':'—',bm?sign(bm.alpha_pct):'')}
     </div>
     <div className="grid" style={{marginTop:12}}>
       <div className="panel"><h3>Go-live gates · {g._passed}/{g._total} passed</h3>
@@ -670,22 +698,48 @@ function ReportView(){
           <span className={"pill "+(v.pass?'g':'r')} style={{minWidth:54,textAlign:'center'}}>{v.pass?'PASS':'WAIT'}</span>
           <div style={{flex:1}}><b style={{fontSize:12.5}}>{k}</b> <span className="wl-sec">now {v.value} · target {v.target}</span></div></div>)}
       </div>
-      <div className="panel"><h3>Today · {r.today.entered.length} in / {r.today.exited.length} out · realized {rs(r.today.realized_pnl)}</h3>
-        {r.today.entered.map((e,i)=><div key={'i'+i} className="flag"><span className="pill g" style={{minWidth:46,textAlign:'center'}}>BUY</span><div style={{flex:1}}><b>{e.symbol}</b> <span className="wl-sec">{e.instrument} · {e.qty}@{rs(e.entry_price)}</span><div className="wl-sec">{e.reason}</div></div></div>)}
-        {r.today.exited.map((e,i)=><div key={'x'+i} className="flag"><span className={"pill "+(e.pnl>=0?'g':'r')} style={{minWidth:46,textAlign:'center'}}>{e.result||'EXIT'}</span><div style={{flex:1}}><b>{e.symbol}</b> {rs(e.pnl)} <span className="wl-sec">{e.exit_reason}</span></div></div>)}
-        {r.today.entered.length+r.today.exited.length===0 && <div className="wl-sec">No trades today.</div>}
+      <div className="panel"><h3>Today · {b.today.entered.length} in / {b.today.exited.length} out · realized {rs(b.today.realized_pnl)}</h3>
+        {b.today.entered.map((e,i)=><div key={'i'+i} className="flag"><span className="pill g" style={{minWidth:46,textAlign:'center'}}>BUY</span><div style={{flex:1}}><b>{e.symbol}</b> <span className="wl-sec">{e.instrument} · {e.qty!=null?e.qty+'@':''}{rs(e.entry_price)}</span><div className="wl-sec">{e.reason}</div></div></div>)}
+        {b.today.exited.map((e,i)=><div key={'x'+i} className="flag"><span className={"pill "+(e.pnl>=0?'g':'r')} style={{minWidth:46,textAlign:'center'}}>{e.result||'EXIT'}</span><div style={{flex:1}}><b>{e.symbol}</b> {rs(e.pnl)} <span className="wl-sec">{e.exit_reason}</span></div></div>)}
+        {b.today.entered.length+b.today.exited.length===0 && <div className="wl-sec">No trades today.</div>}
       </div>
     </div>
-    {r.narrative && <div className="panel" style={{marginTop:12}}><h3>EOD note (Claude)</h3>
-      <div style={{whiteSpace:'pre-wrap',fontSize:13,lineHeight:1.55}}>{r.narrative}</div></div>}
     <div className="panel" style={{marginTop:12,padding:0}}><table><thead><tr>
       <th>Open position</th><th>Entry</th><th>Unreal. P&L</th><th>Days</th><th>Why entered</th></tr></thead><tbody>
-      {(r.open_positions||[]).map((pos,i)=><tr key={i}>
-        <td><b>{pos.symbol}</b> <span className="wl-sec">{pos.instrument}</span></td><td>{rs(pos.entry_price)}</td>
+      {(b.open_positions||[]).map((pos,i)=><tr key={i}>
+        <td><b>{pos.symbol}</b> <span className="wl-sec">{pos.instrument}</span></td><td>{rs(pos.entry_price??pos.net_debit)}</td>
         <td style={{color:sign(pos.unrealized_pnl)}}>{rs(pos.unrealized_pnl)}</td><td>{pos.sessions_held}</td>
         <td className="wl-sec">{(pos.reasoning||'').slice(0,64)}</td></tr>)}
-      {(r.open_positions||[]).length===0 && <tr><td colSpan={5} style={{textAlign:'center',color:'#7d8da1',padding:16}}>No open positions.</td></tr>}
+      {(b.open_positions||[]).length===0 && <tr><td colSpan={5} style={{textAlign:'center',color:'#7d8da1',padding:16}}>No open positions.</td></tr>}
     </tbody></table></div>
+  </div>;
+}
+
+function ReportView(){
+  const [r,setR]=useState(null),[err,setErr]=useState(null),[busy,setBusy]=useState(false);
+  const load=(rebuild)=>{setBusy(true);api('/api/report'+(rebuild?'?rebuild=true':'')).then(d=>{setR(d);setBusy(false);}).catch(e=>{setErr(e.message);setBusy(false);});};
+  useEffect(()=>{load(false);},[]);
+  if(err) return <div className="center">Report unavailable: {err}</div>;
+  if(!r) return <div className="center"><div className="spin"></div>building report…</div>;
+  const rs=(n)=>n==null?'—':'₹'+Math.round(n).toLocaleString('en-IN');
+  const p=r.pnl||{},f=r.option_funnel||{};
+  return <div>
+    <div className="head"><h1>📊 Daily Report</h1><span className="wl-sec">{r.date}{r.halted?' · ⚠ HALTED: '+r.halt_reason:''}</span>
+      <span className={"pill "+(r.total_return_pct>=0?'g':'r')} style={{fontSize:14}}>{r.total_return_pct>=0?'+':''}{r.total_return_pct}%</span>
+      <span className="pill">combined {rs(r.equity)}</span>
+      <span className="pill">P&L {rs(p.total)}</span>
+      <button className="btn ghost" style={{marginLeft:'auto'}} onClick={()=>load(true)} disabled={busy}>{busy?'…':'↻ Rebuild'}</button></div>
+    {r.books ? <React.Fragment>
+      <BookReport b={r.books.equity}/>
+      <BookReport b={r.books.options}/>
+      {(f.signals>0||Object.keys(f.skips||{}).length>0) && <div className="panel" style={{marginTop:12}}>
+        <h3>Options funnel (today) · {f.signals||0} signals → {f.entered||0} entered</h3>
+        {Object.entries(f.skips||{}).map(([k,v])=><div key={k} className="flag"><span className="pill r" style={{minWidth:30,textAlign:'center'}}>{v}</span><div style={{flex:1,fontSize:12.5}}>{k}</div></div>)}
+        {Object.keys(f.skips||{}).length===0 && <div className="wl-sec">No skips today.</div>}
+      </div>}
+    </React.Fragment> : <div className="panel" style={{marginTop:12}}><div className="wl-sec">Pre-V11 report format — hit ↻ Rebuild to generate the two-book report.</div></div>}
+    {r.narrative && <div className="panel" style={{marginTop:12}}><h3>EOD note (Claude)</h3>
+      <div style={{whiteSpace:'pre-wrap',fontSize:13,lineHeight:1.55}}>{r.narrative}</div></div>}
   </div>;
 }
 
@@ -698,18 +752,42 @@ function ChatView(){
   const [msgs,setMsgs]=useState([]);          // {role, content, tools?}
   const [input,setInput]=useState('');
   const [busy,setBusy]=useState(false);
+  const [status,setStatus]=useState([]);      // tools currently being fetched (live progress)
   const logRef=useRef(null);
-  useEffect(()=>{if(logRef.current) logRef.current.scrollTop=logRef.current.scrollHeight;},[msgs,busy]);
-  const send=(text)=>{
+  useEffect(()=>{if(logRef.current) logRef.current.scrollTop=logRef.current.scrollHeight;},[msgs,busy,status]);
+  const send=async(text)=>{
     const q=(text||input).trim();
     if(!q||busy) return;
     const next=[...msgs,{role:'user',content:q}];
-    setMsgs(next); setInput(''); setBusy(true);
-    api('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({messages:next.map(m=>({role:m.role,content:m.content})).slice(-16)})})
-      .then(r=>setMsgs(m=>[...m,{role:'assistant',content:r.reply,tools:r.tools_used||[]}]))
-      .catch(e=>setMsgs(m=>[...m,{role:'assistant',content:'⚠ '+e.message,tools:[]}]))
-      .finally(()=>setBusy(false));
+    setMsgs(next); setInput(''); setBusy(true); setStatus([]);
+    const payload={messages:next.map(m=>({role:m.role,content:m.content})).slice(-16)};
+    try{
+      // streaming: show live tool progress, then the final answer
+      const resp=await fetch('/api/chat/stream',{method:'POST',
+        headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+      if(!resp.ok||!resp.body) throw new Error('stream unavailable');
+      const reader=resp.body.getReader(); const dec=new TextDecoder(); let buf='',final=null;
+      for(;;){
+        const {value,done}=await reader.read(); if(done) break;
+        buf+=dec.decode(value,{stream:true});
+        let i;
+        while((i=buf.indexOf('\n\n'))>=0){
+          const line=buf.slice(0,i).split('\n').find(l=>l.startsWith('data:')); buf=buf.slice(i+2);
+          if(!line) continue;
+          let ev; try{ev=JSON.parse(line.slice(5).trim());}catch(_){continue;}
+          if(ev.type==='status'){ if(ev.tools&&ev.tools.length) setStatus(ev.tools); }
+          else if(ev.type==='final'){ final=ev; }
+        }
+      }
+      if(!final) throw new Error('no answer');
+      setMsgs(m=>[...m,{role:'assistant',content:final.reply,tools:final.tools_used||[]}]);
+    }catch(err){
+      try{   // fallback to the blocking endpoint if streaming failed
+        const r=await api('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify(payload)});
+        setMsgs(m=>[...m,{role:'assistant',content:r.reply,tools:r.tools_used||[]}]);
+      }catch(e2){ setMsgs(m=>[...m,{role:'assistant',content:'⚠ '+e2.message,tools:[]}]); }
+    }finally{ setBusy(false); setStatus([]); }
   };
   const suggestions=["What's happening with RELIANCE today?","Best LONG setups in the market right now",
     "Should I buy TCS?","Show me the NIFTY option chain","How is my portfolio doing?",
@@ -729,7 +807,9 @@ function ChatView(){
             {m.tools.map(t=><span key={t}>✓ {TOOL_LABELS[t]||t}</span>)}</div>}
         </div>)}
         {busy && <div className="typing"><div className="spin" style={{width:16,height:16,borderWidth:2}}></div>
-          analyst is checking live data…</div>}
+          {status.length>0
+            ? 'fetching '+status.map(t=>TOOL_LABELS[t]||t).join(' · ')+'…'
+            : 'analyst is working… (a full buy/sell call takes ~30-90s)'}</div>}
       </div>
       <div className="chat-input">
         <input placeholder="Ask your analyst… e.g. 'why did HDFCBANK fall today?'" value={input}
@@ -745,7 +825,7 @@ function App(){
   const [regime,setRegime]=useState(null);
   const [sel,setSel]=useState(null);
   const [q,setQ]=useState('');
-  const [view,setView]=useState('stock');
+  const [view,setView]=useState('portfolio');   // landing page = Portfolio (both books)
   const [showAdd,setShowAdd]=useState(false);
   const loadWl=()=>api('/api/watchlist').then(d=>{setWl(d); if(!sel&&d.length) setSel(d[0].symbol);});
   useEffect(()=>{loadWl(); api('/api/regime').then(setRegime).catch(()=>{});},[]);
