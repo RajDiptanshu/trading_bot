@@ -58,8 +58,8 @@
    "target": 24902.72,
    "reached_1atr": false,
    "atr_at_entry": 259.99,
-   "sessions_held": 0,
-   "last_session": null,
+   "sessions_held": 1,
+   "last_session": "2026-07-13",
    "max_loss_inr": 19015.75,
    "open_risk_inr": 19015.75,
    "entry_costs": 63.11,
@@ -89,8 +89,8 @@
  "equity_curve": [
   {
    "date": "2026-07-13",
-   "equity": 1000000.0,
-   "nifty": 24117.2
+   "equity": 999886.48,
+   "nifty": 24119.3
   }
  ]
 }
