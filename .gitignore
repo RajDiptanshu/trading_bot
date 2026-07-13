@@ -35,6 +35,15 @@ Notes/*.docx
 Notes/*.doc
 Notes/~$*
 
+# ── large user-provided market-data sets (gigabytes — kept local, never committed) ──
+NSE500 Daily and Intraday Stock data/
+Nifty 500 (NSE) Stocks Multi-Timeframe Dataset/
+
+# ── one-off paper-book backups/archives (superseded by the two V11 book files) ──
+agent4_state.backup-*.json
+agent4_state.legacy-*.json
+agent4_state.pre-split-backup-*.json
+
 # ── editor / OS ──
 .DS_Store
 Thumbs.db

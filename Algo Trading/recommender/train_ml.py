@@ -54,11 +54,19 @@ def fetch_history(period: str) -> dict:
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--period", default="7y", help="yfinance period, e.g. 5y, 7y, max")
+    ap.add_argument("--ensemble", action="store_true",
+                    help="[V11.1] train the 10-seed ENSEMBLE (models/ml_ensemble.pkl) that "
+                         "agent4's AGENT4_ML_GATE consumes, instead of the single model")
     args = ap.parse_args()
     prices = fetch_history(args.period)
     if len(prices) < 15:
         print("FATAL: fewer than 15 symbols with enough history - aborting")
         sys.exit(1)
+    if args.ensemble:
+        print("training the 10-seed ENSEMBLE (purged walk-forward CV + fits)...")
+        meta = ml_signal.train_ensemble(prices)
+        print(json.dumps({k: v for k, v in meta.items() if k != "cv"}, indent=1))
+        return
     print("training (purged walk-forward CV)...")
     meta = ml_signal.train(prices)
     print(json.dumps({k: v for k, v in meta.items() if k != "cv"}, indent=1))

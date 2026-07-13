@@ -199,6 +199,108 @@ def train(prices: dict[str, pd.DataFrame], verbose: bool = True) -> dict:
         print(f"  saved {MODEL_FILE.name}: {name}, mean AUC {meta['mean_auc']}, mean IC {meta['mean_ic']}")
     return meta
 
+# ───────────────────────── seed-ensemble (V11.1 2026-07-13) ─────────────────────────
+# Validation (SKILL.md §6): a SINGLE model's entry gate was unreliable — same data, different
+# random seed swung OOS PF 0.97..2.49. AVERAGING ~10 seeds cancels that noise; the mean-prob>=0.50
+# gate then lifts nifty210 OOS PF 1.42->2.38, period-robust across OOS splits (universe-specific to
+# nifty210). This trains the ensemble; agent4's AGENT4_ML_GATE consumes ensemble_prob_universe().
+ENSEMBLE_FILE = MODEL_DIR / "ml_ensemble.pkl"
+ENSEMBLE_N    = 10
+
+def _seeded_model(seed: int):
+    """Same model family as _make_model but with a controllable random seed (for the ensemble)."""
+    try:
+        from lightgbm import LGBMClassifier
+        return LGBMClassifier(n_estimators=300, learning_rate=0.05, num_leaves=31,
+                              min_child_samples=50, subsample=0.8, colsample_bytree=0.8,
+                              random_state=seed, verbosity=-1)
+    except Exception:
+        pass
+    try:
+        from sklearn.ensemble import HistGradientBoostingClassifier
+        return HistGradientBoostingClassifier(max_iter=300, learning_rate=0.05,
+                                              min_samples_leaf=50, random_state=seed)
+    except Exception:
+        from sklearn.linear_model import LogisticRegression
+        return LogisticRegression(max_iter=1000)
+
+def train_ensemble(prices: dict[str, pd.DataFrame], n_models: int = ENSEMBLE_N,
+                   verbose: bool = True) -> dict:
+    """Fit n_models seeded models on all data (averaged at inference) + report the purged-CV
+    rank-IC (same gate metric as train()). Saves models/ml_ensemble.pkl. Returns meta."""
+    from sklearn.metrics import roc_auc_score
+    from scipy.stats import spearmanr
+    import joblib
+    panel = build_panel(prices, with_labels=True)
+    if panel.empty:
+        raise RuntimeError("not enough data to build a training panel")
+    X, y = panel[FEATURES], panel["label"]
+    folds = []                                            # CV IC = the noise gate (model-0 proxy)
+    for k, (tr, te) in enumerate(PurgedWalkForwardCV().split(panel)):
+        if len(tr) < 1000 or len(te) < 200:
+            continue
+        m0 = _seeded_model(0); m0.fit(X.iloc[tr], y.iloc[tr])
+        prob = m0.predict_proba(X.iloc[te])[:, 1]
+        sub = panel.iloc[te].copy(); sub["prob"] = prob
+        ic = float(np.nanmean(sub.groupby(level="date").apply(
+            lambda g: spearmanr(g["prob"], g["fwd_ret"])[0] if len(g) > 5 else np.nan)))
+        folds.append({"fold": k, "auc": round(float(roc_auc_score(y.iloc[te], prob)), 4),
+                      "rank_ic": round(ic, 4)})
+        if verbose:
+            print(f"  fold {k}: rank-IC {ic:+.4f}")
+    models = []
+    for s in range(n_models):
+        m = _seeded_model(s); m.fit(X, y); models.append(m)
+    MODEL_DIR.mkdir(exist_ok=True)
+    meta = {"kind": "ensemble", "n_models": n_models, "features": FEATURES, "fwd_days": FWD_DAYS,
+            "trained": datetime.now().strftime("%Y-%m-%d %H:%M"), "n_obs": len(panel), "cv": folds,
+            "mean_ic": round(float(np.mean([f["rank_ic"] for f in folds])), 4) if folds else None,
+            "mean_auc": round(float(np.mean([f["auc"] for f in folds])), 4) if folds else None}
+    joblib.dump({"models": models, "meta": meta}, ENSEMBLE_FILE)
+    if verbose:
+        print(f"  saved {ENSEMBLE_FILE.name}: {n_models} models, mean IC {meta['mean_ic']}")
+    return meta
+
+def ensemble_prob_universe() -> dict:
+    """Mean P(beat median next FWD_DAYS) across the ensemble, per symbol in the trading universe.
+    FAIL-SAFE: returns {} on ANY problem — no ensemble file, CV IC below the noise gate, or an
+    error — so agent4's ML gate never blocks a trade for lack of a model."""
+    if not ENSEMBLE_FILE.exists():
+        return {}
+    try:
+        import joblib
+        blob = joblib.load(ENSEMBLE_FILE)
+        models, meta = blob["models"], blob["meta"]
+        if (meta.get("mean_ic") if meta.get("mean_ic") is not None else -1) < MIN_USABLE_IC:
+            return {}
+        import agents
+        try:
+            import universe as uni
+            syms = [e["symbol"] for e in uni.load_universe(os.getenv("AGENT4_UNIVERSE_SCOPE", "nifty210"))]
+        except Exception:
+            syms = [s["symbol"] for s in agents.load_watchlist()]
+        try:
+            agents.prefetch_history(syms, "27mo")
+        except Exception:
+            pass
+        prices = {}
+        for sym in syms:
+            try:
+                df = agents.history(sym, "27mo")
+                if len(df) >= 270:
+                    prices[sym] = df
+            except Exception:
+                continue
+        panel = build_panel(prices, with_labels=False)
+        if panel.empty:
+            return {}
+        latest = panel.xs(panel.index.get_level_values("date").max(), level="date")
+        X = latest[meta["features"]]
+        avg = np.mean([m.predict_proba(X)[:, 1] for m in models], axis=0)
+        return {sym: round(float(p), 3) for sym, p in zip(latest.index, avg)}
+    except Exception:
+        return {}
+
 # ───────────────────────── inference ─────────────────────────
 MIN_USABLE_IC = 0.01   # NOISE GATE: below this mean rank-IC the model is noise.
                        # Inference returns {} so the whole system runs as "no ML"

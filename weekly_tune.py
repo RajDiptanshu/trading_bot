@@ -67,13 +67,16 @@ def run_backtests():
 
 def paper_vs_backtest():
     import agent4
-    s = agent4.summary()
+    # [V11 2026-07-12] two-book split: the backtests here are the EQUITY strategy
+    # (V10.1 params on stock panels), so compare against the EQUITY book only.
+    # live_stats (EV/Kelly prior) is likewise equity-strategy — options book excluded.
+    s = agent4.summary()["books"]["equity"]
     st = s.get("stats", {}) or {}
     paper = {"trades_closed": st.get("trades_closed"), "win_rate": st.get("win_rate"),
              "profit_factor": st.get("profit_factor"), "expectancy_inr": st.get("expectancy_inr"),
              "max_dd_pct": st.get("max_drawdown_pct"), "equity": s.get("equity"),
              "alpha_vs_nifty": (s.get("benchmark") or {}).get("alpha_pct")}
-    print(f"paper book: {paper}")
+    print(f"paper book (EQUITY): {paper}")
     # update live_stats only past the sample-size bar
     n = st.get("trades_closed") or 0
     updated = False

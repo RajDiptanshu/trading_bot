@@ -10,7 +10,21 @@ Works like a desk trader who runs purely on maths:
   • logs EVERY decision (taken or skipped) with a full feature snapshot to
     agent4_decisions.jsonl — this becomes the ML validation dataset.
 
-Capital: Rs 20,00,000 paper. No real orders are ever placed.
+[V11 2026-07-12] TWO SEPARATE BOOKS (user decision — test the sleeves independently):
+  EQUITY book  Rs 10,00,000  agent4_equity_state.json   EQUITY instrument only;
+               option logic is NEVER consulted (no chains, no legs, no Greeks);
+               no index sleeve; risk 1%/trade.
+  OPTIONS book Rs 10,00,000  agent4_options_state.json  F&O ONLY (defined-risk
+               spreads incl. the NIFTY/BANKNIFTY index sleeve); an entry that
+               cannot be built as an option structure is SKIPPED — there is NO
+               equity fallback; risk 2%/trade (Rs20k on 10L — option max-loss
+               runs Rs15-21k/lot, a 1% book would sit near-silent).
+Each book has its own cash, positions, kill switches, equity curve and peak;
+every decision logged with a "book" field. One process still runs both books
+per cycle (exits first, then entries) so the schedule is unchanged.
+The pre-split 20L book is archived as agent4_state.legacy-*.json.
+
+Capital: Rs 10,00,000 paper per book. No real orders are ever placed.
 
 Risk rules (all % of CURRENT equity, not start capital):
   RISK_PCT            1.0%  risk per trade (halved when VIX elevated, via Agent 1)
@@ -25,7 +39,10 @@ Options (paper, defined-risk only — never naked):
   BULL_PUT_SPREAD, conviction >= OPT_CONVICTION_MIN, real option-chain premiums
   are available from NSE, and the watchlist has a real lot size. Otherwise the
   trade falls back to EQUITY and the fallback is logged. Position size is set so
-  the structure's MAXIMUM loss fits inside the trade risk budget.
+  the structure's MAXIMUM loss fits inside the trade risk budget. The long CALL
+  leg is bought ITM (~OPT_LONG_DELTA delta) to cut theta; implied vol and Greeks
+  are computed in-house (Black-Scholes, options_math.py) since Angel's chain
+  ships premiums only.
 
 State:      C:\\trading_bot\\agent4_state.json      (portfolio, positions, closed)
 Decisions:  C:\\trading_bot\\agent4_decisions.jsonl (one JSON line per decision)
@@ -48,6 +65,10 @@ try:
 except Exception:
     lq = None
 try:
+    import options_math as om          # in-house Black-Scholes IV + Greeks (no scipy)
+except Exception:
+    om = None
+try:
     from notify import notify         # alerts.log + optional Telegram
 except Exception:
     def notify(msg, level="WARN"):    # degrade silently in test harnesses
@@ -55,7 +76,6 @@ except Exception:
 
 BASE_DIR        = Path(__file__).resolve().parent
 TRADING_BOT_DIR = Path(os.getenv("TRADING_BOT_DIR", BASE_DIR.parents[1]))
-STATE_FILE      = TRADING_BOT_DIR / "agent4_state.json"
 DECISIONS_FILE  = TRADING_BOT_DIR / "agent4_decisions.jsonl"
 
 # load .env so the CLI (scheduled tasks) gets ANTHROPIC_API_KEY for Agent 3,
@@ -74,7 +94,7 @@ except Exception:                                    # pragma: no cover
         return round(0.0015 * price * quantity * max(lot_size, 1), 2)  # crude fallback
 
 # ───────────────────────────── configuration ─────────────────────────────
-START_CAPITAL       = 2_000_000.0  # Rs 20 lakh paper capital
+START_CAPITAL       = 2_000_000.0  # legacy pre-split total; live capital now per book in BOOKS [V11]
 RISK_PCT            = 1.0          # % of equity risked per trade (upper bound)
 RISK_RUPEE_CAP      = 20_000.0     # absolute cap per trade (matches Agent 1; = 1% of 20L)
 # [V10.1 2026-07-06, user decision] "trade as much as the logic allows": positions 6->12,
@@ -98,6 +118,23 @@ ENTRY_ZONE_TOL      = 0.005        # live price may exceed entry zone top by max
 TIME_STOP_SESSIONS  = 8            # exit if never reached +1*ATR by session 8
                                    # [V10.1 2026-07-06] 12->8: backtest_lab OOS PF 1.51->1.58, maxDD halved
 OPT_EXIT_DTE        = 4            # close options this many calendar days before expiry
+# [V10.2 2026-07-10] defined-risk options MANAGEMENT (the old 2.5*ATR underlying stop RCA'd as the
+# #1 loss driver — both closed spreads exited UNDERLYING_STOP_HIT at 2 days for ~96% of max loss).
+OPT_PROFIT_TAKE_FRAC = float(os.getenv("OPT_PROFIT_TAKE_FRAC", "0.6"))  # bank a debit spread at 60% of max profit
+OPT_DISASTER_ATR     = float(os.getenv("OPT_DISASTER_ATR", "4.0"))      # only exit on underlying CLOSE this many ATR against (real thesis break, not a wick)
+# [V10.3 2026-07-11] in-house IV/Greeks (options_math.py) + ITM long CALL leg. The long leg of
+# ATM_CALL / BULL_CALL_SPREAD is now bought at ~OPT_LONG_DELTA delta (ITM) instead of ATM≈0.50
+# to cut theta while keeping defined risk; ATM fallback if the chain carries no Greeks.
+OPT_LONG_DELTA       = float(os.getenv("AGENT4_OPT_LONG_DELTA", "0.65"))  # target delta for the long CALL leg (ITM)
+OPT_RISK_FREE        = float(os.getenv("OPT_RISK_FREE_RATE", "0.065"))    # annualised risk-free for BS IV/Greeks (India ~10Y G-sec)
+# [V11.1 2026-07-13] ML ENSEMBLE ENTRY GATE — DEFAULT OFF. When AGENT4_ML_GATE=1, an EQUITY
+# entry additionally requires the 10-model ML ensemble's mean P(beat-median-fwd-10d) >= 0.50.
+# Validated: nifty210 OOS PF 1.42->2.38, period-robust, seed-robust (single-seed was noise);
+# universe-specific to nifty210 (see SKILL.md §6). FAIL-SAFE: no ensemble model / no prob for a
+# name => NOT gated (never blocks trading). Options book is never ML-gated. Ship after a few
+# days of forward paper validation, not before.
+ML_GATE          = os.getenv("AGENT4_ML_GATE", "0").strip().lower() in ("1", "true", "yes", "on")
+ML_GATE_MIN_PROB = float(os.getenv("AGENT4_ML_GATE_PROB", "0.50"))
 TOP_N_RECS          = int(os.getenv("AGENT4_TOP_N_RECS", "5"))   # max Claude recs/cycle — SPEED LEVER (lower = faster)
 # Universe Agent 4 scans for NEW entries. core = curated 55; nifty210 = Nifty 50+Bank+Midcap150
 # (~204); nifty500 = full. Only the top TOP_N_RECS by score get a Claude call, so cost is
@@ -115,36 +152,67 @@ INDEX_UNIVERSE = [
 INDEX_MIN_SCORE     = 5            # of 7-point index trend score, below = no trade
 INDEX_CONVICTION    = 0.60         # fixed conviction tag for index spread entries
 
+# ───────── [V11 2026-07-12] the two books (user decision: separate 10L tests) ─────────
+# "allow" is the hard wall: the equity book never consults option code paths at all;
+# the options book never holds equity — a failed option build SKIPS, never falls back.
+# Options risk 2%: option max-loss runs Rs15-21k/lot, so 1% of 10L (Rs10k) would fit
+# almost no structure; 2% = Rs20k keeps the same rupee risk as the old 20L book at 1%.
+BOOKS = {
+    "equity": {
+        "label": "EQUITY BOOK",
+        "state_file": TRADING_BOT_DIR / "agent4_equity_state.json",
+        "start_capital": float(os.getenv("AGENT4_EQUITY_CAPITAL", "1000000")),
+        "risk_pct": float(os.getenv("AGENT4_EQUITY_RISK_PCT", "1.0")),
+        "allow": "equity",
+        "index_sleeve": False,
+        "max_positions": int(os.getenv("AGENT4_EQUITY_MAX_POS", str(MAX_POSITIONS))),
+    },
+    "options": {
+        "label": "OPTIONS BOOK",
+        "state_file": TRADING_BOT_DIR / "agent4_options_state.json",
+        "start_capital": float(os.getenv("AGENT4_OPTIONS_CAPITAL", "1000000")),
+        "risk_pct": float(os.getenv("AGENT4_OPTIONS_RISK_PCT", "2.0")),
+        "allow": "options",
+        "index_sleeve": True,
+        "max_positions": int(os.getenv("AGENT4_OPTIONS_MAX_POS", str(MAX_OPTION_POS))),
+    },
+}
+OPTION_INSTRUMENTS = ("ATM_CALL", "BULL_CALL_SPREAD", "BULL_PUT_SPREAD")
+
 _LOCK = Lock()
 
-# ───────────────────────────── state I/O ─────────────────────────────
-def _blank_state() -> dict:
+# ───────────────────────────── state I/O (per book, V11) ─────────────────────────────
+def _blank_state(book: str) -> dict:
+    cap = BOOKS[book]["start_capital"]
     return {"created": datetime.now().strftime("%Y-%m-%d %H:%M"),
-            "start_capital": START_CAPITAL, "cash": START_CAPITAL,
-            "peak_equity": START_CAPITAL,
+            "book": book, "config_version": "V11",
+            "start_capital": cap, "cash": cap,
+            "peak_equity": cap,
             "halted": False, "halt_reason": None,
             "day": {"date": str(date.today()), "realized_pnl": 0.0},
             "next_id": 1, "positions": [], "closed": [], "equity_curve": []}
 
-def _load() -> dict:
-    if STATE_FILE.exists():
-        with open(STATE_FILE, encoding="utf-8") as f:
+def _load(book: str) -> dict:
+    f_ = BOOKS[book]["state_file"]
+    if f_.exists():
+        with open(f_, encoding="utf-8") as f:
             state = json.load(f)
-        # capital migration: if START_CAPITAL changed and the book is still
+        # capital migration: if start_capital changed and the book is still
         # untouched (no trades, no positions), restart clean at the new size.
         # A book WITH history is never rewritten — that would falsify the record.
-        if (state.get("start_capital") != START_CAPITAL
+        if (state.get("start_capital") != BOOKS[book]["start_capital"]
                 and not state.get("positions") and not state.get("closed")):
-            state = _blank_state()
+            state = _blank_state(book)
         return state
-    return _blank_state()
+    return _blank_state(book)
 
-def _save(state: dict):
+def _save(book: str, state: dict):
     # atomic write — never leave a half-written portfolio on disk
-    fd, tmp = tempfile.mkstemp(dir=str(STATE_FILE.parent), suffix=".tmp")
+    f_ = BOOKS[book]["state_file"]
+    fd, tmp = tempfile.mkstemp(dir=str(f_.parent), suffix=".tmp")
     with os.fdopen(fd, "w", encoding="utf-8") as f:
         json.dump(state, f, indent=1)
-    os.replace(tmp, STATE_FILE)
+    os.replace(tmp, f_)
 
 def _log_decision(rec: dict):
     rec["ts"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -306,9 +374,27 @@ def fetch_option_chain(symbol: str) -> dict | None:
     if out is None:
         out = _chain_from_nse(symbol)
     if out:
-        _log_chain_snapshot(symbol, out)
+        _enrich_chain_greeks(symbol, out)      # in-house BS IV + delta/gamma/theta/vega
+        _log_chain_snapshot(symbol, out)       # snapshot now seeds the IV/Greeks dataset
     _NSE_CACHE[key] = (time.time(), out)
     return out
+
+def _enrich_chain_greeks(symbol: str, chain: dict) -> None:
+    """Fill every chain node with in-house Black-Scholes IV + Greeks. Delta drives the
+    ITM long-leg pick in build_option_legs; the enriched snapshot grows
+    option_chain_history.jsonl into the IV dataset the §5c gating work needs. Best-effort
+    — a missing spot or a solver failure just leaves iv=None; it never blocks a fetch."""
+    if om is None:
+        return
+    try:
+        spot = None
+        if lq:
+            q = lq.get_quote(symbol)
+            spot = q.get("ltp") if q else None
+        if spot:
+            om.enrich_chain(chain, float(spot), r=OPT_RISK_FREE)
+    except Exception:
+        pass
 
 def _pick_expiry(chain: dict) -> str | None:
     """Nearest expiry with >= OPT_EXIT_DTE+10 calendar days left (avoid expiry-week
@@ -327,6 +413,34 @@ def _pick_expiry(chain: dict) -> str | None:
 def _nearest_strike(strikes: list[float], px: float) -> float:
     return min(strikes, key=lambda k: abs(k - px))
 
+def _node_delta(book: dict, strike: float, leg: str):
+    node = book.get(strike, {}).get(leg)
+    return node.get("delta") if node else None
+
+def _delta_strike(book: dict, target_delta: float, leg: str):
+    """Strike whose |delta| is closest to target_delta for the given leg (ce/pe),
+    among nodes that carry a computed Greek. None if the chain has no Greeks at all
+    (caller then falls back to the ATM strike)."""
+    best, best_err = None, None
+    for k, slot in book.items():
+        node = slot.get(leg) if isinstance(slot, dict) else None
+        d = node.get("delta") if isinstance(node, dict) else None
+        if d is None:
+            continue
+        err = abs(abs(float(d)) - target_delta)
+        if best_err is None or err < best_err:
+            best, best_err = k, err
+    return best
+
+def _attach_cf_lots(cf, risk_budget: float, lot: int) -> None:
+    """[V10.3] Add the same-risk-budget lot count to an ATM counterfactual, in place, so
+    ITM-vs-ATM is directly comparable (ATM is cheaper -> usually more lots for equal risk)."""
+    if not cf:
+        return
+    mlot = (cf.get("max_loss_per_share") or 0) * lot
+    cf["lot_size"] = lot
+    cf["lots_same_risk"] = math.floor(risk_budget / mlot) if mlot > 0 else 0
+
 def build_option_legs(instrument: str, price: float, target: float, stop: float,
                       chain: dict, strict: bool = False) -> dict | None:
     """Construct defined-risk legs from REAL chain premiums. Returns
@@ -344,6 +458,7 @@ def build_option_legs(instrument: str, price: float, target: float, stop: float,
         return None
     atm = _nearest_strike(strikes, price)
     i = strikes.index(atm)
+    long_delta = None
 
     def prem(strike, leg):
         node = book.get(strike, {}).get(leg)
@@ -359,20 +474,40 @@ def build_option_legs(instrument: str, price: float, target: float, stop: float,
                     return None                      # spread wider than 5% of mid
         return node["ltp"]
 
+    # Long CALL leg: buy ITM (~OPT_LONG_DELTA delta) to cut theta [V10.3]. Delta comes
+    # from the in-house Greeks enrichment; if the chain has none, or the ITM strike is
+    # untradeable under the strict filters, we fall back to the ATM strike (old behaviour).
+    long_k = atm
+    if instrument in ("ATM_CALL", "BULL_CALL_SPREAD"):
+        cand = _delta_strike(book, OPT_LONG_DELTA, "ce")
+        if cand is not None and cand in strikes:
+            long_k = cand
+
     if instrument == "ATM_CALL":
-        p = prem(atm, "ce")
+        p = prem(long_k, "ce")
+        if p is None and long_k != atm:
+            long_k, p = atm, prem(atm, "ce")         # ITM leg untradeable -> ATM
         if p is None: return None
-        legs = [{"type": "CE", "side": "BUY", "strike": atm, "entry_premium": p}]
+        long_delta = _node_delta(book, long_k, "ce")
+        legs = [{"type": "CE", "side": "BUY", "strike": long_k, "entry_premium": p}]
         debit = p
         max_loss = debit                                      # premium paid
     elif instrument == "BULL_CALL_SPREAD":
+        li = strikes.index(long_k)
         upper = _nearest_strike(strikes, target)
-        if upper <= atm and i + 1 < len(strikes):
-            upper = strikes[i + 1]
-        b, sl_ = prem(atm, "ce"), prem(upper, "ce")
-        if b is None or sl_ is None or upper <= atm: return None
-        legs = [{"type": "CE", "side": "BUY",  "strike": atm,   "entry_premium": b},
-                {"type": "CE", "side": "SELL", "strike": upper, "entry_premium": sl_}]
+        if upper <= long_k and li + 1 < len(strikes):
+            upper = strikes[li + 1]
+        b, sl_ = prem(long_k, "ce"), prem(upper, "ce")
+        if b is None and long_k != atm:              # ITM long untradeable -> ATM long
+            long_k, li = atm, i
+            upper = _nearest_strike(strikes, target)
+            if upper <= long_k and li + 1 < len(strikes):
+                upper = strikes[li + 1]
+            b, sl_ = prem(long_k, "ce"), prem(upper, "ce")
+        if b is None or sl_ is None or upper <= long_k: return None
+        long_delta = _node_delta(book, long_k, "ce")
+        legs = [{"type": "CE", "side": "BUY",  "strike": long_k, "entry_premium": b},
+                {"type": "CE", "side": "SELL", "strike": upper,  "entry_premium": sl_}]
         debit = b - sl_
         if debit <= 0: return None
         max_loss = debit                                      # net debit
@@ -392,8 +527,43 @@ def build_option_legs(instrument: str, price: float, target: float, stop: float,
         return None
     if max_loss <= 0:
         return None
+
+    # [V10.3] ATM counterfactual — what the pre-ITM structure WOULD have been, recorded on
+    # every option entry so ITM-vs-ATM is comparable straight from the book/decisions log
+    # (no separate backtest needed). Per-share metrics only; the same-risk-budget lot count
+    # is derived at the entry site (needs lot_size + risk budget). None for BULL_PUT_SPREAD
+    # (unchanged by V10.3) and when the ITM leg fell back to ATM (then actual == ATM already).
+    def _atm_cf():
+        if long_k == atm:
+            return None
+        if instrument == "ATM_CALL":
+            pa = prem(atm, "ce")
+            if pa is None:
+                return None
+            return {"long_strike": atm, "long_premium": pa,
+                    "long_delta": _node_delta(book, atm, "ce"),
+                    "short_strike": None, "short_premium": None,
+                    "net_debit_per_share": round(pa, 2), "max_loss_per_share": round(pa, 2)}
+        if instrument == "BULL_CALL_SPREAD":
+            up = _nearest_strike(strikes, target)
+            if up <= atm and i + 1 < len(strikes):
+                up = strikes[i + 1]
+            ba, sa = prem(atm, "ce"), prem(up, "ce")
+            if ba is None or sa is None or up <= atm:
+                return None
+            da = ba - sa
+            if da <= 0:
+                return None
+            return {"long_strike": atm, "long_premium": ba,
+                    "long_delta": _node_delta(book, atm, "ce"),
+                    "short_strike": up, "short_premium": sa,
+                    "net_debit_per_share": round(da, 2), "max_loss_per_share": round(da, 2)}
+        return None
+
     return {"legs": legs, "expiry": expiry, "net_debit": round(debit, 2),
-            "max_loss_per_share": round(max_loss, 2)}
+            "max_loss_per_share": round(max_loss, 2),
+            "long_delta": round(long_delta, 4) if long_delta is not None else None,
+            "atm_counterfactual": _atm_cf()}
 
 # ───────────────────────────── valuation ─────────────────────────────
 def _option_mark(pos: dict) -> tuple[float, str, list[float]]:
@@ -432,7 +602,7 @@ def portfolio_equity(state: dict) -> float:
 def _heat(state: dict) -> float:
     return sum(p.get("open_risk_inr", 0.0) for p in state["positions"])
 
-def _entry_blockers(state: dict, reg: dict) -> list[str]:
+def _entry_blockers(state: dict, reg: dict, book: str) -> list[str]:
     out = []
     if state["halted"]:
         out.append(f"kill switch active: {state['halt_reason']}")
@@ -440,8 +610,9 @@ def _entry_blockers(state: dict, reg: dict) -> list[str]:
         out.append("F1 veto — Nifty below 50dma, no new longs")
     if reg.get("vix_tier") == "EXTREME":
         out.append(f"VIX {reg.get('vix')} EXTREME — entries halted")
-    if len(state["positions"]) >= MAX_POSITIONS:
-        out.append(f"max positions ({MAX_POSITIONS}) reached")
+    maxp = BOOKS[book]["max_positions"]
+    if len(state["positions"]) >= maxp:
+        out.append(f"max positions ({maxp}) reached")
     return out
 
 def _features(tech: dict, fund: dict, rec: dict) -> dict:
@@ -463,13 +634,18 @@ def _features(tech: dict, fund: dict, rec: dict) -> dict:
             "conviction": rec.get("conviction"), "instrument_proposed": rec.get("instrument"),
             "engine": rec.get("engine")}
 
-def execute_entry(bundle: dict, state: dict) -> dict:
-    """Try to enter one recommendation. Returns a decision record."""
+def execute_entry(bundle: dict, state: dict, book: str = "equity", ml_probs: dict | None = None) -> dict:
+    """Try to enter one recommendation into the given book. Returns a decision record.
+    [V11] book routing: 'equity' book takes EQUITY only (option code never consulted);
+    'options' book takes F&O only (any unmet option precondition SKIPS — no fallback).
+    [V11.1] ml_probs (equity book, AGENT4_ML_GATE=1 only): {sym: ensemble prob}; a name below
+    ML_GATE_MIN_PROB is skipped. None/missing prob => not gated (fail-safe)."""
     tech, fund, rec = bundle["technical"], bundle["fundamental"], bundle["recommendation"]
+    cfg = BOOKS[book]
     sym = tech["symbol"]
     equity = portfolio_equity(state)
     feats = _features(tech, fund, rec)
-    dec = {"symbol": sym, "rec_action": rec.get("action"), "features": feats,
+    dec = {"symbol": sym, "book": book, "rec_action": rec.get("action"), "features": feats,
            "action_taken": "SKIP", "skip_reason": None}
 
     if rec.get("action") != "BUY":
@@ -481,6 +657,15 @@ def execute_entry(bundle: dict, state: dict) -> dict:
     if any(p["symbol"] == sym for p in state["positions"]):
         dec["skip_reason"] = "already holding this symbol"
         return dec
+    # [V11.1] ML ensemble gate — EQUITY book only, off unless AGENT4_ML_GATE=1. Fail-safe:
+    # only skips when a real prob exists and is below the bar; no model / no prob = pass through.
+    if ML_GATE and cfg["allow"] == "equity" and ml_probs:
+        p = ml_probs.get(sym)
+        if p is not None:
+            dec["ml_prob"] = p
+            if p < ML_GATE_MIN_PROB:
+                dec["skip_reason"] = f"ML gate: ensemble prob {p} < {ML_GATE_MIN_PROB}"
+                return dec
 
     price, stop, target = tech["price"], tech["stop_loss"], tech["target"]
     atr = tech["atr"]
@@ -513,44 +698,59 @@ def execute_entry(bundle: dict, state: dict) -> dict:
         stop = round(px_now - 2.5 * atr, 2)
         target = round(px_now + 3 * atr, 2)
 
-    # ----- risk budget: min(our 1% rule, Agent 1's vol-adjusted %, Rs cap) -----
-    a1_pct = (tech.get("sizing") or {}).get("risk_pct_of_capital") or RISK_PCT
-    risk_budget = round(min(RISK_PCT, a1_pct) / 100 * equity, 2)
+    # ----- risk budget [V11 per book] -----
+    if cfg["allow"] == "options":
+        # user-set 2% (Rs20k on 10L). Agent-1's vol-adjusted % is calibrated for ~1%-scale
+        # equity risk and would undercut the deliberate options budget; structures are
+        # defined-risk, so the budget IS the max loss — no vol adjustment needed.
+        risk_budget = round(cfg["risk_pct"] / 100 * equity, 2)
+    else:
+        # equity: min(book %, Agent 1's vol-adjusted %), as before
+        a1_pct = (tech.get("sizing") or {}).get("risk_pct_of_capital") or cfg["risk_pct"]
+        risk_budget = round(min(cfg["risk_pct"], a1_pct) / 100 * equity, 2)
     risk_budget = min(risk_budget, RISK_RUPEE_CAP)
     if _heat(state) + risk_budget > MAX_HEAT_PCT / 100 * equity:
         dec["skip_reason"] = (f"portfolio heat {_heat(state):.0f} + {risk_budget:.0f} "
                               f"would exceed {MAX_HEAT_PCT}% of equity")
         return dec
 
-    # ----- instrument: options only with real chain data + real lot size -----
-    instrument, opt, fallback_note = "EQUITY", None, None
+    # ----- instrument routing [V11]: hard wall between the books -----
+    instrument, opt, fallback_note, opt_cf = "EQUITY", None, None, None
     proposed = rec.get("instrument")
-    if proposed in ("ATM_CALL", "BULL_CALL_SPREAD", "BULL_PUT_SPREAD"):
+    if cfg["allow"] == "options":
+        # F&O-ONLY book: every unmet precondition SKIPS — no equity fallback exists here.
+        if proposed not in OPTION_INSTRUMENTS:
+            dec["skip_reason"] = f"strategist proposed {proposed or 'EQUITY'} — F&O-only book skips"
+            return dec
         if (rec.get("conviction") or 0) < OPT_CONVICTION_MIN:
-            fallback_note = f"options need conviction >= {OPT_CONVICTION_MIN} — taking EQUITY"
-        elif sum(1 for p in state["positions"] if p["instrument"] != "EQUITY") >= MAX_OPTION_POS:
-            fallback_note = f"max {MAX_OPTION_POS} option positions — taking EQUITY"
-        else:
-            lot = _lot_size(sym)
-            if lot <= 1:
-                fallback_note = "no F&O lot size in watchlist — taking EQUITY"
-            else:
-                chain = fetch_option_chain(sym)
-                if not chain:
-                    fallback_note = "NSE option chain unavailable — taking EQUITY"
-                else:
-                    built = build_option_legs(proposed, price, target, stop, chain, strict=True)
-                    if not built:
-                        fallback_note = ("chain premiums illiquid or unusable "
-                                         "(OI/spread/zero-debit checks) — taking EQUITY")
-                    else:
-                        max_loss_lot = built["max_loss_per_share"] * lot
-                        lots = math.floor(risk_budget / max_loss_lot)
-                        if lots < 1:
-                            fallback_note = (f"1 lot max-loss Rs{max_loss_lot:,.0f} > "
-                                             f"risk budget Rs{risk_budget:,.0f} — taking EQUITY")
-                        else:
-                            instrument, opt = proposed, {**built, "lots": lots, "lot_size": lot}
+            dec["skip_reason"] = f"conviction {rec.get('conviction')} < options bar {OPT_CONVICTION_MIN}"
+            return dec
+        lot = _lot_size(sym)
+        if lot <= 1:
+            dec["skip_reason"] = "no F&O lot size for this name"
+            return dec
+        chain = fetch_option_chain(sym)
+        if not chain:
+            dec["skip_reason"] = "option chain unavailable"
+            return dec
+        built = build_option_legs(proposed, price, target, stop, chain, strict=True)
+        if not built:
+            dec["skip_reason"] = ("chain premiums illiquid or unusable "
+                                  "(OI/spread/zero-debit checks)")
+            return dec
+        # ATM counterfactual is logged even when the pricier ITM leg sizes to <1 lot
+        # and the trade is skipped — that is the "ITM too expensive" signal to measure.
+        _attach_cf_lots(built.get("atm_counterfactual"), risk_budget, lot)
+        opt_cf = dec["atm_counterfactual"] = built.get("atm_counterfactual")
+        max_loss_lot = built["max_loss_per_share"] * lot
+        lots = math.floor(risk_budget / max_loss_lot)
+        if lots < 1:
+            dec["skip_reason"] = (f"1 lot max-loss Rs{max_loss_lot:,.0f} > "
+                                  f"risk budget Rs{risk_budget:,.0f}")
+            return dec
+        instrument, opt = proposed, {**built, "lots": lots, "lot_size": lot}
+    # equity book: instrument stays EQUITY — option code paths are never touched here.
+    # (The strategist's proposed instrument is still recorded in features for audit.)
 
     now = datetime.now()
     pid = state["next_id"]; state["next_id"] += 1
@@ -598,6 +798,8 @@ def execute_entry(bundle: dict, state: dict) -> dict:
                "entry_date": str(date.today()), "entry_time": now.strftime("%H:%M"),
                "underlying_entry": price, "legs": opt["legs"], "expiry": opt["expiry"],
                "lots": lots, "lot_size": lot, "net_debit": round(debit, 2),
+               "long_delta": opt.get("long_delta"),
+               "atm_counterfactual": opt.get("atm_counterfactual"),
                "stop": stop, "target": target, "reached_1atr": False,
                "atr_at_entry": atr, "sessions_held": 0, "last_session": None,
                "max_loss_inr": round(max_loss, 2),
@@ -609,7 +811,8 @@ def execute_entry(bundle: dict, state: dict) -> dict:
     state["positions"].append(pos)
     dec.update({"action_taken": "ENTER", "instrument": instrument,
                 "position_id": pid, "fallback_note": fallback_note,
-                "risk_budget_inr": risk_budget})
+                "risk_budget_inr": risk_budget,
+                "atm_counterfactual": opt_cf})
     return dec
 
 # ───────────────────────────── index sleeve (NIFTY / BANKNIFTY) ─────────────────────────────
@@ -639,17 +842,19 @@ def _index_signal(idx: dict) -> dict | None:
             "direction": "LONG" if score >= INDEX_MIN_SCORE else "NONE",
             "stop": round(price - 2 * atr, 2), "target": round(price + 3 * atr, 2)}
 
-def _enter_index(state: dict, idx: dict, sig: dict, reg: dict) -> dict:
-    """Defined-risk index spread, Cohen vol-matrix instrument. No equity fallback
-    exists for an index — if the spread can't be built, the trade is skipped."""
-    sym = idx["symbol"]
-    dec = {"symbol": sym, "sleeve": "index", "action_taken": "SKIP", "skip_reason": None,
+def _enter_index(state: dict, idx: dict, sig: dict, reg: dict, book: str = "options") -> dict:
+    """Defined-risk index spread, Cohen vol-matrix instrument. Lives in the OPTIONS
+    book [V11]. No equity fallback exists for an index — if the spread can't be
+    built, the trade is skipped."""
+    sym, cfg = idx["symbol"], BOOKS[book]
+    dec = {"symbol": sym, "book": book, "sleeve": "index",
+           "action_taken": "SKIP", "skip_reason": None,
            "features": {"index_score": sig["score"], "details": sig["details"],
                         "rsi": sig["rsi"], "adx": sig["adx"], "vix": reg.get("vix"),
                         "vix_pctile": reg.get("vix_pctile"), "vix_slope_5d": reg.get("vix_slope_5d"),
                         "regime_label": reg.get("label"), "conviction": INDEX_CONVICTION}}
-    if sum(1 for p in state["positions"] if p["instrument"] != "EQUITY") >= MAX_OPTION_POS:
-        dec["skip_reason"] = f"max {MAX_OPTION_POS} option positions"
+    if len(state["positions"]) >= cfg["max_positions"]:
+        dec["skip_reason"] = f"max {cfg['max_positions']} positions"
         return dec
     vp, slope = reg.get("vix_pctile"), reg.get("vix_slope_5d") or 0
     if vp is not None and vp > 70:
@@ -680,15 +885,19 @@ def _enter_index(state: dict, idx: dict, sig: dict, reg: dict) -> dict:
         dec["skip_reason"] = f"chain premiums could not build {instrument}"
         return dec
     equity = portfolio_equity(state)
-    risk_budget = min(RISK_PCT / 100 * equity, RISK_RUPEE_CAP)
+    risk_budget = min(cfg["risk_pct"] / 100 * equity, RISK_RUPEE_CAP)   # [V11] 2% options book
     if _heat(state) + risk_budget > MAX_HEAT_PCT / 100 * equity:
         dec["skip_reason"] = f"portfolio heat would exceed {MAX_HEAT_PCT}%"
         return dec
     lot = idx["lot_size"]
     max_loss_lot = built["max_loss_per_share"] * lot
+    _attach_cf_lots(built.get("atm_counterfactual"), risk_budget, lot)
     lots = math.floor(risk_budget / max_loss_lot)
     if lots < 1:
+        # ITM too rich to fit 1 lot in the index budget (no equity fallback for an index) —
+        # log the counterfactual on the SKIP so this Caveat-2 case is measurable.
         dec["skip_reason"] = f"1 lot max-loss Rs{max_loss_lot:,.0f} > risk budget Rs{risk_budget:,.0f}"
+        dec["atm_counterfactual"] = built.get("atm_counterfactual")
         return dec
     base = lots * lot
     debit = built["net_debit"] * (1 + SLIPPAGE_OPT_PCT / 100) if built["net_debit"] > 0 \
@@ -707,6 +916,8 @@ def _enter_index(state: dict, idx: dict, sig: dict, reg: dict) -> dict:
          "entry_time": datetime.now().strftime("%H:%M"),
          "underlying_entry": px, "legs": built["legs"], "expiry": built["expiry"],
          "lots": lots, "lot_size": lot, "net_debit": round(debit, 2),
+         "long_delta": built.get("long_delta"),
+         "atm_counterfactual": built.get("atm_counterfactual"),
          "slippage_pct": SLIPPAGE_OPT_PCT, "data_source": data_source,
          "stop": stop, "target": target, "reached_1atr": False,
          "atr_at_entry": sig["atr"], "sessions_held": 0, "last_session": None,
@@ -718,23 +929,36 @@ def _enter_index(state: dict, idx: dict, sig: dict, reg: dict) -> dict:
                        f"{instrument} into {built['expiry']}"),
          "features": dec["features"]})
     dec.update({"action_taken": "ENTER", "instrument": instrument, "position_id": pid,
-                "lots": lots, "risk_budget_inr": risk_budget})
+                "lots": lots, "risk_budget_inr": risk_budget,
+                "atm_counterfactual": built.get("atm_counterfactual")})
     return dec
 
 def run_entry_cycle(symbols: list[str] | None = None) -> dict:
-    """The morning routine: regime gates -> scan -> top candidates ->
-    full 3-agent recommendation -> execute. Everything is logged."""
+    """The morning routine: regime gates -> ONE scan -> top candidates -> ONE full
+    3-agent recommendation each -> execute into BOTH books [V11]. The same signal
+    is offered to the equity book (as shares) and the options book (as a spread),
+    which is exactly the paired equity-vs-options test the split exists for.
+    Claude cost is unchanged: one rec per candidate, shared by both books."""
     with _LOCK:
-        state = _load()
-        _roll_day(state)
         reg = agents.market_regime()
-        blockers = _entry_blockers(state, reg)
+        states, blockers = {}, {}
+        for name in BOOKS:
+            st = _load(name)
+            _roll_day(st)
+            states[name] = st
+            blockers[name] = _entry_blockers(st, reg, name)
+        active = [n for n in BOOKS if not blockers[n]]
         decisions = []
-        if blockers:
-            _log_decision({"cycle": "entry", "blocked": blockers, "regime": reg})
-            _save(state)
+        if not active:
+            for name in BOOKS:
+                _log_decision({"cycle": "entry", "book": name,
+                               "blocked": blockers[name], "regime": reg})
+                _save(name, states[name])
             _heartbeat("entry", entered=0, blocked=blockers,
-                       halted=state["halted"], halt_reason=state["halt_reason"])
+                       halted=any(s["halted"] for s in states.values()),
+                       halt_reason="; ".join(f"{n}:{s['halt_reason']}" for n, s in states.items()
+                                             if s["halt_reason"]) or None,
+                       books={n: {"halted": s["halted"]} for n, s in states.items()})
             return {"entered": 0, "blocked": blockers, "decisions": [], "regime": reg}
 
         # explicit symbols (API/test) keep watchlist-relative RS; otherwise scan the
@@ -749,15 +973,19 @@ def run_entry_cycle(symbols: list[str] | None = None) -> dict:
             curated_syms = {e["symbol"] for e in entries if e.get("curated")}
             agents.prefetch_history(wl)                      # one batched fetch (scale lever)
             rs_map = agents.rs_ranks(wl)                     # RS relative to the universe
-        # same-day re-entry guard: a symbol exited today cannot be re-bought today
-        # (prevents stop-out -> re-trigger churn in the 30-min intraday cycle)
-        closed_today = {c["symbol"] for c in state["closed"]
-                        if c.get("exit_date") == str(date.today())}
-        held = {p["symbol"] for p in state["positions"]} | closed_today
+        # same-day re-entry guard, PER BOOK: a symbol exited today can't be re-bought
+        # today in that book. A name is only dropped from the scan when NO active book
+        # could take it (held/exited in all of them) — else the other book gets its shot.
+        today = str(date.today())
+        held = {}
+        for name in active:
+            st = states[name]
+            held[name] = ({p["symbol"] for p in st["positions"]}
+                          | {c["symbol"] for c in st["closed"] if c.get("exit_date") == today})
         if rs_map is None:
             agents.rs_ranks()                               # warm cache (watchlist path)
         def _scan(sym):
-            if sym in held:
+            if all(sym in held[name] for name in active):
                 return None
             try:
                 t = agents.technical_agent(sym, rs_map=rs_map)
@@ -776,62 +1004,90 @@ def run_entry_cycle(symbols: list[str] | None = None) -> dict:
             cands = [t for t in ex.map(_scan, wl) if t]
         cands.sort(key=lambda t: t["score"], reverse=True)
 
-        entered = 0
-        for t in cands[:TOP_N_RECS]:
-            if len(state["positions"]) >= MAX_POSITIONS:
-                break
+        # [V11.1] ML ensemble entry gate — computed ONCE per cycle, only when AGENT4_ML_GATE=1.
+        # Fully inert by default (ml_probs stays None). Fail-safe: any error -> None -> no gating.
+        ml_probs = None
+        if ML_GATE:
             try:
-                bundle = agents.recommend(t["symbol"])
+                import ml_signal
+                ml_probs = ml_signal.ensemble_prob_universe() or None
+            except Exception:
+                ml_probs = None
+
+        entered = {name: 0 for name in BOOKS}
+        def _book_open(name):
+            return len(states[name]["positions"]) < BOOKS[name]["max_positions"]
+        for t in cands[:TOP_N_RECS]:
+            takers = [n for n in active if _book_open(n) and t["symbol"] not in held[n]]
+            if not takers:
+                if not any(_book_open(n) for n in active):
+                    break                                   # every active book is full
+                continue
+            try:
+                bundle = agents.recommend(t["symbol"])      # ONE Claude call, both books share it
             except Exception as e:
                 decisions.append({"symbol": t["symbol"], "action_taken": "SKIP",
                                   "skip_reason": f"recommend() failed: {str(e)[:80]}"})
                 continue
             if "error" in bundle:
                 continue
-            dec = execute_entry(bundle, state)
             nc = bundle.get("news_context") or {}      # Agent 6 pre-market brain (audit + ML feature)
-            if nc:
-                dec["news"] = {"market_bias": nc.get("market_bias"), "sector": nc.get("sector"),
-                               "sector_bias": nc.get("sector_bias"),
-                               "sector_confidence": nc.get("sector_confidence"),
-                               "stock_flag": (nc.get("stock_flag") or {}).get("bias")}
-            decisions.append(dec)
-            _log_decision({**dec, "cycle": "entry"})
-            if dec["action_taken"] == "ENTER":
-                entered += 1
+            news = {"market_bias": nc.get("market_bias"), "sector": nc.get("sector"),
+                    "sector_bias": nc.get("sector_bias"),
+                    "sector_confidence": nc.get("sector_confidence"),
+                    "stock_flag": (nc.get("stock_flag") or {}).get("bias")} if nc else None
+            for name in takers:
+                dec = execute_entry(bundle, states[name], name, ml_probs)
+                if news:
+                    dec["news"] = news
+                decisions.append(dec)
+                _log_decision({**dec, "cycle": "entry"})
+                if dec["action_taken"] == "ENTER":
+                    entered[name] += 1
 
-        # ----- index sleeve: NIFTY / BANKNIFTY defined-risk spreads -----
-        for idx in INDEX_UNIVERSE:
-            if len(state["positions"]) >= MAX_POSITIONS:
-                break
-            if any(p["symbol"] == idx["symbol"] for p in state["positions"]) \
-                    or idx["symbol"] in closed_today:
+        # ----- index sleeve: NIFTY / BANKNIFTY defined-risk spreads -> OPTIONS book -----
+        for name in active:
+            if not BOOKS[name]["index_sleeve"]:
                 continue
-            try:
-                sig = _index_signal(idx)
-            except Exception as e:
-                decisions.append({"symbol": idx["symbol"], "sleeve": "index",
-                                  "action_taken": "SKIP",
-                                  "skip_reason": f"signal failed: {str(e)[:80]}"})
-                continue
-            if not sig:
-                continue
-            if sig["direction"] != "LONG":
-                dec = {"symbol": idx["symbol"], "sleeve": "index", "action_taken": "SKIP",
-                       "skip_reason": f"index trend score {sig['score']}/{sig['max_score']} "
-                                      f"< {INDEX_MIN_SCORE}"}
-            else:
-                dec = _enter_index(state, idx, sig, reg)
-            decisions.append(dec)
-            _log_decision({**dec, "cycle": "entry"})
-            if dec["action_taken"] == "ENTER":
-                entered += 1
+            st = states[name]
+            for idx in INDEX_UNIVERSE:
+                if not _book_open(name):
+                    break
+                if any(p["symbol"] == idx["symbol"] for p in st["positions"]) \
+                        or idx["symbol"] in held[name]:
+                    continue
+                try:
+                    sig = _index_signal(idx)
+                except Exception as e:
+                    decisions.append({"symbol": idx["symbol"], "book": name, "sleeve": "index",
+                                      "action_taken": "SKIP",
+                                      "skip_reason": f"signal failed: {str(e)[:80]}"})
+                    continue
+                if not sig:
+                    continue
+                if sig["direction"] != "LONG":
+                    dec = {"symbol": idx["symbol"], "book": name, "sleeve": "index",
+                           "action_taken": "SKIP",
+                           "skip_reason": f"index trend score {sig['score']}/{sig['max_score']} "
+                                          f"< {INDEX_MIN_SCORE}"}
+                else:
+                    dec = _enter_index(st, idx, sig, reg, name)
+                decisions.append(dec)
+                _log_decision({**dec, "cycle": "entry"})
+                if dec["action_taken"] == "ENTER":
+                    entered[name] += 1
 
-        _save(state)
-        _heartbeat("entry", entered=entered, blocked=[],
-                   halted=state["halted"], halt_reason=state["halt_reason"])
-        return {"entered": entered, "blocked": [], "decisions": decisions,
-                "candidates_scanned": len(cands), "regime": reg}
+        for name in BOOKS:
+            _save(name, states[name])
+        _heartbeat("entry", entered=sum(entered.values()), blocked=[],
+                   halted=any(s["halted"] for s in states.values()),
+                   halt_reason="; ".join(f"{n}:{s['halt_reason']}" for n, s in states.items()
+                                         if s["halt_reason"]) or None,
+                   books={n: {"entered": entered[n], "blocked": blockers[n],
+                              "halted": states[n]["halted"]} for n in BOOKS})
+        return {"entered": sum(entered.values()), "entered_by_book": entered,
+                "blocked": {n: b for n, b in blockers.items() if b},
+                "decisions": decisions, "candidates_scanned": len(cands), "regime": reg}
 
 # ───────────────────────────── exits / monitoring ─────────────────────────────
 def _close_equity(state: dict, pos: dict, px: float, frac: float, reason: str):
@@ -890,13 +1146,33 @@ def _close_options(state: dict, pos: dict, reason: str):
     return rec
 
 def run_monitor() -> dict:
-    """The daily babysitter. Priority per position:
+    """The daily babysitter, run for EACH book [V11]. Priority per position:
     stop -> half-bank at target (equity) -> chandelier trail -> time stop ->
-    options expiry exit. Then kill switches + equity curve."""
+    options expiry exit. Then per-book kill switches + equity curve."""
     with _LOCK:
-        state = _load()
-        _roll_day(state)
-        actions = []
+        out = {}
+        for book in BOOKS:
+            out[book] = _monitor_book(book)
+        all_actions = [a for r in out.values() for a in r["actions"]]
+        _heartbeat("monitor", actions=len(all_actions),
+                   halted=any(r["halted"] for r in out.values()),
+                   halt_reason="; ".join(f"{n}:{r['halt_reason']}" for n, r in out.items()
+                                         if r["halt_reason"]) or None,
+                   books={n: {"equity": r["equity"], "open": r["open_positions"],
+                              "halted": r["halted"]} for n, r in out.items()})
+        return {"books": out, "actions": all_actions,
+                "equity": round(sum(r["equity"] for r in out.values()), 2),
+                "open_positions": sum(r["open_positions"] for r in out.values()),
+                "halted": any(r["halted"] for r in out.values()),
+                "halt_reason": "; ".join(f"{n}:{r['halt_reason']}" for n, r in out.items()
+                                         if r["halt_reason"]) or None}
+
+def _monitor_book(book: str) -> dict:
+    """Exit management + kill switches + equity curve for ONE book. Caller holds _LOCK."""
+    state = _load(book)
+    _roll_day(state)
+    actions = []
+    if True:                                   # keep the position-loop indentation stable
         for pos in list(state["positions"]):
             bar = _bar(pos)
             if not bar:
@@ -934,22 +1210,27 @@ def run_monitor() -> dict:
                     r = _close_equity(state, pos, px, 1.0, "TIME_STOP_12D")
                     actions.append({"symbol": pos["symbol"], "action": "TIME_STOP_12D", "pnl": r["pnl"]})
             else:
-                # options: managed off the UNDERLYING levels + expiry clock
-                if not pos["reached_1atr"] and bar["high"] >= pos["underlying_entry"] + pos["atr_at_entry"]:
-                    pos["reached_1atr"] = True
+                # [V10.2 2026-07-10] OPTIONS = DEFINED-RISK MANAGEMENT, not equity stops.
+                # A debit spread's max loss IS the premium paid — never stop it out on a 2.5*ATR
+                # underlying wiggle (RCA: that realised ~96% of max loss at 2 days and killed all
+                # recovery). Manage on: (1) profit target on the SPREAD's own value, (2) the expiry
+                # clock, (3) a WIDE disaster stop on the underlying CLOSE (real thesis break).
                 try:
                     dte = (datetime.strptime(pos["expiry"], "%d-%b-%Y").date() - date.today()).days
                 except ValueError:
                     dte = 99
+                mark, _mq, _ = _option_mark(pos)                  # current spread value per share
+                debit = pos.get("net_debit") or 0.0               # >0 debit spread, <0 credit spread
+                strikes = [l["strike"] for l in pos["legs"]]
+                width = abs(max(strikes) - min(strikes)) if len(strikes) >= 2 else None
                 reason = None
-                if bar["low"] <= pos["stop"]:
-                    reason = "UNDERLYING_STOP_HIT"
-                elif bar["high"] >= pos["target"]:
-                    reason = "UNDERLYING_TARGET_HIT"
+                if width and debit > 0 and mark >= debit + OPT_PROFIT_TAKE_FRAC * (width - debit):
+                    reason = f"SPREAD_TARGET_{int(OPT_PROFIT_TAKE_FRAC * 100)}PCT"      # bank the winner
                 elif dte <= OPT_EXIT_DTE:
                     reason = f"EXPIRY_EXIT_{dte}DTE"
-                elif not pos["reached_1atr"] and pos["sessions_held"] >= TIME_STOP_SESSIONS:
-                    reason = "TIME_STOP_12D"
+                elif bar and bar["close"] <= pos["underlying_entry"] - OPT_DISASTER_ATR * pos["atr_at_entry"]:
+                    reason = "UNDERLYING_THESIS_BREAK"            # genuinely wrong (4*ATR, on close)
+                # else: HOLD — max loss is already capped at the debit; give theta/recovery a chance
                 if reason:
                     r = _close_options(state, pos, reason)
                     actions.append({"symbol": pos["symbol"], "action": reason,
@@ -963,13 +1244,15 @@ def run_monitor() -> dict:
         if not state["halted"]:
             if state["day"]["realized_pnl"] <= -DAILY_LOSS_HALT_PCT / 100 * eq:
                 state["halted"], state["halt_reason"] = True, "DAILY_LOSS"
-                msg = (f"KILL SWITCH: day loss Rs{state['day']['realized_pnl']:,.0f} > "
+                msg = (f"KILL SWITCH [{BOOKS[book]['label']}]: day loss "
+                       f"Rs{state['day']['realized_pnl']:,.0f} > "
                        f"{DAILY_LOSS_HALT_PCT}% — no new entries until tomorrow")
                 actions.append({"action": "KILL_SWITCH", "reason": msg})
                 notify(msg, "ALERT")
             elif eq < state["peak_equity"] * (1 - MAX_DD_HALT_PCT / 100):
                 state["halted"], state["halt_reason"] = True, "MAX_DRAWDOWN"
-                msg = (f"KILL SWITCH: equity Rs{eq:,.0f} is {MAX_DD_HALT_PCT}% below peak "
+                msg = (f"KILL SWITCH [{BOOKS[book]['label']}]: equity Rs{eq:,.0f} is "
+                       f"{MAX_DD_HALT_PCT}% below peak "
                        f"Rs{state['peak_equity']:,.0f} — manual reset required")
                 actions.append({"action": "KILL_SWITCH", "reason": msg})
                 notify(msg, "ALERT")
@@ -989,10 +1272,9 @@ def run_monitor() -> dict:
                 state["equity_curve"][-1]["nifty"] = nifty
 
         for a in actions:
+            a["book"] = book
             _log_decision({**a, "cycle": "monitor"})
-        _save(state)
-        _heartbeat("monitor", actions=len(actions),
-                   halted=state["halted"], halt_reason=state["halt_reason"])
+        _save(book, state)
         return {"actions": actions, "equity": eq, "open_positions": len(state["positions"]),
                 "halted": state["halted"], "halt_reason": state["halt_reason"]}
 
@@ -1008,16 +1290,18 @@ def run_cycle() -> dict:
     mon = run_monitor()
     ent = run_entry_cycle()
     lines = []
+    tag = {"equity": "[EQ]", "options": "[OPT]"}
     for a in mon.get("actions", []):
         act = a.get("action")
         if act in ("NO_DATA", "TRAIL_RAISED", "KILL_SWITCH"):
             continue                       # kill switches already notify directly
         pnl = a.get("pnl")
-        lines.append(f"EXIT {a.get('symbol', '?')} {act}"
+        lines.append(f"{tag.get(a.get('book'), '')} EXIT {a.get('symbol', '?')} {act}".strip()
                      + (f" Rs{pnl:+,.0f}" if pnl is not None else ""))
     for d in ent.get("decisions", []):
         if d.get("action_taken") == "ENTER":
-            lines.append(f"ENTER {d['symbol']} {d.get('instrument', '')}".rstrip())
+            lines.append(f"{tag.get(d.get('book'), '')} ENTER {d['symbol']} "
+                         f"{d.get('instrument', '')}".strip())
     if lines:
         notify(" | ".join(lines), "TRADE")
     return {"monitor": mon, "entry": ent, "notified": lines}
@@ -1041,7 +1325,25 @@ def _read_heartbeat() -> dict:
         return {}
 
 def summary() -> dict:
-    state = _load()
+    """[V11] Both books side by side + a combined header. Each book's block keeps the
+    pre-split field shape so per-book consumers (UI panels, Agent 5) stay simple."""
+    books = {name: _book_summary(name) for name in BOOKS}
+    eq = round(sum(b["equity"] for b in books.values()), 2)
+    cap = round(sum(b["start_capital"] for b in books.values()), 2)
+    return {"books": books,
+            "combined": {
+                "start_capital": cap, "equity": eq,
+                "cash": round(sum(b["cash"] for b in books.values()), 2),
+                "return_pct": round((eq / cap - 1) * 100, 2) if cap else None,
+                "day_realized_pnl": round(sum(b["day"]["realized_pnl"] for b in books.values()), 2),
+                "open_positions": sum(len(b["open_positions"]) for b in books.values()),
+                "trades_closed": sum(b["stats"]["trades_closed"] for b in books.values()),
+                "halted_books": [n for n, b in books.items() if b["halted"]]},
+            "heartbeat": _read_heartbeat()}
+
+def _book_summary(book: str) -> dict:
+    cfg = BOOKS[book]
+    state = _load(book)
     eq = portfolio_equity(state)
     closed = state["closed"]
     full_exits = [c for c in closed if "banked half" not in (c.get("note") or "")]
@@ -1083,7 +1385,8 @@ def summary() -> dict:
             except Exception:
                 pass
         open_rows.append(row)
-    return {"start_capital": state["start_capital"], "equity": eq,
+    return {"book": book, "label": cfg["label"], "allow": cfg["allow"],
+            "start_capital": state["start_capital"], "equity": eq,
             "cash": state["cash"], "peak_equity": state["peak_equity"],
             "return_pct": round((eq / state["start_capital"] - 1) * 100, 2),
             "halted": state["halted"], "halt_reason": state["halt_reason"],
@@ -1099,21 +1402,26 @@ def summary() -> dict:
                       "expectancy_inr": round(sum(c["pnl"] for c in closed) / len(closed), 0) if closed else None,
                       "max_drawdown_pct": round(max_dd, 2)},
             "benchmark": _benchmark(state),
-            "heartbeat": _read_heartbeat(),
             "equity_curve": curve,
-            "limits": {"risk_pct": RISK_PCT, "max_positions": MAX_POSITIONS,
+            "limits": {"risk_pct": cfg["risk_pct"], "max_positions": cfg["max_positions"],
                        "max_heat_pct": MAX_HEAT_PCT, "daily_loss_halt_pct": DAILY_LOSS_HALT_PCT,
                        "max_dd_halt_pct": MAX_DD_HALT_PCT,
                        "conviction_min": CONVICTION_MIN, "opt_conviction_min": OPT_CONVICTION_MIN}}
 
-def reset_halt() -> dict:
+def reset_halt(book: str | None = None) -> dict:
+    """Clear the drawdown/daily halt on one book, or both when book is None [V11]."""
     with _LOCK:
-        state = _load()
-        was = state["halt_reason"]
-        state["halted"], state["halt_reason"] = False, None
-        _save(state)
-        _log_decision({"cycle": "admin", "action": "HALT_RESET", "was": was})
-        return {"reset": True, "was": was}
+        out = {}
+        for name in ([book] if book else list(BOOKS)):
+            if name not in BOOKS:
+                return {"error": f"unknown book '{name}' — use equity|options"}
+            state = _load(name)
+            was = state["halt_reason"]
+            state["halted"], state["halt_reason"] = False, None
+            _save(name, state)
+            _log_decision({"cycle": "admin", "book": name, "action": "HALT_RESET", "was": was})
+            out[name] = {"reset": True, "was": was}
+        return out
 
 # ───────────────────────────── CLI ─────────────────────────────
 if __name__ == "__main__":
@@ -1125,8 +1433,8 @@ if __name__ == "__main__":
             print(json.dumps(run_cycle(), indent=1))
         elif cmd == "monitor":
             print(json.dumps(run_monitor(), indent=1))
-        elif cmd == "reset-halt":
-            print(json.dumps(reset_halt(), indent=1))
+        elif cmd == "reset-halt":     # optional book arg: reset-halt [equity|options]
+            print(json.dumps(reset_halt(sys.argv[2] if len(sys.argv) > 2 else None), indent=1))
         else:
             print(json.dumps(summary(), indent=1))
     except Exception as e:

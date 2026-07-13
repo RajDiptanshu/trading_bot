@@ -4,13 +4,15 @@ description: Full state-of-project reference for Diptanshu's NSE algo-trading sy
 ---
 
 # NSE Algo-Trading Project — State of the World
-*Last updated: 2026-06-20 (added Agent 6 News Brain: pre-market 24h news + sector contagion → strategist veto). Update this file whenever architecture, risk rules, or schedule change.*
+*Last updated: 2026-07-13 (V11.1: seed-ensemble ML entry gate — DEFAULT OFF, §6b; V11 two books §5e; V10.3 IV/Greeks+ITM §5d; independent-data validation + tilt falsified §5f). Update this file whenever architecture, risk rules, or schedule change.*
 
 ## 1. What this project is
-A fully-local NSE swing-trading system on Diptanshu's Windows machine. Research UI + 4 agents
-generate and execute PAPER trades (Rs 20,00,000 virtual) autonomously via Windows Task Scheduler.
-No real orders are placed anywhere in the code. Goal: 3-6 months of honest paper results
-(gates in §9) before any real-money discussion. ML4T (Stefan Jansen, repo at
+A fully-local NSE swing-trading system on Diptanshu's Windows machine. Research UI + agents
+generate and execute PAPER trades autonomously via Windows Task Scheduler. [V11 2026-07-12]
+TWO SEPARATE BOOKS: an EQUITY-only book (Rs 10,00,000) and an F&O-only OPTIONS book
+(Rs 10,00,000) — see §5e; the sleeves are tested independently. No real orders are placed
+anywhere in the code. Goal: 3-6 months of honest paper results
+(gates in §9, tracked PER BOOK) before any real-money discussion. ML4T (Stefan Jansen, repo at
 `C:\trading_bot\machine-learning-for-trading`) is the reference text ("bible") for the ML layer.
 
 ## 2. File map (don't re-explore; this is current)
@@ -24,8 +26,10 @@ C:\trading_bot\                       (TRADING_BOT_DIR — single source of trut
   strategy_memory.json                kill-words + live_stats override for EV/Kelly
   .env                                ANTHROPIC_API_KEY etc. (app.py AND agent4.py load it)
   cost_model.py                       audited NSE costs (equity delivery + options), both sides
-  agent4_state.json                   Agent 4 portfolio (auto-created on first run; 20L start)
-  agent4_decisions.jsonl              EVERY decision w/ feature snapshot = future ML dataset
+  agent4_equity_state.json            [V11] EQUITY book (10L; shares only)
+  agent4_options_state.json           [V11] OPTIONS book (10L; F&O only)
+  agent4_state.legacy-20260712.json   archived pre-split 20L book (final equity 20,35,489)
+  agent4_decisions.jsonl              EVERY decision w/ feature snapshot (+ "book" field V11)
   setup_agent4_tasks.ps1              Task Scheduler migration (run once as admin)
   logs\agent4_entry.log, agent4_monitor.log, ml_retrain.log
   Notes\01..09_*.md                   project docs; 03=Strategy Playbook, 05=Backtest report,
@@ -54,8 +58,15 @@ C:\trading_bot\Algo Trading\recommender\   (the live system)
   screener_engine.py  scan_universe(scope) — bulk prefetch + universe RS + parallel technical
                     funnel + News Brain overlay; NO Claude in bulk scan (cost stays bounded)
   ml_signal.py      ML4T feature/model/CV code; train_ml.py trains -> models/ml_signal.pkl
+  options_math.py   Black-Scholes IV + Greeks (pure stdlib, no scipy): inverts Angel premiums
+                    to IV, computes delta/gamma/theta/vega; enrich_chain() drives the ITM
+                    long-leg pick and the option_chain_history.jsonl IV dataset [V10.3]
   static\index.html single-file React UI (in-browser babel; no build step)
   README.md         user-facing docs incl. Agent 4 section
+  remote_access.bat + REMOTE_ACCESS.md  [2026-07-12] reach the cockpit from any device via
+                    Tailscale (private mesh — app stays 127.0.0.1, `tailscale serve` proxies
+                    the tailnet to it; NO public tunnel — app has no auth). APP_HOST env
+                    (default 127.0.0.1) only widens the bind for the direct-IP fallback.
 ```
 
 ## 3. Agent architecture + status
@@ -70,7 +81,12 @@ C:\trading_bot\Algo Trading\recommender\   (the live system)
 | Cockpit UI | single-file React (static/index.html): Screener tab (universe table + scope/sector/score/LONG filters, scan cached ~10min, click→stock), News tab (market bias + sector contagion + stock flags from /api/news-brief), Stock view (chart+technicals+rec), Portfolio | LIVE (2026-06-22) |
 
 ## 4. Agent 4 — the exact rules (agent4.py constants)
-- Capital 20,00,000. Risk/trade = min(1% equity, Agent-1 vol-adjusted %, Rs 20k cap).
+- [V11] TWO BOOKS (see §5e). EQUITY book: capital 10,00,000, risk/trade = min(1% book equity,
+  Agent-1 vol-adjusted %, Rs 20k cap), max 12 positions. OPTIONS book: capital 10,00,000,
+  risk/trade = min(2% book equity, Rs 20k cap) — Agent-1's vol % deliberately NOT applied
+  (defined-risk structures; budget IS the max loss), max 5 positions. Heat 8% / kill
+  switches / 20% value cap apply PER BOOK. Pre-V11 text below reads "the book" as the
+  single 20L book; the mechanics are unchanged per book unless §5e says otherwise.
 - [V10.1 2026-07-06, user decision "trade as much as the logic allows"]: max 12 positions
   (AGENT4_MAX_POSITIONS), heat cap 8% (AGENT4_MAX_HEAT_PCT), 5 option slots
   (AGENT4_MAX_OPTION_POS); 20% value cap/position unchanged. NOTE heat is the true throttle
@@ -147,6 +163,112 @@ the gate (best fold most recent, +0.072). Breadth, not features, was the ML fix.
 Caveats: OOS samples 84-145 trades; universe backtests carry survivorship bias
 (today's constituents on their own past); index-sleeve params unchanged (not re-validated).
 
+## 5c. V10.2 (2026-07-10) — options RCA + exit fix + expert chat
+OPTIONS RCA: both closed option spreads (NIFTY/BANKNIFTY bull-call) exited UNDERLYING_STOP_HIT at
+2 days for -Rs28,803 (~96% of max loss each) — vs -Rs15,589 on 5 equity trades. ROOT CAUSE: the
+2.5*ATR equity stop was applied to defined-risk debit spreads (whose max loss is ALREADY the debit),
+so a 2-day underlying wiggle crystallised near-max loss and killed all recovery. FIX (run_monitor
+options branch): removed the underlying noise-stop; spreads now managed on (1) SPREAD_TARGET —
+bank at OPT_PROFIT_TAKE_FRAC (0.6) of max profit on the spread's own mark, (2) EXPIRY_EXIT
+(OPT_EXIT_DTE), (3) UNDERLYING_THESIS_BREAK — only on underlying CLOSE past OPT_DISASTER_ATR (4.0)
+ATR. Max loss stays capped at the debit; losers get theta/recovery time. Verified on live spreads
+(NIFTY spread was +Rs65/sh and would've been noise-stopped under old logic).
+DONE 2026-07-11 (§5d V10.3): ITM long leg + in-house IV/Greeks. STILL-NOT-DONE: per-stock
+IV-percentile gating (don't buy rich premium — the enriched history is now accruing the dataset
+for it), bearish/neutral structures (book is 100% long-delta). CHAT ANALYST (chat_analyst.py): added
+Anthropic native web_search (server tool, India user_location) + a 15+yr-analyst persona that
+mandates MOVE/VERDICT/LEVELS/WATCH with a stop+target every time — fixed the "no news driver" punt
+(now finds real catalysts, e.g. TRENT's Q1 miss, with levels).
+
+## 5d. V10.3 (2026-07-11) — in-house IV/Greeks + ITM long leg
+Angel's option chain ships premiums only (iv=null), so `options_math.py` (pure stdlib, no scipy)
+inverts Black-Scholes from each live premium to recover IV, then computes delta/gamma/theta/vega
+(theta per calendar day, vega per 1 vol-pt; NSE-fallback percent IV used only when the premium is
+all-intrinsic and the solve is indeterminate). `fetch_option_chain` now enriches every node before
+caching+logging, so `option_chain_history.jsonl` accretes the IV/Greeks dataset the deferred
+per-stock IV-percentile gating needs. LONG CALL LEG moved ATM→ITM: the BUY leg of ATM_CALL /
+BULL_CALL_SPREAD (single-stock AND index sleeve) is now the ~0.65-delta strike
+(AGENT4_OPT_LONG_DELTA; OPT_RISK_FREE_RATE default 0.065, both env-tunable) to cut theta while
+max-loss stays the debit; graceful ATM fallback if the chain carries no Greeks or the ITM strike is
+untradeable under the strict OI/spread filters. Positions record `long_delta`. VERIFIED LIVE: NIFTY
+BULL_CALL_SPREAD picked 24050/24950 at long-delta 0.666, spot 24207 (was ATM); IV solved 0.105 from
+Angel LTP where the feed gave null. Sizing unchanged (lots = risk_budget / max-loss) — an ITM long
+costs more so fewer lots/trade, a deliberate theta-for-cost trade. NOT backtested (no historical NSE
+option data exists; these snapshots are the forward dataset). BULL_PUT_SPREAD unchanged (short ATM
+put + protective lower put — no long call to move).
+ATM COUNTERFACTUAL: every option entry — and every "ITM too rich to fit 1 lot" fallback/skip —
+logs `atm_counterfactual` {long/short strike+premium, long_delta, per-share debit/max-loss,
+lots_same_risk} onto the position AND the decisions log, giving a from-day-one ITM-vs-ATM record
+with no separate backtest. LIVE FINDING (NIFTY, spot 24207): ITM 24050/24950 debit 322/sh vs ATM
+24200/24950 debit 230/sh (+40%); ITM max-loss Rs20,946/lot EXCEEDS the ~19-20k index risk budget,
+so that spread now SKIPS (indices have no equity fallback). Expect the index option sleeve to quiet
+down under ITM — levers: shallower AGENT4_OPT_LONG_DELTA (0.60), a higher option-only risk cap, or
+ITM-for-stocks-only. The counterfactual log will measure how often this bites.
+PAPER-BOOK RESET 2026-07-12: the 5 pre-V10.3 option trades (3 open ATM bull-call spreads + the 2
+UNDERLYING_STOP_HIT losers totalling -Rs28,803) were VOIDED as-if-never-entered (cash reconciled
++Rs81,318 to 191,045; backup agent4_state.backup-20260712-001200.json; ADMIN_VOID_OPTIONS marker in
+the append-only decisions log). Options sleeve restarts flat on V10.3 logic; equity sleeve untouched
+(5 closed trades, -Rs15,589). Gate closed-trade count dropped accordingly (options now 0).
+
+## 5e. V11 (2026-07-12) — TWO SEPARATE BOOKS (user decision: test sleeves independently)
+EQUITY book (agent4_equity_state.json, Rs 10L): EQUITY instrument ONLY — option code paths are
+never consulted (no chains/legs/Greeks), no index sleeve, risk 1%/trade, max 12 positions.
+OPTIONS book (agent4_options_state.json, Rs 10L): F&O ONLY — stock defined-risk spreads
+(conviction>=0.55) + the NIFTY/BANKNIFTY index sleeve; an entry that cannot be built as an
+option structure SKIPS (chain down / illiquid / EQUITY proposal / lots<1) — NO equity fallback;
+risk 2%/trade (Rs20k on 10L: option max-loss runs Rs15-21k/lot, a 1% book would sit near-silent;
+user picked 2% explicitly). NO FUTURES yet (user deferred). One process still runs both books
+per cycle — exits first then entries, ONE scan + ONE Claude rec per candidate shared by both
+books (the same signal becomes a paired equity-vs-options test; Claude cost unchanged). The
+same-day re-entry guard, kill switches, heat, peaks, curves are PER BOOK; one book halting does
+not stop the other. Decisions log lines carry "book"; option-funnel (signals->entered->skip
+reasons) reported daily by Agent 5. Schedule/tasks UNCHANGED (same CLI verbs; reset-halt takes
+an optional book arg; /api/portfolio returns {books,combined}; /api/portfolio/reset-halt?book=).
+UI: Portfolio tab = combined header + two bordered book sections; Report tab = per-book report
+blocks + options funnel. summary() => {books:{equity,options}, combined}, each book block keeps
+the old field shape. MIGRATION 2026-07-12: the 7 open legacy equity positions were closed at the
+last market price (2026-07-10 close, BOOK_SPLIT_RESTRUCTURE, +Rs51,074 on the closes), the 20L
+book archived to agent4_state.legacy-20260712.json (final equity Rs 20,35,489, +1.77% lifetime
+incl. the V10.3 options void), ADMIN_BOOK_SPLIT marker in the decisions log, both new books
+started flat at 10L. GATES (§9) now count PER BOOK from zero — the ~50-trade clock restarted.
+weekly_tune.paper_vs_backtest now compares the EQUITY book (its backtests are the equity
+strategy; live_stats/EV-Kelly prior stays equity-only — verified before the Sun 18:30 run).
+Tested: 25-check mocked harness (book walls, skip-not-fallback, per-book kill switches +
+reset, budgets 10k/20k, summary shapes, book-tagged decisions) ALL PASS + live smoke on :8651
+(both UI tabs render, no console errors). NOTE: restart the :8650 app (start.bat) to load V11 —
+the running server still holds the pre-split module.
+
+## 5f. Independent-data equity validation (2026-07-12) — recent OOS holds, large-cap tilt FALSIFIED
+Two user-provided external datasets in C:\trading_bot cross-check the EQUITY edge. NEITHER helps
+options (no premiums/IV/strikes, no NIFTY/BANKNIFTY series) — the options-data gap is unchanged.
+  • `NSE500 Daily and Intraday Stock data\` (497 per-stock xlsx, Day + intraday sheets): RAW/
+    as-traded — a constant per-stock scale vs live (VBL 2.5x, RELIANCE 2.0x), HARMLESS for
+    %-return backtests (notional & %-of-turnover costs invariant). Daily 2018→Jun-2024.
+    Split-consistent: the only >25% overnight jumps were REAL crashes (COVID 2020-03-23,
+    Hindenburg 2023-02). Intraday shallow.
+  • `Nifty 500 (NSE) Stocks Multi-Timeframe Dataset\` (7 consolidated CSVs, one per timeframe,
+    long format Datetime,Ticker,OHLCV): SPLIT-ADJUSTED (= live; RELIANCE 2024-06 = 1477 = raw
+    2955 halved for the Oct-2024 1:1 bonus). Daily 2005/2019→Feb-2026, 501 stocks. Intraday
+    tapers (1h from 2023, 30m Aug-24, 15m May-25, 5m Nov-25, 1m ~3wks) — only 1h has backtest
+    depth. THE better daily source: adjusted AND reaches the 2024-2026 OOS the xlsx set can't.
+RECENT OOS (V10.1 rules, nifty210 radar, 195 adjusted MTF names, split at 2024-01-01):
+  conf2  IS PF 1.46 (n147) ≈ OOS PF 1.42 (n77) exp Rs413 — edge HOLDS out-of-sample on
+         independent adjusted data with ~ZERO decay (not curve-fit; clears the PF>1.3 gate).
+  conf3  IS 1.33 ≈ OOS 1.33 — the tiered gate does NOT lift PF on this adjusted set (its benefit
+         is source/window-dependent, not robust; keep it, don't over-trust it).
+  HONEST CALIBRATION: the broad-universe edge is ~PF 1.4, NOT the ~2.0-2.5 the curated-55/raw
+  runs flattered. Treat backtest PF as "~1.4 broad, ~2 curated, ±0.5 by data source".
+LARGE-CAP TILT FALSIFIED (don't re-litigate): baseline OOS per-tier looked like NIFTY50 PF 3.44
+  (n22) vs MIDCAP 1.08 (n55) — but 3.44 is a SELECTION artifact (the top 22 large caps that beat
+  midcaps for slots). Forcing nifty50-only, or boosting N50 score to crowd out midcaps, gives OOS
+  PF 1.42 on 73 trades = SAME as broad and LOWER total P&L (Rs342x73 < Rs413x77). Every tilt
+  raised IS (→2.0-2.13) but OOS stayed 1.42 (overfit caught by the split); a partial +2 boost was
+  WORSE (OOS 1.30 — let 4 dud midcaps in at PF 0.02). CONCLUSION: keep the broad nifty210 radar at
+  conf2; do NOT tilt to large caps, do NOT restrict the universe, do NOT expand to smallcaps
+  (survivorship-inflated, §5b). The current config IS the honest optimum. NO agent4 change made.
+  Caches in backtest_results\: prices_nse500data.pkl (52 curated raw), prices_n210b/n500.pkl
+  (raw broad), prices_mtf210.pkl (adjusted, the recent-OOS cache — reuse this one).
+
 ## 6. ML layer (ML4T) — exact lineage
 Features ch4 (19, incl. 12-1 momentum, alpha#101), cross-sectional rank transform per date;
 label = beats watchlist median fwd 5d; LightGBM->HGB->logistic fallback chain ch11/12;
@@ -161,6 +283,32 @@ switches on automatically only if IC ever clears the gate. Do NOT remove the gat
 present ML as active unless meta mean_ic >= 0.01. The validated edge (PF 2.46 ablation)
 is the rules system WITHOUT ML.
 
+## 6b. ML-ENTRY investigation + seed-ensemble gate (2026-07-13, V11.1) — the honest arc
+Motivated by a diagnostic: the 14-pt technical score does NOT predict returns (bottom-score-third
+OOS PF 2.10 vs top-third 1.08 — high score = extended/crowded entry). So can ML rank entries better?
+FULL ARC (all on the adjusted 500-name MTF daily data — §5f):
+  1. TRAIN/IC: 20-fold walk-forward, mean rank-IC +0.028 (recent half +0.032), positive in 16/20
+     folds — real but WEAK signal (AUC ~0.515), and POSITIVE where the score is flat/inverse.
+  2. SINGLE-SEED GATE looked amazing (gate ensemble-prob>=0.50 → OOS PF 1.42→1.79) BUT was NOISE:
+     a different LightGBM random seed gave 1.06-1.18 (below baseline). Same data, seed 42 vs 7
+     swung OOS PF 0.97..2.49. NEVER trust a single-seed ML gate.
+  3. SEED-ENSEMBLE RESCUE (10 seeds, mean prob): cancels the seed noise. Gate>=0.50 → OOS PF 2.38,
+     IS 1.91 (OOS>IS, no overfit), and TWO independent 5-seed halves BOTH beat baseline at 0.50
+     (2.80 / 2.28). 0.50 is the label's own "beat-median" boundary (principled, not tuned).
+  4. OUT-OF-PERIOD/UNIVERSE VALIDATION: period-ROBUST on nifty210 (OOS-from-2022 1.01→1.24,
+     from-2023 1.29→1.64, from-2024 1.42→2.38; helps most years, hurt only 2023) BUT does NOT
+     generalise to nifty500 (full 1.36→1.34). So it's REAL but UNIVERSE-SPECIFIC to the nifty210
+     radar we actually trade. Honest magnitude: a consistent +0.2-0.4 PF, biggest recently — the
+     2.38 is the optimistic end, not the expectation.
+SHIPPED (agent4.py, DEFAULT OFF): AGENT4_ML_GATE=1 makes an EQUITY entry additionally require the
+10-model ensemble mean prob >= AGENT4_ML_GATE_PROB (0.50). Options book never gated. FAIL-SAFE: no
+ensemble model / no prob for a name ⇒ NOT gated (never blocks). Build the model with
+`python train_ml.py --ensemble` → models/ml_ensemble.pkl (ensemble_prob_universe() serves it,
+noise-gated at IC 0.01 like the single model). Enable ONLY after a few days of forward paper
+validation. Every other tuning idea this session (large-cap tilt, tighter stop, conf3, score-select,
+single-seed ML) FAILED OOS — the system sits at ~PF 1.4 broad / ~2 curated; the ensemble gate is
+the one thing that survived scrutiny, and only on nifty210.
+
 ## 7. API quick reference (app at http://127.0.0.1:8650)
 /api/regime · /api/watchlist (+/add POST) · /api/stock/{sym} · /api/chart/{sym} ·
 /api/news/{sym} · /api/news-brief (Agent 6 briefing) · POST /api/news-brief/build (slow) ·
@@ -169,8 +317,9 @@ POST /api/chat {messages:[{role,content}...]} (conversational analyst, tool-grou
 /api/chart/{sym}?period=5m|15m|1h|6mo|13mo|3y|5y (intraday = display-only, Yahoo ~15min
 delayed; epochs IST-shifted +5:30 in chart_data via _ist_epoch so the lightweight-charts axis
 shows NSE hours 09:15-15:30 not UTC — fix 2026-06-22; signals remain daily-bar) ·
-/api/portfolio · POST /api/portfolio/execute · POST /api/portfolio/monitor ·
-POST /api/portfolio/reset-halt. UI: 💼 Portfolio view + ⊞ Scan all + per-stock view.
+/api/portfolio ({books:{equity,options},combined} [V11]) · POST /api/portfolio/execute ·
+POST /api/portfolio/monitor · POST /api/portfolio/reset-halt?book=equity|options (omit = both).
+UI: 💼 Portfolio view (two book sections) + ⊞ Scan all + per-stock view.
 
 ## 8. Data sources + honest limitations (tell the user when relevant)
 LIVE QUOTES (added 2026-06-11): `live_quotes.py` — Angel One SmartAPI (creds ANGEL_* in .env,
@@ -194,11 +343,14 @@ is impossible and the user has been told so. Judge nothing under 30 closed trade
 ## 9. Roadmap + go-live gates (Notes\09 has detail)
 Next builds: analyze-ANY-stock analyst mode; per-stock cockpit news
 overlay + fundamentals (connect bigdata-com skills); Kronos zero-shot signal (deferred — needs
-separate py3.11 CPU env, see §6); IV history capture from daily
-chain fetches; ablation backtest of ML floor (ch8). Monthly retrain. GO-LIVE GATES (month 6):
+separate py3.11 CPU env, see §6); IV history capture from daily chain fetches (LIVE 2026-07-11
+via options_math enrichment — §5d; NEXT: use the accruing dataset for per-stock IV-percentile
+gating); ablation backtest of ML floor (ch8). Monthly retrain. GO-LIVE GATES (month 6):
 >=3 months paper, >=50 trades, PF>1.3 across 2 regimes, maxDD<10%, every kill switch observed
 firing. Real money = user's deliberate decision, start 10-20% size. Claude must never place
-real-money orders itself.
+real-money orders itself. CALIBRATION (§5f): independent split-adjusted OOS 2024-2026 = PF ~1.42
+broad / ~2 curated — clears the 1.3 gate but only just on the broad radar, so paper PF near 1.3-1.5
+is EXPECTED, not underperformance; judge the live book against ~1.4, not the flattered ~2.5.
 
 ## 10. Conventions & gotchas for future Claude sessions
 - Always use venv python `C:\trading_bot\venv\Scripts\python.exe`; UTF-8 reconfigure pattern

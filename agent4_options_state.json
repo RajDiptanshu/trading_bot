@@ -1,0 +1,96 @@
+{
+ "created": "2026-07-12 01:44",
+ "book": "options",
+ "config_version": "V11",
+ "start_capital": 1000000.0,
+ "cash": 980730.98,
+ "peak_equity": 1000000.0,
+ "halted": false,
+ "halt_reason": null,
+ "day": {
+  "date": "2026-07-13",
+  "realized_pnl": 0.0
+ },
+ "next_id": 2,
+ "positions": [
+  {
+   "id": 1,
+   "symbol": "NIFTY",
+   "yahoo": "^NSEI",
+   "instrument": "BULL_CALL_SPREAD",
+   "direction": "LONG",
+   "entry_date": "2026-07-13",
+   "entry_time": "10:03",
+   "underlying_entry": 24122.75,
+   "legs": [
+    {
+     "type": "CE",
+     "side": "BUY",
+     "strike": 24000.0,
+     "entry_premium": 320.25
+    },
+    {
+     "type": "CE",
+     "side": "SELL",
+     "strike": 24900.0,
+     "entry_premium": 27.7
+    }
+   ],
+   "expiry": "28-Jul-2026",
+   "lots": 1,
+   "lot_size": 65,
+   "net_debit": 295.48,
+   "long_delta": 0.6403,
+   "atm_counterfactual": {
+    "long_strike": 24100.0,
+    "long_premium": 262.6,
+    "long_delta": 0.5682,
+    "short_strike": 24900.0,
+    "short_premium": 27.7,
+    "net_debit_per_share": 234.9,
+    "max_loss_per_share": 234.9,
+    "lot_size": 65,
+    "lots_same_risk": 1
+   },
+   "slippage_pct": 1.0,
+   "data_source": "live_angel",
+   "stop": 23602.77,
+   "target": 24902.72,
+   "reached_1atr": false,
+   "atr_at_entry": 259.99,
+   "sessions_held": 1,
+   "last_session": "2026-07-13",
+   "max_loss_inr": 19015.75,
+   "open_risk_inr": 19015.75,
+   "entry_costs": 63.11,
+   "status": "OPEN",
+   "reasoning": "NIFTY index trend 6/7 (stack_20_50, ma50_rising, breakout_5d, mom_63_pos, rsi_zone); BULL_CALL_SPREAD into 28-Jul-2026",
+   "features": {
+    "index_score": 6,
+    "details": {
+     "stack_20_50": true,
+     "ma50_rising": true,
+     "breakout_5d": true,
+     "mom_63_pos": true,
+     "rsi_zone": true,
+     "adx_trend": false
+    },
+    "rsi": 53.6,
+    "adx": 11.9,
+    "vix": 13.23,
+    "vix_pctile": 61.1,
+    "vix_slope_5d": 1.41,
+    "regime_label": "NEUTRAL",
+    "conviction": 0.6
+   }
+  }
+ ],
+ "closed": [],
+ "equity_curve": [
+  {
+   "date": "2026-07-13",
+   "equity": 999886.48,
+   "nifty": 24119.3
+  }
+ ]
+}
